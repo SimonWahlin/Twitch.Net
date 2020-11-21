@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Twitch.Net.Api\Twitch.Net.Api.csproj" />
+      <ProjectReference Include="..\Twitch.Net.Client\Twitch.Net.Client.csproj" />
+      <ProjectReference Include="..\Twitch.Net.Communication\Twitch.Net.Communication.csproj" />
+      <ProjectReference Include="..\Twitch.Net.Pubsub\Twitch.Net.Pubsub.csproj" />
+    </ItemGroup>
+
+</Project>
