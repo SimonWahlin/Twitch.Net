@@ -1,13 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <VersionPrefix>0.0.1</VersionPrefix>
         <TargetFramework>net5.0</TargetFramework>
-        <AssemblyName>Twitch.Net.Shared</AssemblyName>
-        <RootNamespace>Twitch.Net.Shared</RootNamespace>
-        <PackageId>Twitch.Net.Shared</PackageId>
-        <Authors>Twitch.Net.Shared</Authors>
-        <Company>Twitch.Net.Shared</Company>
-        <Product>Twitch.Net.Shared</Product>
+        <Authors>Twitch.Net Contributors</Authors>
+        <Title>Twitch.Net Shared code between packages</Title>
+        <PackageProjectUrl>https://github.com/Twitch-Net/Twitch.Net</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/Twitch-Net/Twitch.Net</RepositoryUrl>
+        <PackageTags>.NET5</PackageTags>
+        <RepositoryType>Open Source</RepositoryType>
     </PropertyGroup>
 
     <ItemGroup>

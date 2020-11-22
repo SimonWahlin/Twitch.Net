@@ -1,13 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <VersionPrefix>0.0.1</VersionPrefix>
         <TargetFramework>net5.0</TargetFramework>
-        <AssemblyName>Twitch.Net.PubSub</AssemblyName>
-        <RootNamespace>Twitch.Net.PubSub</RootNamespace>
-        <PackageId>Twitch.Net.PubSub</PackageId>
-        <Authors>Twitch.Net.PubSub</Authors>
-        <Company>Twitch.Net.PubSub</Company>
-        <Product>Twitch.Net.PubSub</Product>
+        <Authors>Twitch.Net Contributors</Authors>
+        <Title>Twitch.Net PubSub Implementation</Title>
+        <PackageProjectUrl>https://github.com/Twitch-Net/Twitch.Net</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/Twitch-Net/Twitch.Net</RepositoryUrl>
+        <RepositoryType>Open Source</RepositoryType>
+        <PackageTags>PubSub Twitch Websocket .NET5</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

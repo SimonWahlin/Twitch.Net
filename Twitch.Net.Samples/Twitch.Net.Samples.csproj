@@ -3,6 +3,7 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net5.0</TargetFramework>
+        <Authors>Twitch.Net Contributors</Authors>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,7 +21,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Twitch.Net.Library\Twitch.Net.Library.csproj" />
+      <ProjectReference Include="..\Twitch.Net.Api\Twitch.Net.Api.csproj" />
+      <ProjectReference Include="..\Twitch.Net.Client\Twitch.Net.Client.csproj" />
+      <ProjectReference Include="..\Twitch.Net.Communication\Twitch.Net.Communication.csproj" />
+      <ProjectReference Include="..\Twitch.Net.Pubsub\Twitch.Net.Pubsub.csproj" />
+      <ProjectReference Include="..\Twitch.Net.Shared\Twitch.Net.Shared.csproj" />
     </ItemGroup>
 
 </Project>

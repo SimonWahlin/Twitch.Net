@@ -1,7 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <VersionPrefix>0.0.1</VersionPrefix>
         <TargetFramework>net5.0</TargetFramework>
+        <Title>Twitch.Net IRC Client implementation</Title>
+        <Authors>Twitch.Net Contributors</Authors>
+        <PackageProjectUrl>https://github.com/Twitch-Net/Twitch.Net</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/Twitch-Net/Twitch.Net</RepositoryUrl>
+        <RepositoryType>Open Source</RepositoryType>
+        <PackageTags>Twitch IRC Chat Websocket .NET5</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
