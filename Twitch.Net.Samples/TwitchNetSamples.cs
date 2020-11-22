@@ -81,7 +81,7 @@ namespace Twitch.Net.Samples
 
         private void OnPubSubConnected(
             IPubSubClient pubsub, 
-            TwitchCredentialConfiguration config
+            IPubSubCredentialConfiguration config
             ) => 
             pubsub.CreateBuilder()
                 .CreateChannelPointsRedeemTopic(UserId)

@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Api", "Twitch.Ne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Client", "Twitch.Net.Client\Twitch.Net.Client.csproj", "{B53123FB-B2EA-46E2-AB7C-79A19A0CBEEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net", "Twitch.Net\Twitch.Net.csproj", "{651149BC-7E53-4D72-A886-B929DD24D704}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Library", "Twitch.Net.Library\Twitch.Net.Library.csproj", "{651149BC-7E53-4D72-A886-B929DD24D704}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Shared", "Twitch.Net.Shared\Twitch.Net.Shared.csproj", "{E3A8FBDA-28FB-4C10-9C36-20E6A41E5CF3}"
 EndProject
