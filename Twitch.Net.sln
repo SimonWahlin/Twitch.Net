@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Communication", "Twitch.Net.Communication\Twitch.Net.Communication.csproj", "{DF7FD4FC-F4E5-4F71-B54B-10DD7353CE93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Samples", "Twitch.Net.Samples\Twitch.Net.Samples.csproj", "{D128204F-A3E5-4D09-B5DD-013CDAAAEA34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Pubsub", "Twitch.Net.Pubsub\Twitch.Net.Pubsub.csproj", "{6C5451FE-4AA3-4DC6-9FF3-EB9FF9905F5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Api", "Twitch.Net.Api\Twitch.Net.Api.csproj", "{7147D62B-46E8-43AF-9153-F50ECEF0B4F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Client", "Twitch.Net.Client\Twitch.Net.Client.csproj", "{B53123FB-B2EA-46E2-AB7C-79A19A0CBEEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net", "Twitch.Net\Twitch.Net.csproj", "{651149BC-7E53-4D72-A886-B929DD24D704}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Shared", "Twitch.Net.Shared\Twitch.Net.Shared.csproj", "{E3A8FBDA-28FB-4C10-9C36-20E6A41E5CF3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DF7FD4FC-F4E5-4F71-B54B-10DD7353CE93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF7FD4FC-F4E5-4F71-B54B-10DD7353CE93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF7FD4FC-F4E5-4F71-B54B-10DD7353CE93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF7FD4FC-F4E5-4F71-B54B-10DD7353CE93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D128204F-A3E5-4D09-B5DD-013CDAAAEA34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D128204F-A3E5-4D09-B5DD-013CDAAAEA34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D128204F-A3E5-4D09-B5DD-013CDAAAEA34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D128204F-A3E5-4D09-B5DD-013CDAAAEA34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C5451FE-4AA3-4DC6-9FF3-EB9FF9905F5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C5451FE-4AA3-4DC6-9FF3-EB9FF9905F5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C5451FE-4AA3-4DC6-9FF3-EB9FF9905F5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C5451FE-4AA3-4DC6-9FF3-EB9FF9905F5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7147D62B-46E8-43AF-9153-F50ECEF0B4F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7147D62B-46E8-43AF-9153-F50ECEF0B4F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7147D62B-46E8-43AF-9153-F50ECEF0B4F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7147D62B-46E8-43AF-9153-F50ECEF0B4F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B53123FB-B2EA-46E2-AB7C-79A19A0CBEEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B53123FB-B2EA-46E2-AB7C-79A19A0CBEEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B53123FB-B2EA-46E2-AB7C-79A19A0CBEEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B53123FB-B2EA-46E2-AB7C-79A19A0CBEEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{651149BC-7E53-4D72-A886-B929DD24D704}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{651149BC-7E53-4D72-A886-B929DD24D704}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{651149BC-7E53-4D72-A886-B929DD24D704}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{651149BC-7E53-4D72-A886-B929DD24D704}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3A8FBDA-28FB-4C10-9C36-20E6A41E5CF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3A8FBDA-28FB-4C10-9C36-20E6A41E5CF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3A8FBDA-28FB-4C10-9C36-20E6A41E5CF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3A8FBDA-28FB-4C10-9C36-20E6A41E5CF3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,2 @@
+﻿To run this test sample application you will have to make a copy of the "appsettings.template.json" and name it "appsettings.json".
+Then fill the configurations in the file to provide all the required stuff for this example.
