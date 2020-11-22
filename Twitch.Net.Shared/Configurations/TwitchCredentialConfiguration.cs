@@ -1,7 +1,7 @@
 ﻿namespace Twitch.Net.Shared.Configurations
 {
     public class TwitchCredentialConfiguration : 
-        IChatClientCredentialConfiguration,
+        IIrcClientCredentialConfiguration,
         IPubSubCredentialConfiguration,
         IApiCredentialConfiguration
     {

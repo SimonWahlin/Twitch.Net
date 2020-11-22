@@ -17,4 +17,13 @@
       <ProjectReference Include="..\Twitch.Net.Shared\Twitch.Net.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Events" />
+      <Folder Include="Models\Messages" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Optional" Version="4.0.0" />
+    </ItemGroup>
+
 </Project>

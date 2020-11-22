@@ -1,6 +1,6 @@
 ﻿namespace Twitch.Net.Shared.Configurations
 {
-    public interface IChatClientCredentialConfiguration
+    public interface IIrcClientCredentialConfiguration
     {
         public string Username { get; init; }
         public string OAuth { get; init; }

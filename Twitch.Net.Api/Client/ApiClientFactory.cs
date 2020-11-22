@@ -1,8 +1,8 @@
 ﻿namespace Twitch.Net.Api.Client
 {
-    public class ApiClientFactory
+    public static class ApiClientFactory
     {
-        public IApiClient CreateClient()
+        public static IApiClient CreateClient()
             => new ApiClient();
     }
 }

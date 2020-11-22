@@ -120,18 +120,13 @@ namespace Twitch.Net.PubSub.Client
         }
 
         public async Task OnConnected()
-        {
-            await _eventHandler.InvokeOnPubSubConnected();
-        }
+            => await _eventHandler.InvokeOnPubSubConnected();
         
         public async Task OnReconnected()
-        {
-            _pingTimer.Start();
-            await _eventHandler.InvokeOnPubSubReconnect();
-        }
+            => await _eventHandler.InvokeOnPubSubReconnect();
 
-        public async Task OnDisconnected() =>
-            await _eventHandler.InvokeOnPubSubDisconnect();
+        public async Task OnDisconnected() 
+            => await _eventHandler.InvokeOnPubSubDisconnect();
 
         private void PingTickHandler(object sender, ElapsedEventArgs e)
         {

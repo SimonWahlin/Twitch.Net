@@ -2,9 +2,7 @@
 {
     public static class PubSubClientFactory
     {
-        public static IPubSubClient CreateClient(bool useSsl = true)
-        {
-            return new PubSubClient(useSsl);
-        }
+        public static IPubSubClient CreateClient(bool useSsl = true) 
+            => new PubSubClient(useSsl);
     }
 }

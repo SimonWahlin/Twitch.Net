@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Twitch.Net.Client.Client;
 using Twitch.Net.PubSub.Client;
 using Twitch.Net.PubSub.Events;
 using Twitch.Net.Shared.Configurations;
@@ -34,10 +35,20 @@ namespace Twitch.Net.Samples
             var factory = provider.GetService<IHttpClientFactory>();
 
             var helper = new ClientCredentialTokenResolver(factory, config);
-            var pubsub = PubSubClientFactory.CreateClient();
             
-            pubsub.ConnectionLoggerConfiguration.OutputLog = true;
-            pubsub.ConnectionLoggerConfiguration.OutputMessageLog = true;
+            var pubsub = PubSubClientFactory.CreateClient();
+            pubsub.ConnectionLoggerConfiguration.OutputLog = false;
+            pubsub.ConnectionLoggerConfiguration.OutputMessageLog = false;
+            
+            var irc = IrcClientFactory.CreateClient(config);
+            irc.ConnectionLoggerConfiguration.OutputLog = true;
+            irc.ConnectionLoggerConfiguration.OutputMessageLog = true;
+
+            irc.Events.OnPubSubConnected += () =>
+            {
+                Console.WriteLine("[IRC] Connected");
+                return Task.CompletedTask;
+            };
 
             // Event listening - which are sent as "tasks" so you can easily async/await the event instead of
             // having to do a manual Task.Run() for doing async executions as example API / Database, you name it.
@@ -68,6 +79,8 @@ namespace Twitch.Net.Samples
                 {
                     Console.WriteLine("Failed initial connecting, retrying...");
                 }
+
+                await irc.ConnectAsync();
             });
 
             ListenToInput();
