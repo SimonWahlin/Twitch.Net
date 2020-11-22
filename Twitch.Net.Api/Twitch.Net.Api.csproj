@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Twitch.Net.Utils\Twitch.Net.Utils.csproj" />
+      <ProjectReference Include="..\Twitch.Net.Shared\Twitch.Net.Shared.csproj" />
     </ItemGroup>
 
 </Project>

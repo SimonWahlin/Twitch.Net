@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
 
-namespace Twitch.Net.Utils.Extensions
+namespace Twitch.Net.Shared.Extensions
 {
     public static class JsonSerializerHelper
     {

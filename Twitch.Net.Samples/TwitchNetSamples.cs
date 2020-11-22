@@ -5,8 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Twitch.Net.PubSub.Client;
 using Twitch.Net.PubSub.Events;
-using Twitch.Net.Utils.Configurations;
-using Twitch.Net.Utils.Credential;
+using Twitch.Net.Shared.Configurations;
+using Twitch.Net.Shared.Credential;
 
 namespace Twitch.Net.Samples
 {

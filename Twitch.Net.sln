@@ -12,7 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Client", "Twitch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net", "Twitch.Net\Twitch.Net.csproj", "{651149BC-7E53-4D72-A886-B929DD24D704}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Utils", "Twitch.Net.Utils\Twitch.Net.Utils.csproj", "{E3A8FBDA-28FB-4C10-9C36-20E6A41E5CF3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Shared", "Twitch.Net.Shared\Twitch.Net.Shared.csproj", "{E3A8FBDA-28FB-4C10-9C36-20E6A41E5CF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

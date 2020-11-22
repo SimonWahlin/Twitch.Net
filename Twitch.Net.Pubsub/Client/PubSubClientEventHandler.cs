@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Twitch.Net.PubSub.Events;
-using Twitch.Net.Utils.Extensions;
+using Twitch.Net.Shared.Extensions;
 
 namespace Twitch.Net.PubSub.Client
 {

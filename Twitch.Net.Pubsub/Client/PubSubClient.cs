@@ -6,7 +6,7 @@ using Twitch.Net.Communication.Clients;
 using Twitch.Net.Communication.Models;
 using Twitch.Net.PubSub.Events;
 using Twitch.Net.PubSub.Topics;
-using Twitch.Net.Utils.Extensions;
+using Twitch.Net.Shared.Extensions;
 using Twitch.Net.Utils.Logger;
 
 namespace Twitch.Net.PubSub.Client

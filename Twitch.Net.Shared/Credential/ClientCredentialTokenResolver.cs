@@ -5,9 +5,9 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Twitch.Net.Utils.Configurations;
+using Twitch.Net.Shared.Configurations;
 
-namespace Twitch.Net.Utils.Credential
+namespace Twitch.Net.Shared.Credential
 {
     /**
      * Recommendation is to only create ONE instance of this to use through the whole application.

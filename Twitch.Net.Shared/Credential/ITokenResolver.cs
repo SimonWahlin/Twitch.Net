@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Twitch.Net.Utils.Credential
+namespace Twitch.Net.Shared.Credential
 {
     public interface ITokenResolver
     {

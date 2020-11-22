@@ -2,6 +2,12 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <AssemblyName>Twitch.Net.Shared</AssemblyName>
+        <RootNamespace>Twitch.Net.Shared</RootNamespace>
+        <PackageId>Twitch.Net.Shared</PackageId>
+        <Authors>Twitch.Net.Shared</Authors>
+        <Company>Twitch.Net.Shared</Company>
+        <Product>Twitch.Net.Shared</Product>
     </PropertyGroup>
 
     <ItemGroup>

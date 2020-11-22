@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Twitch.Net.Utils.Credential
+namespace Twitch.Net.Shared.Credential
 {
     public class TwitchClientCredentialAuthResponse
     {

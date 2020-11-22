@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Twitch.Net.PubSub.Client;
-using Twitch.Net.Utils.Extensions;
+using Twitch.Net.Shared.Extensions;
 
 namespace Twitch.Net.PubSub.Topics
 {
