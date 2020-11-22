@@ -8,4 +8,8 @@
       <ProjectReference Include="..\Twitch.Net.Utils\Twitch.Net.Utils.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Websocket.Client" Version="4.3.21" />
+    </ItemGroup>
+
 </Project>

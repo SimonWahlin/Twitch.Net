@@ -2,6 +2,12 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <AssemblyName>Twitch.Net.PubSub</AssemblyName>
+        <RootNamespace>Twitch.Net.PubSub</RootNamespace>
+        <PackageId>Twitch.Net.PubSub</PackageId>
+        <Authors>Twitch.Net.PubSub</Authors>
+        <Company>Twitch.Net.PubSub</Company>
+        <Product>Twitch.Net.PubSub</Product>
     </PropertyGroup>
 
     <ItemGroup>
