@@ -30,3 +30,4 @@ jobs:
             PACKAGE_NAME: Twitch.Net.Library
             PROJECT_FILE_PATH: Twitch.Net.Library/Twitch.Net.Library.csproj
             NUGET_KEY: ${{secrets.NUGET_TWITCH_NET}}
+            VERSION_REGEX: ^\s*<PackageVersion>(.*)<\/PackageVersion>\s*$
