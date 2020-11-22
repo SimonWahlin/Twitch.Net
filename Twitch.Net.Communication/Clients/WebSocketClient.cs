@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Twitch.Net.Utils.Logger;
+using Twitch.Net.Shared.Logger;
 using Websocket.Client;
 using Websocket.Client.Models;
 

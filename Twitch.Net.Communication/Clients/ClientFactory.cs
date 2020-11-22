@@ -1,4 +1,4 @@
-﻿using Twitch.Net.Utils.Logger;
+﻿using Twitch.Net.Shared.Logger;
 
 namespace Twitch.Net.Communication.Clients
 {

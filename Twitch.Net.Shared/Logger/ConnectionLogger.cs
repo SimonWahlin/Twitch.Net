@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Twitch.Net.Utils.Logger
+namespace Twitch.Net.Shared.Logger
 {
     public class ConnectionLogger : IConnectionLogger, IConnectionLoggerConfiguration
     {

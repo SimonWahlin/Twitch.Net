@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Twitch.Net.PubSub.Topics;
-using Twitch.Net.Utils.Logger;
+using Twitch.Net.Shared.Logger;
 
 namespace Twitch.Net.PubSub.Client
 {

@@ -1,4 +1,4 @@
-﻿namespace Twitch.Net.Utils.Logger
+﻿namespace Twitch.Net.Shared.Logger
 {
     public interface IConnectionLoggerConfiguration
     {
