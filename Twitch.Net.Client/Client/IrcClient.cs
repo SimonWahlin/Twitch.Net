@@ -1,46 +1,43 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
+using Twitch.Net.Client.Client.Handlers.Events;
+using Twitch.Net.Client.Client.Handlers.Join;
 using Twitch.Net.Client.Irc;
 using Twitch.Net.Client.Models;
 using Twitch.Net.Communication.Clients;
 using Twitch.Net.Shared.Configurations;
-using Twitch.Net.Shared.Logger;
 
 namespace Twitch.Net.Client.Client
 {
     internal class IrcClient : IIrcClient, IClientListener
     {
-        private const string IrcServerAddress = "irc-ws.chat.twitch.tv";
         private readonly IClient _connectionClient;
         private readonly IIrcClientCredentialConfiguration _credentialConfiguration;
-        private readonly ConnectionLogger _connectionLogger;
         private readonly IrcClientEventHandler _eventHandler;
+        private readonly JoinQueueHandler _joinChannelHandler;
         private readonly List<ChatChannel> _channels = new();
-        private readonly ConcurrentQueue<ChatChannel> _joinQueue = new();
         
-        public IrcClient(IIrcClientCredentialConfiguration credentialConfiguration, bool useSsl)
+        public IrcClient(
+            IIrcClientCredentialConfiguration credentialConfiguration, 
+            IClient connectionClient
+            )
         {
             _credentialConfiguration = credentialConfiguration;
+            
+            // Setup handlers
             _eventHandler = new IrcClientEventHandler();
-            _connectionLogger = new ConnectionLogger();
-            _connectionClient = ClientFactory.CreateClient(
-                this,
-                $"{Protocol(useSsl)}://{IrcServerAddress}:{Port(useSsl)}",
-                _connectionLogger
-            );
+            _joinChannelHandler = new JoinQueueHandler(this);
+            
+            // Create connection
+            _connectionClient = connectionClient;
+            connectionClient.SetListener(this);
         }
 
-        private string Protocol(bool ssl) => ssl ? "wss" : "ws";
-        private string Port(bool ssl) => ssl ? "443" : "80";
-
-        public IReadOnlyList<ChatChannel> Channels { get; }
-
-        public IConnectionLoggerConfiguration ConnectionLoggerConfiguration
-            => _connectionLogger;
+        public IReadOnlyList<ChatChannel> Channels
+            => _channels;
 
         public IIrcClientEventHandler Events
             => _eventHandler;
@@ -94,8 +91,9 @@ namespace Twitch.Net.Client.Client
 
             if (!_connectionClient.IsConnected)
                 return chat.SetConnectionState(ChatChannelConnectionState.Failure);
-            
-            _joinQueue.Enqueue(chat.SetConnectionState(ChatChannelConnectionState.Queued));
+
+            _joinChannelHandler.Enqueue(chat.SetConnectionState(ChatChannelConnectionState.Queued));
+            _channels.Add(chat);
             return chat;
         }
 
@@ -124,9 +122,12 @@ namespace Twitch.Net.Client.Client
             await _eventHandler.InvokeOnPubSubReconnect();
         }
 
-        public async Task OnDisconnected() 
-            => await _eventHandler.InvokeOnPubSubDisconnect();
-
+        public async Task OnDisconnected()
+        {
+            _joinChannelHandler.Clear();
+            await _eventHandler.InvokeOnPubSubDisconnect();
+        }
+        
         public async Task OnMessage(WebSocketMessageType messageType, string message)
         {
             if (messageType == WebSocketMessageType.Close) // if server sends "close" message we reconnect

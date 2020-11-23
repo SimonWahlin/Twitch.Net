@@ -36,13 +36,14 @@ namespace Twitch.Net.Samples
 
             var helper = new ClientCredentialTokenResolver(factory, config);
             
+            var pubsubLogger = new ConsoleLog
             var pubsub = PubSubClientFactory.CreateClient();
             pubsub.ConnectionLoggerConfiguration.OutputLog = false;
             pubsub.ConnectionLoggerConfiguration.OutputMessageLog = false;
             
             var irc = IrcClientFactory.CreateClient(config);
             irc.ConnectionLoggerConfiguration.OutputLog = true;
-            irc.ConnectionLoggerConfiguration.OutputMessageLog = true;
+            irc.ConnectionLoggerConfiguration.OutputMessageLog = false;
 
             irc.Events.OnPubSubConnected += () =>
             {
@@ -76,11 +77,10 @@ namespace Twitch.Net.Samples
                 // if you wanna make sure the pubsub client initial connects
                 // you can just do it in a while loop, since the initial connection will not "retry", only reconnects
                 while (!await pubsub.ConnectAsync())
-                {
-                    Console.WriteLine("Failed initial connecting, retrying...");
-                }
+                    Console.WriteLine("[PUBSUB] Failed initial connecting, retrying...");
 
-                await irc.ConnectAsync();
+                while (!await irc.ConnectAsync())
+                    Console.WriteLine("[IRC] Failed initial connecting, retrying...");
             });
 
             ListenToInput();
@@ -89,6 +89,7 @@ namespace Twitch.Net.Samples
         private Task PubSubOnRedeemEvent(CommunityPointsEvent arg)
         {
             // this works
+            Console.WriteLine($"ON REDEEM EVENT FIRE - TYPE: {arg.Type}");
             return Task.CompletedTask;
         }
 

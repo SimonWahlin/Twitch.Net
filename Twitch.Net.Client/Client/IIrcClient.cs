@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Twitch.Net.Client.Client.Handlers.Events;
 using Twitch.Net.Client.Models;
-using Twitch.Net.Shared.Logger;
 
 namespace Twitch.Net.Client.Client
 {
     public interface IIrcClient
     {
         IReadOnlyList<ChatChannel> Channels { get; }
-        IConnectionLoggerConfiguration ConnectionLoggerConfiguration { get; }
         IIrcClientEventHandler Events { get; }
         
         Task<bool> ConnectAsync();

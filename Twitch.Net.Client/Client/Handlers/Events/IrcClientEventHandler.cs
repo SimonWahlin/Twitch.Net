@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Twitch.Net.Shared.Extensions;
 
-namespace Twitch.Net.Client.Client
+namespace Twitch.Net.Client.Client.Handlers.Events
 {
     public class IrcClientEventHandler : IIrcClientEventHandler, IIrcClientEventInvoker
     {

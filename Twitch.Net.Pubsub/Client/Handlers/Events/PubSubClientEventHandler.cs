@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Twitch.Net.PubSub.Events;
 using Twitch.Net.Shared.Extensions;
 
-namespace Twitch.Net.PubSub.Client
+namespace Twitch.Net.Pubsub.Client.Handlers.Events
 {
     /**
      * We are doing this it make "PubSubClient" not overflowed with a bunch of logic & methods

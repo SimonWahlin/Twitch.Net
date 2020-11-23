@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Twitch.Net.PubSub.Events;
 
-namespace Twitch.Net.PubSub.Client
+namespace Twitch.Net.Pubsub.Client.Handlers.Events
 {
     public interface IPubSubClientEventHandler
     {

@@ -2,21 +2,21 @@
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 using System.Timers;
+using Microsoft.Extensions.Logging;
 using Twitch.Net.Communication.Clients;
 using Twitch.Net.Communication.Models;
+using Twitch.Net.Pubsub.Client.Handlers.Events;
 using Twitch.Net.PubSub.Events;
 using Twitch.Net.PubSub.Topics;
 using Twitch.Net.Shared.Extensions;
-using Twitch.Net.Shared.Logger;
 
 namespace Twitch.Net.PubSub.Client
 {
     public class PubSubClient : IPubSubClient, IClientListener
     {
-        private const string PubSubServerAddress = "pubsub-edge.twitch.tv";
         private readonly Random _gen = new();
         private readonly IClient _connectionClient;
-        private readonly ConnectionLogger _connectionLogger;
+        private readonly ILogger<PubSubClient> _logger;
         private readonly TopicResponseHandler _topicResponseHandler;
         private readonly PubSubClientEventHandler _eventHandler;
 
@@ -24,17 +24,13 @@ namespace Twitch.Net.PubSub.Client
         private readonly Timer _pongTimer;
         private readonly string _pingJson;
 
-        public PubSubClient(bool useSsl)
+        public PubSubClient(IClient connectionClient, ILogger<PubSubClient> logger = null)
         {
             _eventHandler = new PubSubClientEventHandler();
             _topicResponseHandler = new TopicResponseHandler(_eventHandler);
-            _connectionLogger = new ConnectionLogger();
-            _connectionClient = ClientFactory.CreateClient(
-                this,
-                $"{Protocol(useSsl)}://{PubSubServerAddress}:{Port(useSsl)}",
-                _connectionLogger
-            );
-            
+            _connectionClient = connectionClient;
+            _logger = logger;
+
             // Ping handler setup
             _pingTimer = new Timer
             {
@@ -44,7 +40,7 @@ namespace Twitch.Net.PubSub.Client
             _pingJson = JsonSerializerHelper.SerializeModel(new PingModel());
             _pingTimer.Start(); // we can just start it and let it continues run.
             
-            // pong handler setup 
+            // Pong handler setup 
             _pongTimer = new Timer
             {
                 Interval = TimeSpan.FromSeconds(10).TotalMilliseconds
@@ -52,14 +48,8 @@ namespace Twitch.Net.PubSub.Client
             _pongTimer.Elapsed += PongTickHandler;
         }
 
-        private string Protocol(bool ssl) => ssl ? "wss" : "ws";
-        private string Port(bool ssl) => ssl ? "443" : "80";
-
         public TopicBuilder CreateBuilder() 
             => new(this);
-
-        public IConnectionLoggerConfiguration ConnectionLoggerConfiguration
-            => _connectionLogger;
 
         public IPubSubClientEventHandler Events
             => _eventHandler;
@@ -107,14 +97,14 @@ namespace Twitch.Net.PubSub.Client
 
         private async Task<bool> HandleReconnect()
         {
-            _connectionLogger.Log("Server requested reconnection - Performing reconnect.");
+            _logger.LogInformation("Server requested reconnection - Performing reconnect.");
             await _connectionClient.ReconnectAsync();
             return true;
         }
 
         private bool HandlePong()
         {
-            _connectionLogger.Log("PONG");
+            _logger.LogTrace("PONG");
             _pongTimer.Stop();
             return true;
         }
@@ -140,14 +130,14 @@ namespace Twitch.Net.PubSub.Client
             _pingTimer.Interval = TimeSpan.FromSeconds(_gen.Next(2*60, 4*60)).TotalMilliseconds;
             _pingTimer.Start();
             
-            _connectionLogger.Log("Sending ping to the server");
+            _logger.LogTrace("Sending ping to the server");
             _pongTimer.Start();
             Send(_pingJson);
         }
 
         private void PongTickHandler(object sender, ElapsedEventArgs e)
         {
-            _connectionLogger.Log("Failed responding to pong - Performing reconnect.");
+            _logger.LogInformation("Failed responding to pong - Performing reconnect.");
             Task.Run(async () => await _connectionClient.ReconnectAsync());
             _pongTimer.Stop();
         }

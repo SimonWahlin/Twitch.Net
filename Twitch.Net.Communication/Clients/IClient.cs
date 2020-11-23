@@ -8,5 +8,6 @@ namespace Twitch.Net.Communication.Clients
         Task<bool> ConnectAsync();
         Task<bool> ReconnectAsync();
         bool Send(string data);
+        void SetListener(IClientListener listener);
     }
 }

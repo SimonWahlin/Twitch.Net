@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Twitch.Net.Shared.Logger;
+using Microsoft.Extensions.Logging;
+using Optional;
 using Websocket.Client;
 using Websocket.Client.Models;
 
@@ -8,23 +9,20 @@ namespace Twitch.Net.Communication.Clients
 {
     internal class WebSocketClient : IClient
     {
-        private readonly IClientListener _clientListener;
         private readonly string _clientAddress;
-        private readonly IConnectionLogger _clientLogger;
+        private readonly ILogger<IClient> _logger;
 
+        private Option<IClientListener> _clientListener = Option.None<IClientListener>();
         private IWebsocketClient _client;
         private bool _reconnecting; // to prevent "faulty" error message
-
         public bool IsConnected => _client?.IsRunning ?? false;
 
         public WebSocketClient(
-            IClientListener clientListener, 
             string address,
-            IConnectionLogger clientLogger = null)
+            ILogger<IClient> logger = null)
         {
-            _clientListener = clientListener;
             _clientAddress = address; // the server address the connection will be connecting to.
-            _clientLogger = clientLogger;
+            _logger = logger;
         }
 
         public async Task<bool> ConnectAsync()
@@ -35,9 +33,9 @@ namespace Twitch.Net.Communication.Clients
                 {
                     ReconnectTimeout = null // this is to prevent the client from auto disconnecting if we are not getting a response within X time
                 };
-                _client.ReconnectionHappened.Subscribe(async r => await OnReconnect(r));
-                _client.MessageReceived.Subscribe(async m => await OnMessage(m));
-                _client.DisconnectionHappened.Subscribe(async d => await Disconnected(d));
+                _client.ReconnectionHappened.Subscribe(OnReconnect);
+                _client.MessageReceived.Subscribe(OnMessage);
+                _client.DisconnectionHappened.Subscribe(Disconnected);
             }
 
             if (IsConnected)
@@ -46,7 +44,7 @@ namespace Twitch.Net.Communication.Clients
             try
             {
                 await _client.StartOrFail();
-                await Connected(); // trigger event and logger
+                Connected(); // trigger event and logger
                 return true;
             }
             catch (Exception)
@@ -69,7 +67,7 @@ namespace Twitch.Net.Communication.Clients
                 else
                 {
                     await _client.StartOrFail();
-                    await OnReconnect(new ReconnectionInfo(ReconnectionType.ByServer));
+                    OnReconnect(new ReconnectionInfo(ReconnectionType.ByServer));
                 }
 
                 _reconnecting = false;
@@ -82,41 +80,42 @@ namespace Twitch.Net.Communication.Clients
             }
         }
 
-        private async Task Connected()
+        private void Connected()
         {
-            _clientLogger.Log("Connection happened");
-            await _clientListener.OnConnected();
+            _logger.LogTrace("Connection happened");
+            _clientListener.MatchSome(async listener => await listener.OnConnected());
         }
 
-        private async Task OnReconnect(ReconnectionInfo reconnectionInfo)
+        private void OnReconnect(ReconnectionInfo reconnectionInfo)
         {
             // we do not want to pass "initial"
             if (reconnectionInfo.Type == ReconnectionType.Initial)
                 return;
             
-            _clientLogger.Log($"Reconnection happened, type: {reconnectionInfo.Type}");
-            await _clientListener.OnReconnected();
+            _logger.LogTrace($"Reconnection happened, type: {reconnectionInfo.Type}");
+            _clientListener.MatchSome(async listener => await listener.OnReconnected());
         }
 
-        private async Task OnMessage(ResponseMessage responseMessage)
+        private void OnMessage(ResponseMessage responseMessage)
         {
-            _clientLogger.MessageLog($"[INCOMING] [Type: {responseMessage.MessageType}] - {responseMessage.Text}");
-            await _clientListener.OnMessage(responseMessage.MessageType, responseMessage.Text);
+            _logger.LogInformation($"[INCOMING] [Type: {responseMessage.MessageType}] - {responseMessage.Text}");
+            _clientListener.MatchSome(async listener => 
+                await listener.OnMessage(responseMessage.MessageType, responseMessage.Text));
         }
 
-        private async Task Disconnected(DisconnectionInfo disconnectionInfo)
+        private void Disconnected(DisconnectionInfo disconnectionInfo)
         {
             if (_reconnecting) return; // disconnects are not valid during a reconnection is going on
             
-            _clientLogger.MessageLog($"Disconnect happened - Reason: {nameof(disconnectionInfo.Type)}");
-            await _clientListener.OnDisconnected();
+            _logger.LogInformation($"Disconnect happened - Reason: {disconnectionInfo.Type}");
+            _clientListener.MatchSome(async listener => await listener.OnDisconnected());
         }
 
         public bool Send(string data)
         {
             if (!IsConnected)
             {
-                _clientLogger.MessageLog("[OUTGOING] Message was not sent, client is not connected.");
+                _logger.LogWarning("[OUTGOING] Message was not sent, client is not connected.");
                 return false; // if we are not connected, we will just return false
             }
             
@@ -124,9 +123,7 @@ namespace Twitch.Net.Communication.Clients
             return true;
         }
 
-        public void Dispose()
-        {
-            _client?.Dispose();
-        }
+        public void SetListener(IClientListener listener)
+            => _clientListener = listener.Some();
     }
 }

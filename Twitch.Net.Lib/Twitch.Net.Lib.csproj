@@ -4,20 +4,19 @@
         <VersionPrefix>0.0.1</VersionPrefix>
         <TargetFramework>net5.0</TargetFramework>
         <Authors>Twitch.Net Contributors</Authors>
-        <Title>Twitch.Net Communication implementation</Title>
+        <Title>Twitch.Net Lib - Collection of all Twitch.Net</Title>
         <PackageProjectUrl>https://github.com/Twitch-Net/Twitch.Net</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/Twitch-Net/Twitch.Net</RepositoryUrl>
         <RepositoryType>Open Source</RepositoryType>
-        <PackageTags>Twitch Websocket Communication .NET5</PackageTags>
+        <PackageTags>Twitch IRC PubSub API .NET5</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Optional" Version="4.0.0" />
-      <PackageReference Include="Websocket.Client" Version="4.3.21" />
-    </ItemGroup>
-
-    <ItemGroup>
+      <ProjectReference Include="..\Twitch.Net.Api\Twitch.Net.Api.csproj" />
+      <ProjectReference Include="..\Twitch.Net.Client\Twitch.Net.Client.csproj" />
+      <ProjectReference Include="..\Twitch.Net.Communication\Twitch.Net.Communication.csproj" />
+      <ProjectReference Include="..\Twitch.Net.Pubsub\Twitch.Net.Pubsub.csproj" />
       <ProjectReference Include="..\Twitch.Net.Shared\Twitch.Net.Shared.csproj" />
     </ItemGroup>
 

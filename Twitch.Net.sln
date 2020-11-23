@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Client", "Twitch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Shared", "Twitch.Net.Shared\Twitch.Net.Shared.csproj", "{E3A8FBDA-28FB-4C10-9C36-20E6A41E5CF3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Lib", "Twitch.Net.Lib\Twitch.Net.Lib.csproj", "{1486E70C-4CCA-46CD-A578-F13628B69AAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,5 +43,9 @@ Global
 		{E3A8FBDA-28FB-4C10-9C36-20E6A41E5CF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3A8FBDA-28FB-4C10-9C36-20E6A41E5CF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3A8FBDA-28FB-4C10-9C36-20E6A41E5CF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1486E70C-4CCA-46CD-A578-F13628B69AAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1486E70C-4CCA-46CD-A578-F13628B69AAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1486E70C-4CCA-46CD-A578-F13628B69AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1486E70C-4CCA-46CD-A578-F13628B69AAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

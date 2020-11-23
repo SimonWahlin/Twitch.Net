@@ -1,12 +1,13 @@
-﻿using Twitch.Net.Shared.Logger;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Twitch.Net.Communication.Clients
 {
     public static class ClientFactory
     {
-        public static IClient CreateClient(IClientListener clientListener, string address, IConnectionLogger clientLogger = null)
-        {
-            return new WebSocketClient(clientListener, address, clientLogger);
-        }
+        public static IClient CreateClient(
+            string address,
+            ILogger<IClient> logger = null
+            )
+            => new WebSocketClient(address, logger);
     }
 }
