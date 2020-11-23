@@ -19,6 +19,7 @@
         NotDefined,
         Queued,
         Connected,
-        Failure
+        Failure,
+        Connecting
     }
 }

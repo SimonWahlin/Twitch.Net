@@ -24,6 +24,7 @@
 
     <ItemGroup>
       <PackageReference Include="Optional" Version="4.0.0" />
+      <PackageReference Include="RateLimiter" Version="2.2.0" />
     </ItemGroup>
 
 </Project>

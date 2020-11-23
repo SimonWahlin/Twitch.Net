@@ -30,6 +30,7 @@ namespace Twitch.Net.PubSub.Client
             _topicResponseHandler = new TopicResponseHandler(_eventHandler);
             _connectionClient = connectionClient;
             _logger = logger;
+            connectionClient.SetListener(this);
 
             // Ping handler setup
             _pingTimer = new Timer
@@ -53,6 +54,9 @@ namespace Twitch.Net.PubSub.Client
 
         public IPubSubClientEventHandler Events
             => _eventHandler;
+
+        public bool IsConnected
+            => _connectionClient.IsConnected;
 
         public Task<bool> ConnectAsync() 
             => _connectionClient.ConnectAsync();
@@ -97,14 +101,14 @@ namespace Twitch.Net.PubSub.Client
 
         private async Task<bool> HandleReconnect()
         {
-            _logger.LogInformation("Server requested reconnection - Performing reconnect.");
+            _logger?.LogInformation("Server requested reconnection - Performing reconnect.");
             await _connectionClient.ReconnectAsync();
             return true;
         }
 
         private bool HandlePong()
         {
-            _logger.LogTrace("PONG");
+            _logger?.LogTrace("PONG");
             _pongTimer.Stop();
             return true;
         }
@@ -130,14 +134,14 @@ namespace Twitch.Net.PubSub.Client
             _pingTimer.Interval = TimeSpan.FromSeconds(_gen.Next(2*60, 4*60)).TotalMilliseconds;
             _pingTimer.Start();
             
-            _logger.LogTrace("Sending ping to the server");
+            _logger?.LogTrace("Sending ping to the server");
             _pongTimer.Start();
             Send(_pingJson);
         }
 
         private void PongTickHandler(object sender, ElapsedEventArgs e)
         {
-            _logger.LogInformation("Failed responding to pong - Performing reconnect.");
+            _logger?.LogInformation("Failed responding to pong - Performing reconnect.");
             Task.Run(async () => await _connectionClient.ReconnectAsync());
             _pongTimer.Stop();
         }

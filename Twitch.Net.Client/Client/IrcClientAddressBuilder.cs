@@ -4,7 +4,7 @@
     {
         private const string IrcServerAddress = "irc-ws.chat.twitch.tv";
 
-        public static string CreateAddress(bool ssl) =>
+        public static string CreateAddress(bool ssl = true) =>
             $"{Protocol(ssl)}://{IrcServerAddress}:{Port(ssl)}";
         
         private static string Protocol(bool ssl) => ssl ? "wss" : "ws";

@@ -4,20 +4,29 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Twitch.Net.Client.Client;
+using Twitch.Net.Client.Models;
+using Twitch.Net.Communication.Clients;
 using Twitch.Net.PubSub.Client;
 using Twitch.Net.PubSub.Events;
 using Twitch.Net.Shared.Configurations;
 using Twitch.Net.Shared.Credential;
+using Twitch.Net.Shared.RateLimits;
 
 namespace Twitch.Net.Samples
 {
     public class TwitchNetSamples
     {
-        public const long UserId = 137132000; // Temporary to use for pubsub (later on this would be resolved by API)
+        private const long UserId = 137132000; // Temporary to use for pubsub (later on this would be resolved by API)
         
         private TwitchNetSamples()
         {
-            // If you are doing this in a webapp you'll not have to do this part, since this is only required if you
+            Task.Run(async () => await Run());
+            ListenToInput();
+        }
+
+        private async Task Run()
+        {
+                        // If you are doing this in a webapp you'll not have to do this part, since this is only required if you
             // are not using the default "startup" flow of webserver
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
@@ -33,19 +42,13 @@ namespace Twitch.Net.Samples
                 .AddHttpClient();
             var provider = collection.BuildServiceProvider();
             var factory = provider.GetService<IHttpClientFactory>();
+            var userAccountResolver = new UserAccountResolver(factory, config);
 
-            var helper = new ClientCredentialTokenResolver(factory, config);
-            
-            var pubsubLogger = new ConsoleLog
+            var userAccount = await userAccountResolver.TryResolveUserAccountStatusOrDefaultAsync();
             var pubsub = PubSubClientFactory.CreateClient();
-            pubsub.ConnectionLoggerConfiguration.OutputLog = false;
-            pubsub.ConnectionLoggerConfiguration.OutputMessageLog = false;
-            
-            var irc = IrcClientFactory.CreateClient(config);
-            irc.ConnectionLoggerConfiguration.OutputLog = true;
-            irc.ConnectionLoggerConfiguration.OutputMessageLog = false;
+            var irc = IrcClientFactory.CreateClient(config, userAccountStatus: userAccount);
 
-            irc.Events.OnPubSubConnected += () =>
+            irc.Events.OnIrcConnected += () =>
             {
                 Console.WriteLine("[IRC] Connected");
                 return Task.CompletedTask;
@@ -72,18 +75,20 @@ namespace Twitch.Net.Samples
             };
             pubsub.Events.OnCustomRedeemEvent += PubSubOnRedeemEvent;
 
-            Task.Run(async () =>
+            irc.Events.OnIrcConnected += async () =>
             {
-                // if you wanna make sure the pubsub client initial connects
-                // you can just do it in a while loop, since the initial connection will not "retry", only reconnects
-                while (!await pubsub.ConnectAsync())
-                    Console.WriteLine("[PUBSUB] Failed initial connecting, retrying...");
+                var chat = irc.JoinChannel(config.BaseChannel);
+                await Task.Delay(5000); // this is just dummy for testing till I fixed events
+                irc.SendMessage(chat, "Hello World!");
+            };
+            
+            // if you wanna make sure the pubsub client initial connects
+            // you can just do it in a while loop, since the initial connection will not "retry", only reconnects
+            while (!await pubsub.ConnectAsync())
+                Console.WriteLine("[PUBSUB] Failed initial connecting, retrying...");
 
-                while (!await irc.ConnectAsync())
-                    Console.WriteLine("[IRC] Failed initial connecting, retrying...");
-            });
-
-            ListenToInput();
+            while (!await irc.ConnectAsync())
+                Console.WriteLine("[IRC] Failed initial connecting, retrying...");
         }
 
         private Task PubSubOnRedeemEvent(CommunityPointsEvent arg)

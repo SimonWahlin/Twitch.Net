@@ -1,5 +1,6 @@
 ﻿using Twitch.Net.Communication.Clients;
 using Twitch.Net.Shared.Configurations;
+using Twitch.Net.Shared.RateLimits;
 
 namespace Twitch.Net.Client.Client
 {
@@ -7,10 +8,12 @@ namespace Twitch.Net.Client.Client
     {
         public static IIrcClient CreateClient(
             IIrcClientCredentialConfiguration credentialConfiguration, 
-            IClient connectionClient
+            IClient connectionClient = null,
+            UserAccountStatus userAccountStatus = null
             )
             => new IrcClient(
                 credentialConfiguration,
-                connectionClient);
+                connectionClient ?? ClientFactory.CreateClient(IrcClientAddressBuilder.CreateAddress()),
+                userAccountStatus);
     }
 }

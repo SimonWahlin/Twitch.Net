@@ -82,7 +82,7 @@ namespace Twitch.Net.Communication.Clients
 
         private void Connected()
         {
-            _logger.LogTrace("Connection happened");
+            _logger?.LogTrace("Connection happened");
             _clientListener.MatchSome(async listener => await listener.OnConnected());
         }
 
@@ -92,13 +92,13 @@ namespace Twitch.Net.Communication.Clients
             if (reconnectionInfo.Type == ReconnectionType.Initial)
                 return;
             
-            _logger.LogTrace($"Reconnection happened, type: {reconnectionInfo.Type}");
+            _logger?.LogTrace($"Reconnection happened, type: {reconnectionInfo.Type}");
             _clientListener.MatchSome(async listener => await listener.OnReconnected());
         }
 
         private void OnMessage(ResponseMessage responseMessage)
         {
-            _logger.LogInformation($"[INCOMING] [Type: {responseMessage.MessageType}] - {responseMessage.Text}");
+            _logger?.LogInformation($"[INCOMING] [Type: {responseMessage.MessageType}] - {responseMessage.Text}");
             _clientListener.MatchSome(async listener => 
                 await listener.OnMessage(responseMessage.MessageType, responseMessage.Text));
         }
@@ -107,7 +107,7 @@ namespace Twitch.Net.Communication.Clients
         {
             if (_reconnecting) return; // disconnects are not valid during a reconnection is going on
             
-            _logger.LogInformation($"Disconnect happened - Reason: {disconnectionInfo.Type}");
+            _logger?.LogInformation($"Disconnect happened - Reason: {disconnectionInfo.Type}");
             _clientListener.MatchSome(async listener => await listener.OnDisconnected());
         }
 
@@ -115,7 +115,7 @@ namespace Twitch.Net.Communication.Clients
         {
             if (!IsConnected)
             {
-                _logger.LogWarning("[OUTGOING] Message was not sent, client is not connected.");
+                _logger?.LogWarning("[OUTGOING] Message was not sent, client is not connected.");
                 return false; // if we are not connected, we will just return false
             }
             

@@ -4,7 +4,7 @@
     {
         private const string PubSubServerAddress = "pubsub-edge.twitch.tv";
         
-        public static string CreateAddress(bool ssl) =>
+        public static string CreateAddress(bool ssl = true) =>
             $"{Protocol(ssl)}://{PubSubServerAddress}:{Port(ssl)}";
         
         private static string Protocol(bool ssl) => ssl ? "wss" : "ws";

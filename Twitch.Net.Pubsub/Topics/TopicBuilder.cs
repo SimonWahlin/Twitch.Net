@@ -44,7 +44,7 @@ namespace Twitch.Net.PubSub.Topics
             var data = new TopicDataModel
             {
                 Topics = _topics,
-                Token = token?.Replace("oauth:", "")
+                Token = token?.Replace("oauth:", "", StringComparison.OrdinalIgnoreCase)
             };
 
             var model = new TopicModel

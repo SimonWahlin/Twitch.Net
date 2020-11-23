@@ -5,8 +5,8 @@ namespace Twitch.Net.Client.Client.Handlers.Events
     public interface IIrcClientEventInvoker
     {
         // Connection
-        Task InvokeOnPubSubConnected();
-        Task InvokeOnPubSubReconnect();
-        Task InvokeOnPubSubDisconnect();
+        Task InvokeOnIrcConnected();
+        Task InvokeOnIrcReconnect();
+        Task InvokeOnIrcDisconnect();
     }
 }

@@ -3,7 +3,8 @@
     public class TwitchCredentialConfiguration : 
         IIrcClientCredentialConfiguration,
         IPubSubCredentialConfiguration,
-        IApiCredentialConfiguration
+        IApiCredentialConfiguration,
+        IUserAccountResolverCredentialConfiguration
     {
         public string Username { get; init; }
         public string OAuth { get; init; }

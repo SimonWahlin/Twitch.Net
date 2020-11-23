@@ -9,12 +9,14 @@ using Twitch.Net.Client.Irc;
 using Twitch.Net.Client.Models;
 using Twitch.Net.Communication.Clients;
 using Twitch.Net.Shared.Configurations;
+using Twitch.Net.Shared.RateLimits;
 
 namespace Twitch.Net.Client.Client
 {
     internal class IrcClient : IIrcClient, IClientListener
     {
         private readonly IClient _connectionClient;
+        private readonly UserAccountStatus _userAccountStatus;
         private readonly IIrcClientCredentialConfiguration _credentialConfiguration;
         private readonly IrcClientEventHandler _eventHandler;
         private readonly JoinQueueHandler _joinChannelHandler;
@@ -22,14 +24,16 @@ namespace Twitch.Net.Client.Client
         
         public IrcClient(
             IIrcClientCredentialConfiguration credentialConfiguration, 
-            IClient connectionClient
+            IClient connectionClient,
+            UserAccountStatus userAccountStatus = null
             )
         {
             _credentialConfiguration = credentialConfiguration;
-            
+            _userAccountStatus = userAccountStatus ?? new UserAccountStatus();
+
             // Setup handlers
             _eventHandler = new IrcClientEventHandler();
-            _joinChannelHandler = new JoinQueueHandler(this);
+            _joinChannelHandler = new JoinQueueHandler(this, _userAccountStatus.IsVerifiedBot);
             
             // Create connection
             _connectionClient = connectionClient;
@@ -41,6 +45,9 @@ namespace Twitch.Net.Client.Client
 
         public IIrcClientEventHandler Events
             => _eventHandler;
+
+        public bool IsConnected
+            => _connectionClient.IsConnected;
 
         public async Task<bool> ConnectAsync() =>
             await _connectionClient.ConnectAsync();
@@ -92,7 +99,7 @@ namespace Twitch.Net.Client.Client
             if (!_connectionClient.IsConnected)
                 return chat.SetConnectionState(ChatChannelConnectionState.Failure);
 
-            _joinChannelHandler.Enqueue(chat.SetConnectionState(ChatChannelConnectionState.Queued));
+            _joinChannelHandler.Enqueue(chat);
             _channels.Add(chat);
             return chat;
         }
@@ -113,19 +120,19 @@ namespace Twitch.Net.Client.Client
         public async Task OnConnected() 
         {
             AuthenticateConnection();
-            await _eventHandler.InvokeOnPubSubConnected();
+            await _eventHandler.InvokeOnIrcConnected();
         }
 
         public async Task OnReconnected()
         {
             AuthenticateConnection();
-            await _eventHandler.InvokeOnPubSubReconnect();
+            await _eventHandler.InvokeOnIrcReconnect();
         }
 
         public async Task OnDisconnected()
         {
-            _joinChannelHandler.Clear();
-            await _eventHandler.InvokeOnPubSubDisconnect();
+            _joinChannelHandler.Reset();
+            await _eventHandler.InvokeOnIrcDisconnect();
         }
         
         public async Task OnMessage(WebSocketMessageType messageType, string message)
@@ -138,6 +145,7 @@ namespace Twitch.Net.Client.Client
 
         private Task OnHandleMessage(string message)
         {
+            Console.WriteLine(message);
             return Task.CompletedTask;
         }
     }

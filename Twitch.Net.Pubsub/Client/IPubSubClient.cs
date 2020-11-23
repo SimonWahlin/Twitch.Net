@@ -6,6 +6,8 @@ namespace Twitch.Net.PubSub.Client
 {
     public interface IPubSubClient
     {
+        bool IsConnected { get; }
+        
         Task<bool> ConnectAsync();
         TopicBuilder CreateBuilder();
         IPubSubClientEventHandler Events { get; }

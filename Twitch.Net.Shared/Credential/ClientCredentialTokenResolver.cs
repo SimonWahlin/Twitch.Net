@@ -14,7 +14,7 @@ namespace Twitch.Net.Shared.Credential
      * This is a basic implementation for client credential, if you gonna use the access token of a user
      * it is highly recommended to implement your own solution of "ITokenResolver".
      */
-    public class ClientCredentialTokenResolver : ITokenResolver
+    public class ClientCredentialTokenResolver
     {
         private const string TwitchApiAuthEndpoint = "https://id.twitch.tv/oauth2/token";
 
