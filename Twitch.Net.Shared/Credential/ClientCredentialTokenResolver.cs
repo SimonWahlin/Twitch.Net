@@ -23,11 +23,11 @@ namespace Twitch.Net.Shared.Credential
         private DateTime _tokenExpiration = DateTime.Now;
         private readonly SemaphoreSlim _semaphoreSlim = new(1,1);
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly TwitchCredentialConfiguration _configuration;
+        private readonly ITokenResolverCredentialConfiguration _configuration;
 
         public ClientCredentialTokenResolver(
             IHttpClientFactory httpClientFactory,
-            TwitchCredentialConfiguration configuration)
+            ITokenResolverCredentialConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
@@ -60,7 +60,9 @@ namespace Twitch.Net.Shared.Credential
         public async Task<string> GetTokenType()
         {
             await GetToken(); // this is to make sure it is up to date
-            return _tokenType;
+            return !string.IsNullOrEmpty(_tokenType)
+                ? char.ToUpper(_tokenType[0]) + _tokenType.Substring(1) // why? Because "bearer" is not valid but "Bearer" is.
+                : _tokenType;
         }
 
         public async Task<DateTime> GetExpirationDate()
@@ -69,7 +71,7 @@ namespace Twitch.Net.Shared.Credential
             return _tokenExpiration;
         }
 
-        public bool IsTokenExpired() => _tokenExpiration < DateTime.UtcNow;
+        public bool IsTokenExpired() => DateTime.Now >_tokenExpiration;
 
         /**
          * This is to get client credentials, it is similar if you need to get another type of token but

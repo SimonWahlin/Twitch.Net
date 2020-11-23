@@ -1,9 +1,7 @@
 ﻿namespace Twitch.Net.Shared.Configurations
 {
-    public interface IUserAccountResolverCredentialConfiguration
+    public interface IUserAccountResolverCredentialConfiguration : ITokenResolverCredentialConfiguration
     {
         public string Username { get; init; }
-        public string OAuth { get; init; }
-        public string ClientId { get; init; }
     }
 }
