@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Twitch.Net.Communication.Events;
 using Twitch.Net.PubSub.Events;
 using Twitch.Net.Shared.Extensions;
 
-namespace Twitch.Net.Pubsub.Client.Handlers.Events
+namespace Twitch.Net.PubSub.Client.Handlers.Events
 {
     /**
      * We are doing this it make "PubSubClient" not overflowed with a bunch of logic & methods
@@ -28,8 +29,8 @@ namespace Twitch.Net.Pubsub.Client.Handlers.Events
             remove => _reconnectEvents.Remove(value);
         }
         
-        private readonly AsyncEvent<Func<Task>> _disconnectEvents = new();
-        public event Func<Task> OnPubSubDisconnect 
+        private readonly AsyncEvent<Func<ClientDisconnected, Task>> _disconnectEvents = new();
+        public event Func<ClientDisconnected, Task> OnPubSubDisconnect 
         {
             add => _disconnectEvents.Add(value);
             remove => _disconnectEvents.Remove(value);
@@ -119,8 +120,8 @@ namespace Twitch.Net.Pubsub.Client.Handlers.Events
         public async Task InvokeOnPubSubReconnect()
             => await _reconnectEvents.InvokeAsync().ConfigureAwait(false);
 
-        public async Task InvokeOnPubSubDisconnect()
-            => await _disconnectEvents.InvokeAsync().ConfigureAwait(false);
+        public async Task InvokeOnPubSubDisconnect(ClientDisconnected clientDisconnected)
+            => await _disconnectEvents.InvokeAsync(clientDisconnected).ConfigureAwait(false);
         
         // Message
         public async Task InvokeResponseMessage(MessageResponse arg)

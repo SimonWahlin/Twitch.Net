@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Optional;
+using Twitch.Net.Communication.Events;
 using Websocket.Client;
 using Websocket.Client.Models;
 
@@ -51,6 +53,16 @@ namespace Twitch.Net.Communication.Clients
             {
                 return false;
             }
+        }
+
+        public async Task DisconnectAsync(string msg = null)
+        {
+            try
+            {
+                // as everything else is done through the async way, we will disconnect async too.
+                await _client.StopOrFail(WebSocketCloseStatus.NormalClosure, msg ?? "Closed on demand");
+            }
+            catch { /* just fail safe to not throw exceptions to main thread */ }
         }
 
         public async Task<bool> ReconnectAsync()
@@ -108,7 +120,10 @@ namespace Twitch.Net.Communication.Clients
             if (_reconnecting) return; // disconnects are not valid during a reconnection is going on
             
             _logger?.LogInformation($"Disconnect happened - Reason: {disconnectionInfo.Type}");
-            _clientListener.MatchSome(async listener => await listener.OnDisconnected());
+            _clientListener.MatchSome(async listener
+                => await listener.OnDisconnected(
+                    new ClientDisconnected(disconnectionInfo.CloseStatusDescription))
+                );
         }
 
         public bool Send(string data)

@@ -45,7 +45,7 @@ namespace Twitch.Net.Samples
             var userAccountResolver = new UserAccountResolver(factory, config);
 
             var userAccount = await userAccountResolver.TryResolveUserAccountStatusOrDefaultAsync();
-            var pubsub = PubSubClientFactory.CreateClient();
+            var pubSub = PubSubClientFactory.CreateClient();
             var irc = IrcClientFactory.CreateClient(config, userAccountStatus: userAccount);
 
             irc.Events.OnIrcConnected += () =>
@@ -56,35 +56,40 @@ namespace Twitch.Net.Samples
 
             // Event listening - which are sent as "tasks" so you can easily async/await the event instead of
             // having to do a manual Task.Run() for doing async executions as example API / Database, you name it.
-            pubsub.Events.OnPubSubConnected += () =>
+            pubSub.Events.OnPubSubConnected += () =>
             {
                 Console.WriteLine("[PUBSUB] Connected");
-                OnPubSubConnected(pubsub, config);
+                OnPubSubConnected(pubSub, config);
                 return Task.CompletedTask;
             };
-            pubsub.Events.OnPubSubDisconnect += () =>
+            pubSub.Events.OnPubSubDisconnect += msg =>
             {
-                Console.WriteLine("[PUBSUB] Disconnected");
+                Console.WriteLine($"[PUBSUB] Disconnected - {msg.Message}");
                 return Task.CompletedTask;
             };
-            pubsub.Events.OnPubSubReconnect += () =>
+            pubSub.Events.OnPubSubReconnect += () =>
             {
                 Console.WriteLine("[PUBSUB] Reconnected");
-                OnPubSubConnected(pubsub, config);
+                OnPubSubConnected(pubSub, config);
                 return Task.CompletedTask;
             };
-            pubsub.Events.OnCustomRedeemEvent += PubSubOnRedeemEvent;
+            pubSub.Events.OnCustomRedeemEvent += PubSubOnRedeemEvent;
 
-            irc.Events.OnIrcConnected += async () =>
+            irc.Events.OnIrcConnected += () =>
             {
-                var chat = irc.JoinChannel(config.BaseChannel);
-                await Task.Delay(5000); // this is just dummy for testing till I fixed events
-                irc.SendMessage(chat, "Hello World!");
+                irc.JoinChannel(config.BaseChannel);
+                return Task.CompletedTask;
+            };
+
+            irc.Events.OnJoinedChannel += channel =>
+            {
+                irc.SendMessage(channel.Channel, "HELLO WORLD!");
+                return Task.CompletedTask;
             };
             
             // if you wanna make sure the pubsub client initial connects
             // you can just do it in a while loop, since the initial connection will not "retry", only reconnects
-            while (!await pubsub.ConnectAsync())
+            while (!await pubSub.ConnectAsync())
                 Console.WriteLine("[PUBSUB] Failed initial connecting, retrying...");
 
             while (!await irc.ConnectAsync())
@@ -99,10 +104,10 @@ namespace Twitch.Net.Samples
         }
 
         private void OnPubSubConnected(
-            IPubSubClient pubsub, 
+            IPubSubClient pubSub, 
             IPubSubCredentialConfiguration config
             ) => 
-            pubsub.CreateBuilder()
+            pubSub.CreateBuilder()
                 .CreateChannelPointsRedeemTopic(UserId)
                 .Listen(config.OAuth);
 

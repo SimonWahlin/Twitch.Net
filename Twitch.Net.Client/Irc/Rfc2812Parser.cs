@@ -33,7 +33,7 @@ namespace Twitch.Net.Client.Irc
             var maxModeChanges = 3;
             if (newModes.Length > maxModeChanges)
                 throw new ArgumentOutOfRangeException(
-                    "newModes.Length",
+                    nameof(newModes.Length),
                     newModes.Length,
                     $"Mode change list is too large (> {maxModeChanges})."
                 );

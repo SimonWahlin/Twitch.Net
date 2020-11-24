@@ -22,32 +22,38 @@ namespace Twitch.Net.Client.Client.Handlers.Join
                 new TimeSpan(10));
         }
 
-        public void Enqueue(ChatChannel channel) =>
+        public void Enqueue(ChatChannel channel, Action failure) =>
             Task.Run(() => // fire and forget
             {
                 if (!_client.IsConnected)
                 {
-                    channel.SetConnectionState(ChatChannelConnectionState.Failure);
+                    failure();
                     return; // if we are not connected we wont even try
                 }
 
                 channel.SetConnectionState(ChatChannelConnectionState.Queued);
-                var result = _rateLimiter.Enqueue(() => PerformJoin(channel), _tokenSource.Token);
+                var result = _rateLimiter.Enqueue(() => PerformJoin(channel, failure), _tokenSource.Token);
                 if (result.IsCanceled || result.IsFaulted)
-                    channel.SetConnectionState(ChatChannelConnectionState.Failure);
+                    failure();
             });
 
-        private void PerformJoin(ChatChannel channel)
+        private void PerformJoin(ChatChannel channel, Action failure)
         {
             channel.SetConnectionState(ChatChannelConnectionState.Connecting);
-            _client.SendRaw(Rfc2812Parser.Join($"#{channel.ChannelName.ToLower()}"));
+            // if we fail sending it, then we just directly failure it
+            if (!_client.SendRaw(Rfc2812Parser.Join($"#{channel.ChannelName.ToLower()}")))
+            {
+                failure();
+                return;
+            }
+            
             Task.Run(async () =>
             {
                 // if the status of the channel does not update from connecting to connected within 10 seconds
                 // then we will just assume it failed to join the channel ( Connected state is set by MessageHandler )
                 await Task.Delay(10000);
                 if (channel.ConnectionState == ChatChannelConnectionState.Connecting)
-                    channel.SetConnectionState(ChatChannelConnectionState.Failure);
+                    failure();
             });
         }
 

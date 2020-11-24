@@ -5,9 +5,12 @@ using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Twitch.Net.Client.Client.Handlers.Events;
 using Twitch.Net.Client.Client.Handlers.Join;
+using Twitch.Net.Client.Events;
+using Twitch.Net.Client.Events.Handlers;
 using Twitch.Net.Client.Irc;
 using Twitch.Net.Client.Models;
 using Twitch.Net.Communication.Clients;
+using Twitch.Net.Communication.Events;
 using Twitch.Net.Shared.Configurations;
 using Twitch.Net.Shared.RateLimits;
 
@@ -22,6 +25,11 @@ namespace Twitch.Net.Client.Client
         private readonly JoinQueueHandler _joinChannelHandler;
         private readonly List<ChatChannel> _channels = new();
         
+        // Event handlers
+        private readonly JoinEventHandler _joinEventHandler;
+        private readonly LeftEventHandler _leftEventHandler;
+        private readonly MessageEventHandler _messageEventHandler;
+
         public IrcClient(
             IIrcClientCredentialConfiguration credentialConfiguration, 
             IClient connectionClient,
@@ -31,9 +39,14 @@ namespace Twitch.Net.Client.Client
             _credentialConfiguration = credentialConfiguration;
             _userAccountStatus = userAccountStatus ?? new UserAccountStatus();
 
-            // Setup handlers
+            // Setup client handlers
             _eventHandler = new IrcClientEventHandler();
             _joinChannelHandler = new JoinQueueHandler(this, _userAccountStatus.IsVerifiedBot);
+            
+            // Setup event handlers
+            _joinEventHandler = new JoinEventHandler(this);
+            _leftEventHandler = new LeftEventHandler(this, channel => _channels.Remove(channel));
+            _messageEventHandler = new MessageEventHandler();
             
             // Create connection
             _connectionClient = connectionClient;
@@ -99,8 +112,13 @@ namespace Twitch.Net.Client.Client
             if (!_connectionClient.IsConnected)
                 return chat.SetConnectionState(ChatChannelConnectionState.Failure);
 
-            _joinChannelHandler.Enqueue(chat);
             _channels.Add(chat);
+            _joinChannelHandler.Enqueue(chat, () => // on failure we wanna set the status and remove it from the list
+            {
+                chat.SetConnectionState(ChatChannelConnectionState.Failure);
+                _channels.Remove(chat);
+            });
+            
             return chat;
         }
 
@@ -129,24 +147,55 @@ namespace Twitch.Net.Client.Client
             await _eventHandler.InvokeOnIrcReconnect();
         }
 
-        public async Task OnDisconnected()
+        public async Task OnDisconnected(ClientDisconnected clientDisconnected)
         {
+            // Channel joining / joined needs to be reset since we lost connection
             _joinChannelHandler.Reset();
-            await _eventHandler.InvokeOnIrcDisconnect();
+            _channels.Clear();
+            
+            await _eventHandler.InvokeOnIrcDisconnect(clientDisconnected);
         }
         
-        public async Task OnMessage(WebSocketMessageType messageType, string message)
+        private const string MessageStringSeparator = "\r\n";
+        public async Task OnMessage(WebSocketMessageType messageType, string messages)
         {
             if (messageType == WebSocketMessageType.Close) // if server sends "close" message we reconnect
                 await _connectionClient.ReconnectAsync();
             else if (messageType == WebSocketMessageType.Text) // if it is text, then we parse & handle it
-                await OnHandleMessage(message);
+            {
+                var lines = messages.Split(MessageStringSeparator);
+                foreach (var line in lines.Where(l => l.Length > 1)) // one line equals one message
+                    await OnHandleMessage(line);
+            } 
         }
 
-        private Task OnHandleMessage(string message)
+        private async Task OnHandleMessage(string message)
         {
-            Console.WriteLine(message);
-            return Task.CompletedTask;
+            var parsed = RawIrcMessageParser.ParseRawIrcMessage(message);
+            
+            // if we do not define what command type, we can disconnect a random bot by typing it in the chat
+            if (parsed.Message.Contains("Login authentication failed") && parsed.Command == IrcCommand.Notice) 
+            {
+                await _connectionClient.DisconnectAsync("Login authentication failed");
+                return;
+            }
+
+            var handled = parsed.Command switch
+            {
+                IrcCommand.Join => await _joinEventHandler.Handle(_eventHandler, parsed),
+                _ => false
+            };
+
+            if (!handled)
+            {
+                // if anyone wants to know what the output data was
+                // and easier if you wanna implement a missing feature too
+                await _eventHandler.InvokeOnUnknownMessage(new UnknownMessageEvent
+                {
+                    Parsed = parsed,
+                    Raw = message
+                });
+            }
         }
     }
 }

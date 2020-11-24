@@ -14,11 +14,16 @@
         }
     }
 
+    /**
+     * If a channel is set to "NotDefined" / "Left" / "Failure" the instance of the "ChatChannel" is dead
+     * A new connection attempt toward the chat will create a new instance
+     */
     public enum ChatChannelConnectionState
     {
         NotDefined,
         Queued,
         Connected,
+        Left,
         Failure,
         Connecting
     }

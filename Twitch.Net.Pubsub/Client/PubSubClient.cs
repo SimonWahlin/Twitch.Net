@@ -4,8 +4,9 @@ using System.Threading.Tasks;
 using System.Timers;
 using Microsoft.Extensions.Logging;
 using Twitch.Net.Communication.Clients;
+using Twitch.Net.Communication.Events;
 using Twitch.Net.Communication.Models;
-using Twitch.Net.Pubsub.Client.Handlers.Events;
+using Twitch.Net.PubSub.Client.Handlers.Events;
 using Twitch.Net.PubSub.Events;
 using Twitch.Net.PubSub.Topics;
 using Twitch.Net.Shared.Extensions;
@@ -119,8 +120,8 @@ namespace Twitch.Net.PubSub.Client
         public async Task OnReconnected()
             => await _eventHandler.InvokeOnPubSubReconnect();
 
-        public async Task OnDisconnected() 
-            => await _eventHandler.InvokeOnPubSubDisconnect();
+        public async Task OnDisconnected(ClientDisconnected clientDisconnected) 
+            => await _eventHandler.InvokeOnPubSubDisconnect(clientDisconnected);
 
         private void PingTickHandler(object sender, ElapsedEventArgs e)
         {

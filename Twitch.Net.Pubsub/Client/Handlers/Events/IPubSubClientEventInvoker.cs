@@ -1,14 +1,15 @@
 ﻿using System.Threading.Tasks;
+using Twitch.Net.Communication.Events;
 using Twitch.Net.PubSub.Events;
 
-namespace Twitch.Net.Pubsub.Client.Handlers.Events
+namespace Twitch.Net.PubSub.Client.Handlers.Events
 {
     public interface IPubSubClientEventInvoker
     {
         // Connection
         Task InvokeOnPubSubConnected();
         Task InvokeOnPubSubReconnect();
-        Task InvokeOnPubSubDisconnect();
+        Task InvokeOnPubSubDisconnect(ClientDisconnected clientDisconnected);
         
         // Response message
         Task InvokeResponseMessage(MessageResponse arg);

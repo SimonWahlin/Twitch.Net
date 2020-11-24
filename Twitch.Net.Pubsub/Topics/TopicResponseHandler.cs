@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Twitch.Net.PubSub.Client;
-using Twitch.Net.Pubsub.Client.Handlers.Events;
+using Twitch.Net.PubSub.Client.Handlers.Events;
 using Twitch.Net.PubSub.Events;
 using Twitch.Net.PubSub.Topics.Handlers;
 

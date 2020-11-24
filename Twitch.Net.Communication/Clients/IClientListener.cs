@@ -1,5 +1,6 @@
 ﻿using System.Net.WebSockets;
 using System.Threading.Tasks;
+using Twitch.Net.Communication.Events;
 
 namespace Twitch.Net.Communication.Clients
 {
@@ -8,6 +9,6 @@ namespace Twitch.Net.Communication.Clients
         Task OnReconnected();
         Task OnMessage(WebSocketMessageType messageType, string message);
         Task OnConnected();
-        Task OnDisconnected();
+        Task OnDisconnected(ClientDisconnected clientDisconnected);
     }
 }
