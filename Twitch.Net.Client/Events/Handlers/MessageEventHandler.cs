@@ -9,13 +9,9 @@ namespace Twitch.Net.Client.Events.Handlers
         public async Task<bool> Handle(IIrcClientEventInvoker eventInvoker, IrcMessage message)
         {
             if (message.HostMask.Equals("jtv!jtv@jtv.tmi.twitch.tv"))
-            {
-                // handle on begin hosted here - why this is a thing...
-            }
+                await eventInvoker.InvokeOnBeingHosted(new BeingHostedEvent(message));
             else if (!string.IsNullOrEmpty(message.Message))
-            {
-                // handle message here
-            }
+                await eventInvoker.InvokeOnMessage(new ChatMessageEvent(message));
             else
                 return false;
             

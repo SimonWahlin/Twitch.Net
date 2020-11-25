@@ -11,6 +11,7 @@ namespace Twitch.Net.Client.Irc
             => Params.StartsWith("#") 
                 ? Params.Remove(0, 1) 
                 : Params;
+        
         public string Params
             => _parameters != null && _parameters.Length > 0 
                 ? _parameters[0] 
@@ -25,29 +26,30 @@ namespace Twitch.Net.Client.Irc
         public string User { get; }
         public string HostMask { get; }
         public IrcCommand Command { get; }
-        public IReadOnlyDictionary<string, string> Tags { get; }
+        internal Dictionary<string, string> InternalTags { get; }
+        public IReadOnlyDictionary<string, string> Tags => InternalTags;
         
         internal IrcMessage(string user)
         {
-            _parameters = null;
+            _parameters = System.Array.Empty<string>();
             User = user;
-            HostMask = null;
+            HostMask = string.Empty;
             Command = IrcCommand.Unknown;
-            Tags = null;
+            InternalTags = new Dictionary<string, string>();
         }
 
         internal IrcMessage(
             IrcCommand command,
             string[] parameters,
             string hostMask,
-            IReadOnlyDictionary<string, string> tags = null)
+            Dictionary<string, string> tags = null)
         {
             var idx = hostMask.IndexOf('!');
             User = idx != -1 ? hostMask.Substring(0, idx) : hostMask;
             HostMask = hostMask;
             _parameters = parameters;
             Command = command;
-            Tags = tags;
+            InternalTags = tags;
         }
 
         public override string ToString()

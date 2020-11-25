@@ -26,9 +26,10 @@ namespace Twitch.Net.Client.Client
         private readonly List<ChatChannel> _channels = new();
         
         // Event handlers
-        private readonly JoinEventHandler _joinEventHandler;
-        private readonly LeftEventHandler _leftEventHandler;
+        private readonly UserJoinedEventHandler _userJoinedEventHandler;
+        private readonly UserLeftEventHandler _userLeftEventHandler;
         private readonly MessageEventHandler _messageEventHandler;
+        private readonly ChatChannelStateEventHandler _chatChannelStateEventHandler;
 
         public IrcClient(
             IIrcClientCredentialConfiguration credentialConfiguration, 
@@ -44,9 +45,10 @@ namespace Twitch.Net.Client.Client
             _joinChannelHandler = new JoinQueueHandler(this, _userAccountStatus.IsVerifiedBot);
             
             // Setup event handlers
-            _joinEventHandler = new JoinEventHandler(this);
-            _leftEventHandler = new LeftEventHandler(this, channel => _channels.Remove(channel));
+            _userJoinedEventHandler = new UserJoinedEventHandler(this);
+            _userLeftEventHandler = new UserLeftEventHandler(this, channel => _channels.Remove(channel));
             _messageEventHandler = new MessageEventHandler();
+            _chatChannelStateEventHandler = new ChatChannelStateEventHandler(this);
             
             // Create connection
             _connectionClient = connectionClient;
@@ -61,6 +63,9 @@ namespace Twitch.Net.Client.Client
 
         public bool IsConnected
             => _connectionClient.IsConnected;
+
+        public string BotUsername
+            => _credentialConfiguration.Username;
 
         public async Task<bool> ConnectAsync() =>
             await _connectionClient.ConnectAsync();
@@ -182,7 +187,10 @@ namespace Twitch.Net.Client.Client
 
             var handled = parsed.Command switch
             {
-                IrcCommand.Join => await _joinEventHandler.Handle(_eventHandler, parsed),
+                IrcCommand.Join => await _userJoinedEventHandler.Handle(_eventHandler, parsed),
+                IrcCommand.Part => await _userLeftEventHandler.Handle(_eventHandler, parsed),
+                IrcCommand.PrivMsg => await _messageEventHandler.Handle(_eventHandler, parsed),
+                IrcCommand.RoomState => await _chatChannelStateEventHandler.Handle(_eventHandler, parsed),
                 _ => false
             };
 

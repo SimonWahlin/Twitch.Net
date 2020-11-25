@@ -17,9 +17,13 @@ namespace Twitch.Net.Client.Client.Handlers.Events
         
         // Chat messages
         event Func<ChatMessageEvent, Task> OnChatMessage;
+        event Func<BeingHostedEvent, Task> OnBeingHosted;
         
         // Channel join/leave/update
+        event Func<JoinedChannelEvent, Task> OnUserJoinedChannel;
+        event Func<LeftChannelEvent, Task> OnUserLeftChannel;
         event Func<JoinedChannelEvent, Task> OnJoinedChannel;
         event Func<LeftChannelEvent, Task> OnLeftChannel;
+        event Func<ChannelStateUpdateEvent, Task> OnChannelStateUpdate;
     }
 }

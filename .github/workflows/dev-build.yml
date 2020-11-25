@@ -25,7 +25,7 @@ jobs:
         run: dotnet test --no-restore --verbosity normal
         
       - name: Package beta nugets
-        run: dotnet pack --configuration Release --no-restore --version-suffix beta-$(date +%Y%m%d%H%M%S) -o ./nupkg
+        run: dotnet pack --configuration Release --no-restore --no-build --version-suffix beta-$(date +%Y%m%d%H%M%S) -o ./nupkg
         
       - name: Publish beta nugets
         run: dotnet nuget push './nupkg/*.nupkg' -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_TWITCH_NET}} --skip-duplicate

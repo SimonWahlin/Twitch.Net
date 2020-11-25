@@ -32,7 +32,7 @@ namespace Twitch.Net.Samples
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            // And this would be something you just do with ".Configure<T>()" with the servicecollection
+            // And this would be something you just do with ".Configure<T>()" with the service collection
             var config = new TwitchCredentialConfiguration();
             configuration.GetSection("Twitch").Bind(config);
             
@@ -80,10 +80,14 @@ namespace Twitch.Net.Samples
                 irc.JoinChannel(config.BaseChannel);
                 return Task.CompletedTask;
             };
-
             irc.Events.OnJoinedChannel += channel =>
             {
-                irc.SendMessage(channel.Channel, "HELLO WORLD!");
+                irc.SendMessage(channel.Channel, "Hello! I AM HEREEEE!");
+                return Task.CompletedTask;
+            };
+            irc.Events.OnChatMessage += message =>
+            {
+                Console.WriteLine($"[{message.Channel}] {message.DisplayName} : {message.Message}");
                 return Task.CompletedTask;
             };
             
@@ -98,7 +102,6 @@ namespace Twitch.Net.Samples
 
         private Task PubSubOnRedeemEvent(CommunityPointsEvent arg)
         {
-            // this works
             Console.WriteLine($"ON REDEEM EVENT FIRE - TYPE: {arg.Type}");
             return Task.CompletedTask;
         }

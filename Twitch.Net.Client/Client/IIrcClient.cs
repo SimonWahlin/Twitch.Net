@@ -10,6 +10,7 @@ namespace Twitch.Net.Client.Client
         IReadOnlyList<ChatChannel> Channels { get; }
         IIrcClientEventHandler Events { get; }
         bool IsConnected { get; }
+        string BotUsername { get; }
         
         Task<bool> ConnectAsync();
         bool SendMessage(ChatChannel chatChannel, string message);

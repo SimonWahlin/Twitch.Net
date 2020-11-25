@@ -2,9 +2,8 @@
 
 namespace Twitch.Net.Client.Events
 {
-    public class JoinedChannelEvent
+    public class ChannelStateUpdateEvent
     {
-        public string Username { get; init; }
         public ChatChannel Channel { get; init; }
     }
 }
