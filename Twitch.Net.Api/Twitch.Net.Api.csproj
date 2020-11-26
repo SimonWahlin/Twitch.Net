@@ -16,4 +16,13 @@
       <ProjectReference Include="..\Twitch.Net.Shared\Twitch.Net.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Apis\Kraken\Models" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Optional" Version="4.0.0" />
+      <PackageReference Include="RateLimiter" Version="2.2.0" />
+    </ItemGroup>
+
 </Project>

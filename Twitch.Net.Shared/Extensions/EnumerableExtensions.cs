@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Twitch.Net.Shared.Extensions
 {
@@ -9,6 +10,15 @@ namespace Twitch.Net.Shared.Extensions
         {
             foreach(var item in enumeration)
                 action(item);
+        }
+        
+        public static string Join(this IEnumerable<string> source, char separator) 
+            => string.Join(separator, source);
+        
+        public static async Task ForEachAsync<T>(this IEnumerable<T> list, Func<T, Task> func)
+        {
+            foreach (var value in list)
+                await func(value);
         }
     }
 }

@@ -1,12 +1,11 @@
 ﻿using Twitch.Net.Api.Apis.Helix;
-using Twitch.Net.Api.Apis.V5;
+using Twitch.Net.Api.Apis.Kraken;
 
 namespace Twitch.Net.Api.Client
 {
     public interface IApiClient
     {
-        IApiV5 ApiV5 { get; }
+        IApiKraken ApiKraken { get; }
         IApiHelix Helix { get; }
-        IApiConfiguration Configuration { get; }
     }
 }

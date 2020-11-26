@@ -2,6 +2,6 @@
 {
     public interface IApiHelix
     {
-        
+        Users Users { get; }
     }
 }

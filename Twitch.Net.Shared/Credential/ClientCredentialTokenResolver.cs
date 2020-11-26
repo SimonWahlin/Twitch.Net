@@ -14,7 +14,7 @@ namespace Twitch.Net.Shared.Credential
      * This is a basic implementation for client credential, if you gonna use the access token of a user
      * it is highly recommended to implement your own solution of "ITokenResolver".
      */
-    public class ClientCredentialTokenResolver
+    public class ClientCredentialTokenResolver : ITokenResolver
     {
         private const string TwitchApiAuthEndpoint = "https://id.twitch.tv/oauth2/token";
 
@@ -32,31 +32,36 @@ namespace Twitch.Net.Shared.Credential
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
         }
+        
+        public bool IsTokenExpired() => DateTime.Now >_tokenExpiration;
 
         public async Task<string> GetToken()
         {
-            if (IsTokenExpired())
+            if (!IsTokenExpired()) return _token;
+            
+            await _semaphoreSlim.WaitAsync();
+            try
             {
-                await _semaphoreSlim.WaitAsync();
-                try
+                var response = await Authenticate();
+                if (response != null)
                 {
-                    var response = await Authenticate();
-                    if (response != null)
-                    {
-                        _tokenExpiration = DateTime.Now.AddSeconds(response.ExpiresIn);
-                        _token = response.AccessToken;
-                        _tokenType = response.TokenType;
-                    }
-                }
-                finally
-                {
-                    _semaphoreSlim.Release();
+                    _tokenExpiration = DateTime.Now.AddSeconds(response.ExpiresIn);
+                    _token = response.AccessToken;
+                    _tokenType = response.TokenType;
                 }
             }
-            
+            finally
+            {
+                _semaphoreSlim.Release();
+            }
+
             return _token;
         }
 
+        /**
+         * Basic implementation will be making "bearer" into "Bearer" because most api calls will require this
+         * If you decide to make your own implementation, it is up to you how to deal with this part
+         */
         public async Task<string> GetTokenType()
         {
             await GetToken(); // this is to make sure it is up to date
@@ -64,14 +69,6 @@ namespace Twitch.Net.Shared.Credential
                 ? char.ToUpper(_tokenType[0]) + _tokenType.Substring(1) // why? Because "bearer" is not valid but "Bearer" is.
                 : _tokenType;
         }
-
-        public async Task<DateTime> GetExpirationDate()
-        {
-            await GetToken(); // this is to make sure it is up to date
-            return _tokenExpiration;
-        }
-
-        public bool IsTokenExpired() => DateTime.Now >_tokenExpiration;
 
         /**
          * This is to get client credentials, it is similar if you need to get another type of token but
