@@ -17,7 +17,7 @@ namespace Twitch.Net.Api.Apis
          */
         Task<Option<T>> GetAsync<T>(
             string segment,
-            IReadOnlyList<IReadOnlyDictionary<string, string>> parameters = null, 
+            IReadOnlyList<KeyValuePair<string, string>> parameters = null, 
             string token = null);
     }
 }

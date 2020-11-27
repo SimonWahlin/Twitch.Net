@@ -20,23 +20,22 @@ namespace Twitch.Net.Api.Apis.Helix
             IReadOnlyList<string> logins = null,
             string token = null)
         {
-            var dict = new Dictionary<string, string>();
+            var keySet = new List<KeyValuePair<string,string>>();
             
             ids?.Where(s => !string.IsNullOrEmpty(s))
-                .ForEach(id => dict.Add("id", id));
+                .ForEach(id => keySet.Add(new KeyValuePair<string, string>("id", id)));
             
             logins?.Where(s => !string.IsNullOrEmpty(s))
-                .ForEach(login => dict.Add("login", login));
+                .ForEach(login => keySet.Add(new KeyValuePair<string, string>("login", login)));
 
             var users = new List<HelixUserResponse>();
             var requests = 0;
             var successful = 0;
-            await dict.SplitChunks(100)
+            await keySet.SplitList(100)
                 .Where(d => d.Count > 0)
                 .ForEachAsync(async set =>
             {
-                var resp = await _apiBase.GetAsync<HelixUsersResponse>(
-                    "/users", new List<Dictionary<string, string>> {set});
+                var resp = await _apiBase.GetAsync<HelixUsersResponse>("/users", set, token);
                 resp.MatchSome(res => users.AddRange(res.Users));
                 requests++;
                 successful += resp.HasValue ? 1 : 0;

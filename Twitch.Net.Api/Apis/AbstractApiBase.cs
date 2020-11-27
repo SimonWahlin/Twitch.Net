@@ -39,7 +39,7 @@ namespace Twitch.Net.Api.Apis
 
         public async Task<Option<T>> GetAsync<T>(
             string segment, 
-            IReadOnlyList<IReadOnlyDictionary<string, string>> parameters = null, 
+            IReadOnlyList<KeyValuePair<string, string>> parameters = null, 
             string token = null)
         {
             try
@@ -59,9 +59,7 @@ namespace Twitch.Net.Api.Apis
 
                 var query = parameters == null || parameters.Count == 0
                     ? string.Empty
-                    : parameters.Select(dict =>
-                            dict?.Select(set => $"{set.Key}={set.Value}").Join('&'))
-                        .Join('&');
+                    : parameters.Select(set => $"{set.Key}={set.Value}").Join('&');
 
                 var response = await _rateLimiter.Enqueue(
                     async () => await client.GetAsync(

@@ -46,7 +46,7 @@ namespace Twitch.Net.Samples
 
             var userAccount = await userAccountResolver.TryResolveUserAccountStatusOrDefaultAsync();
             var api = ApiClientFactory.CreateClient(config, factory, new ClientCredentialTokenResolver(factory, config));
-            var users = await api.Helix.Users.GetUsersAsync(logins: new List<string> {"ixyles"});
+            var users = await api.Helix.Users.GetUsersAsync(logins: new List<string> {"ixyles", "ixylesbot"});
             var pubSub = PubSubClientFactory.CreateClient();
             var irc = IrcClientFactory.CreateClient(config, userAccountStatus: userAccount);
 
