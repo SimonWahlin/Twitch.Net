@@ -99,7 +99,7 @@ namespace Twitch.Net.Client.Client.Handlers.Events
         // Connections
         public async Task InvokeOnIrcConnected()
             => await _connectedEvents.InvokeAsync().ConfigureAwait(false);
-
+        
         public async Task InvokeOnIrcReconnect()
             => await _reconnectEvents.InvokeAsync().ConfigureAwait(false);
 

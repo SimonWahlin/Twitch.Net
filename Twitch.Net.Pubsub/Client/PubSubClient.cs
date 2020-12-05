@@ -116,9 +116,12 @@ namespace Twitch.Net.PubSub.Client
 
         public async Task OnConnected()
             => await _eventHandler.InvokeOnPubSubConnected();
-        
+
         public async Task OnReconnected()
-            => await _eventHandler.InvokeOnPubSubReconnect();
+        {
+            await _eventHandler.InvokeOnPubSubReconnect();
+            await _eventHandler.InvokeOnPubSubConnected();
+        }
 
         public async Task OnDisconnected(ClientDisconnected clientDisconnected) 
             => await _eventHandler.InvokeOnPubSubDisconnect(clientDisconnected);

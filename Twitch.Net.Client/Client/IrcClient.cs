@@ -150,6 +150,7 @@ namespace Twitch.Net.Client.Client
         {
             AuthenticateConnection();
             await _eventHandler.InvokeOnIrcReconnect();
+            await _eventHandler.InvokeOnIrcConnected();
         }
 
         public async Task OnDisconnected(ClientDisconnected clientDisconnected)
