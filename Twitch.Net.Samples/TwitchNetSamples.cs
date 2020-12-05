@@ -72,7 +72,6 @@ namespace Twitch.Net.Samples
             pubSub.Events.OnPubSubReconnect += () =>
             {
                 Console.WriteLine("[PUBSUB] Reconnected");
-                OnPubSubConnected(pubSub, config, long.Parse(users.Users.First().Id));
                 return Task.CompletedTask;
             };
             pubSub.Events.OnCustomRedeemEvent += PubSubOnRedeemEvent;
