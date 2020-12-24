@@ -23,6 +23,7 @@ namespace Twitch.Net.Client.Client.Handlers.Events
         event Func<JoinedChannelEvent, Task> OnUserJoinedChannel;
         event Func<LeftChannelEvent, Task> OnUserLeftChannel;
         event Func<JoinedChannelEvent, Task> OnJoinedChannel;
+        event Func<FailedJoinedChannelEvent, Task> OnFailedJoinedChannel;
         event Func<LeftChannelEvent, Task> OnLeftChannel;
         event Func<ChannelStateUpdateEvent, Task> OnChannelStateUpdate;
     }

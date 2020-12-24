@@ -55,7 +55,7 @@ namespace Twitch.Net.Client.Client.Handlers.Events
             remove => _beingHostedEvents.Remove(value);
         }
 
-        // Channel join/leave/update
+        // Channel join/leave/update/failed
 
         private readonly AsyncEvent<Func<JoinedChannelEvent, Task>> _onUserJoinedChannelEvents = new();
         public event Func<JoinedChannelEvent, Task> OnUserJoinedChannel
@@ -63,7 +63,7 @@ namespace Twitch.Net.Client.Client.Handlers.Events
             add => _onUserJoinedChannelEvents.Add(value);
             remove => _onUserJoinedChannelEvents.Remove(value);
         }
-        
+
         private readonly AsyncEvent<Func<LeftChannelEvent, Task>> _onUserLeftChannelEvents = new();
         public event Func<LeftChannelEvent, Task> OnUserLeftChannel
         {
@@ -76,6 +76,13 @@ namespace Twitch.Net.Client.Client.Handlers.Events
         {
             add => _joinChannelEvents.Add(value);
             remove => _joinChannelEvents.Remove(value);
+        }
+                
+        private readonly AsyncEvent<Func<FailedJoinedChannelEvent, Task>> _failedJoinedChannelEvents = new();
+        public event Func<FailedJoinedChannelEvent, Task> OnFailedJoinedChannel
+        {
+            add => _failedJoinedChannelEvents.Add(value);
+            remove => _failedJoinedChannelEvents.Remove(value);
         }
         
         private readonly AsyncEvent<Func<LeftChannelEvent, Task>> _leftChannelEvents = new();
@@ -117,7 +124,6 @@ namespace Twitch.Net.Client.Client.Handlers.Events
         public async Task InvokeOnBeingHosted(BeingHostedEvent beingHostedEvent)
             => await _beingHostedEvents.InvokeAsync(beingHostedEvent).ConfigureAwait(false);
 
-
         // Channel join/leave/update
         public async Task InvokeOnUserJoinedChannel(JoinedChannelEvent joinedChannelEvent)
             => await _onUserJoinedChannelEvents.InvokeAsync(joinedChannelEvent).ConfigureAwait(false);
@@ -126,8 +132,11 @@ namespace Twitch.Net.Client.Client.Handlers.Events
             => await _onUserLeftChannelEvents.InvokeAsync(leftChannelEvent).ConfigureAwait(false);
         
         public async Task InvokeOnChannelJoined(JoinedChannelEvent joinedChannelEvent)
-            => await _joinChannelEvents.InvokeAsync(joinedChannelEvent).ConfigureAwait(false); 
-        
+            => await _joinChannelEvents.InvokeAsync(joinedChannelEvent).ConfigureAwait(false);
+
+        public async Task InvokeOnFailedChannelJoined(FailedJoinedChannelEvent failedJoinedChannelEvent)
+            => await _failedJoinedChannelEvents.InvokeAsync(failedJoinedChannelEvent).ConfigureAwait(false);
+
         public async Task InvokeOnChannelLeft(LeftChannelEvent leftChannelEvent)
             => await _leftChannelEvents.InvokeAsync(leftChannelEvent).ConfigureAwait(false);
 

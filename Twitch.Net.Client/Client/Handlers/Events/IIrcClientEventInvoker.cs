@@ -22,6 +22,7 @@ namespace Twitch.Net.Client.Client.Handlers.Events
         Task InvokeOnUserJoinedChannel(JoinedChannelEvent joinedChannelEvent);
         Task InvokeOnUserLeftChannel(LeftChannelEvent leftChannelEvent);
         Task InvokeOnChannelJoined(JoinedChannelEvent joinedChannelEvent);
+        Task InvokeOnFailedChannelJoined(FailedJoinedChannelEvent failedJoinedChannelEvent);
         Task InvokeOnChannelLeft(LeftChannelEvent leftChannelEvent);
         Task InvokeOnChannelStateUpdate(ChannelStateUpdateEvent channelStateUpdateEvent);
     }

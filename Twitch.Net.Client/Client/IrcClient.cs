@@ -118,10 +118,15 @@ namespace Twitch.Net.Client.Client
                 return chat.SetConnectionState(ChatChannelConnectionState.Failure);
 
             _channels.Add(chat);
-            _joinChannelHandler.Enqueue(chat, () => // on failure we wanna set the status and remove it from the list
+            _joinChannelHandler.Enqueue(chat, async () => // on failure we wanna set the status and remove it from the list
             {
                 chat.SetConnectionState(ChatChannelConnectionState.Failure);
                 _channels.Remove(chat);
+                await _eventHandler.InvokeOnFailedChannelJoined(new FailedJoinedChannelEvent
+                {
+                    Username = chat.ChannelName,
+                    Channel = chat
+                });
             });
             
             return chat;
