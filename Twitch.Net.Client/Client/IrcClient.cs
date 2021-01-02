@@ -249,6 +249,7 @@ namespace Twitch.Net.Client.Client
                 IrcCommand.Part => await _userLeftEventHandler.Handle(_eventHandler, parsed),
                 IrcCommand.PrivMsg => await _messageEventHandler.Handle(_eventHandler, parsed),
                 IrcCommand.RoomState => await _chatChannelStateEventHandler.Handle(_eventHandler, parsed),
+                IrcCommand.Ping => SendRaw("PONG"),
                 _ => false
             };
 
