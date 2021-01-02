@@ -122,7 +122,7 @@ namespace Twitch.Net.Communication.Clients
             _logger?.LogInformation($"Disconnect happened - Reason: {disconnectionInfo.Type}");
             _clientListener.MatchSome(async listener
                 => await listener.OnDisconnected(
-                    new ClientDisconnected(disconnectionInfo.CloseStatusDescription))
+                    new ClientDisconnected(disconnectionInfo?.CloseStatusDescription ?? string.Empty))
                 );
         }
 

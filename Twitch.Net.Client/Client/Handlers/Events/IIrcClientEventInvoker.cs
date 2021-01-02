@@ -10,7 +10,8 @@ namespace Twitch.Net.Client.Client.Handlers.Events
         Task InvokeOnIrcConnected();
         Task InvokeOnIrcReconnect();
         Task InvokeOnIrcDisconnect(ClientDisconnected clientDisconnected);
-        
+        Task InvokeOnAuthenticated(TwitchAuthenticatedEvent authenticatedEvent);
+
         // Unknown
         Task InvokeOnUnknownMessage(UnknownMessageEvent messageEvent);
         

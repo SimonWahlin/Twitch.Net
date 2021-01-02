@@ -98,6 +98,13 @@ namespace Twitch.Net.Client.Client.Handlers.Events
             add => _channelStateUpdateEvents.Add(value);
             remove => _channelStateUpdateEvents.Remove(value);
         }
+        
+        private readonly AsyncEvent<Func<TwitchAuthenticatedEvent, Task>> _userAuthenticatedEvents = new();
+        public event Func<TwitchAuthenticatedEvent, Task> OnTwitchAuthenticated
+        {
+            add => _userAuthenticatedEvents.Add(value);
+            remove => _userAuthenticatedEvents.Remove(value);
+        }
 
         #endregion
         
@@ -143,6 +150,9 @@ namespace Twitch.Net.Client.Client.Handlers.Events
         public async Task InvokeOnChannelStateUpdate(ChannelStateUpdateEvent channelStateUpdateEvent)
             => await _channelStateUpdateEvents.InvokeAsync(channelStateUpdateEvent).ConfigureAwait(false);
 
+        public async Task InvokeOnAuthenticated(TwitchAuthenticatedEvent authenticatedEvent)
+            => await _userAuthenticatedEvents.InvokeAsync(authenticatedEvent).ConfigureAwait(false);
+        
         #endregion
     }
 }

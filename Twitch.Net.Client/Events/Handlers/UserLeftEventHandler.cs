@@ -32,14 +32,14 @@ namespace Twitch.Net.Client.Events.Handlers
                         _onLeftAction?.Invoke(chl);
                         await eventInvoker.InvokeOnChannelLeft(new LeftChannelEvent
                         {
-                            BotUsername = message.User,
+                            Username = message.User,
                             Channel = chl.SetConnectionState(ChatChannelConnectionState.Left)
                         });
                     }
                     else
                         await eventInvoker.InvokeOnUserLeftChannel(new LeftChannelEvent
                         {
-                            BotUsername = message.User,
+                            Username = message.User,
                             Channel = chl
                         });
                 });

@@ -18,6 +18,9 @@ namespace Twitch.Net.Client.Client
 {
     internal class IrcClient : IIrcClient, IClientListener
     {
+        // inner state to make sure an event is not fired more than once
+        private bool _authenticated;
+        
         private readonly IClient _connectionClient;
         private readonly UserAccountStatus _userAccountStatus;
         private readonly IIrcClientCredentialConfiguration _credentialConfiguration;
@@ -70,6 +73,15 @@ namespace Twitch.Net.Client.Client
         public async Task<bool> ConnectAsync() =>
             await _connectionClient.ConnectAsync();
 
+        public async Task DisconnectAsync(string custom = null) =>
+            await _connectionClient.DisconnectAsync(custom);
+
+        /**
+         * Will only perform a reconnect if the client does not have a connection.
+         */
+        public async Task<bool> ReconnectAsync() =>
+            await _connectionClient.ReconnectAsync();
+
         public bool SendMessage(string channel, string message)
             => SendMessage(
                 _channels.FirstOrDefault(x => x.ChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase)), 
@@ -105,10 +117,18 @@ namespace Twitch.Net.Client.Client
         {
             if (string.IsNullOrEmpty(channel)) // just to prevent someone from even try this.
                 return new ChatChannel {ChannelName = channel}.SetConnectionState(ChatChannelConnectionState.Failure);
-            
-            if (_channels.Any(x => x.ChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase)))
-                return _channels.First(x => x.ChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase));
 
+            if (_channels.Any(x => x.ChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase)))
+            {
+                var ch = _channels.First(x => x.ChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase));
+                if (ch.ConnectionState == ChatChannelConnectionState.Failure ||
+                    ch.ConnectionState == ChatChannelConnectionState.Left ||
+                    ch.ConnectionState == ChatChannelConnectionState.NotDefined)
+                    _channels.Remove(ch);
+                else
+                    return _channels.First(x => x.ChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase));
+            }
+            
             var chat = new ChatChannel
             {
                 ChannelName = channel
@@ -132,11 +152,31 @@ namespace Twitch.Net.Client.Client
             return chat;
         }
 
+        public ChatChannel LeaveChannel(string channel)
+        {
+            if (string.IsNullOrEmpty(channel)) // just to prevent someone from even try this.
+                return new ChatChannel {ChannelName = channel}.SetConnectionState(ChatChannelConnectionState.Failure);
+            
+            if (!_channels.Any(x => x.ChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase))) 
+                return new ChatChannel {ChannelName = channel}.SetConnectionState(ChatChannelConnectionState.Failure);
+            
+            var chatChannel = _channels.First(x => x.ChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase));
+            
+            if (!_connectionClient.IsConnected)
+                return chatChannel.SetConnectionState(ChatChannelConnectionState.Left);
+
+            if (SendRaw(Rfc2812Parser.Part($"#{chatChannel.ChannelName.ToLower()}")))
+                return chatChannel.SetConnectionState(ChatChannelConnectionState.Left);
+            
+            return chatChannel.SetConnectionState(ChatChannelConnectionState.Failure);
+        }
+
         /**
          * Authenticate with twitch IRC server as specified : https://dev.twitch.tv/docs/irc/guide
          */
         private void AuthenticateConnection()
         {
+            _authenticated = false; // before we send auths, we reset it to false so the event will re-fire
             _connectionClient.Send(Rfc2812Parser.Pass(_credentialConfiguration.OAuth));
             _connectionClient.Send(Rfc2812Parser.Nick(_credentialConfiguration.Username));
 
@@ -185,9 +225,23 @@ namespace Twitch.Net.Client.Client
             var parsed = RawIrcMessageParser.ParseRawIrcMessage(message);
             
             // if we do not define what command type, we can disconnect a random bot by typing it in the chat
-            if (parsed.Message.Contains("Login authentication failed") && parsed.Command == IrcCommand.Notice) 
+            if (parsed.Message.Contains("Login authentication failed", StringComparison.OrdinalIgnoreCase) && parsed.Command == IrcCommand.Notice) 
             {
                 await _connectionClient.DisconnectAsync("Login authentication failed");
+                return;
+            }
+            
+            Console.WriteLine(parsed);
+
+            // the twitch server responds with "001, 002, 003, 004, 375, 372, 376" after a valid authentication
+            // so we just take one of those to push an event for a developer to handle :) 
+            if (parsed.Command == IrcCommand.Rpl001 && !_authenticated)
+            {
+                _authenticated = true;
+                await _eventHandler.InvokeOnAuthenticated(new TwitchAuthenticatedEvent
+                {
+                    Username = parsed.User
+                });
                 return;
             }
 

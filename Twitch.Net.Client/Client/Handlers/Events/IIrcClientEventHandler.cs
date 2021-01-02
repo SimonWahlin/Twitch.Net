@@ -11,6 +11,7 @@ namespace Twitch.Net.Client.Client.Handlers.Events
         event Func<Task> OnIrcConnected;
         event Func<Task> OnIrcReconnect;
         event Func<ClientDisconnected, Task> OnIrcDisconnect;
+        event Func<TwitchAuthenticatedEvent, Task> OnTwitchAuthenticated;
         
         // Unknown
         event Func<UnknownMessageEvent, Task> OnUnknownMessage;

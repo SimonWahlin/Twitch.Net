@@ -13,9 +13,13 @@ namespace Twitch.Net.Client.Client
         string BotUsername { get; }
         
         Task<bool> ConnectAsync();
+        Task DisconnectAsync(string custom = null);
+        Task<bool> ReconnectAsync();
+        
         bool SendMessage(ChatChannel chatChannel, string message);
         bool SendMessage(string channel, string message);
         bool SendRaw(string message);
         ChatChannel JoinChannel(string channel);
+        ChatChannel LeaveChannel(string channel);
     }
 }

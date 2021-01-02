@@ -78,12 +78,23 @@ namespace Twitch.Net.Samples
 
             irc.Events.OnIrcConnected += () =>
             {
+                Console.WriteLine("Connected to twitch..");
+                return Task.CompletedTask;
+            };
+            irc.Events.OnTwitchAuthenticated += auth =>
+            {
+                Console.WriteLine($"Twitch authenticated: {auth.Username}");
                 irc.JoinChannel(config.BaseChannel);
                 return Task.CompletedTask;
             };
             irc.Events.OnJoinedChannel += channel =>
             {
-                irc.SendMessage(channel.Channel, "Hello! I AM HEREEEE!");
+                Console.WriteLine($"Joined chat channel: {channel.Channel.ChannelName}");
+                return Task.CompletedTask;
+            };
+            irc.Events.OnLeftChannel += channel =>
+            {
+                Console.WriteLine($"Left chat channel: {channel.Channel.ChannelName}");
                 return Task.CompletedTask;
             };
             irc.Events.OnChatMessage += message =>
