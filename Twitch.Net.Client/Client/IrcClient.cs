@@ -230,8 +230,6 @@ namespace Twitch.Net.Client.Client
                 await _connectionClient.DisconnectAsync("Login authentication failed");
                 return;
             }
-            
-            Console.WriteLine(parsed);
 
             // the twitch server responds with "001, 002, 003, 004, 375, 372, 376" after a valid authentication
             // so we just take one of those to push an event for a developer to handle :) 
