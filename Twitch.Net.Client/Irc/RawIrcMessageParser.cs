@@ -36,7 +36,7 @@ namespace Twitch.Net.Client.Irc
                             case '=':
                                 key = raw.Substring(start, i - start);
                                 start = ++i;
-                                continue;
+                                break;
                             case ';':
                             case ' ':
                                 tags[key ?? raw.Substring(start, i - start)] =
