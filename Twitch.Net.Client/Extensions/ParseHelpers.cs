@@ -7,7 +7,8 @@ namespace Twitch.Net.Client.Extensions
     public static class ParseHelpers
     {
         public static bool TagToBoolean(this IReadOnlyDictionary<string, string> tags, string key)
-            => tags != null && tags.ContainsKey(key) && tags[key].Equals("1");
+            => tags != null && tags.ContainsKey(key) && tags[key].Equals("1") 
+            || tags != null && tags.ContainsKey(key) && int.TryParse(tags[key], out var value) && value > 0;
 
         public static IReadOnlyDictionary<string, string> ParseBadges(this IReadOnlyDictionary<string, string> tags)
         {
@@ -21,7 +22,7 @@ namespace Twitch.Net.Client.Extensions
                     .Split(',')
                     .ForEach(badge =>
                     {
-                        var split = badge.Split(',');
+                        var split = badge.Split('/');
                         output.Add(split[0], split[1]);
                     });
             }
