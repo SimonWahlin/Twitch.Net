@@ -26,9 +26,12 @@ namespace Twitch.Net.Client.Events
         }
 
         public string DisplayName => 
-            _tags.ContainsKey(TwitchIrcMessageTags.DisplayName)
+            _tags.ContainsKey(TwitchIrcMessageTags.DisplayName) && 
+            !string.IsNullOrEmpty(_tags[TwitchIrcMessageTags.DisplayName])
                 ? _tags[TwitchIrcMessageTags.DisplayName]
                 : _username;
+
+        public string Username => _username;
 
         public bool IsModerator =>
             _tags.TagToBoolean(TwitchIrcMessageTags.Mod);
