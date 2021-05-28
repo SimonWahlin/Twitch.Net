@@ -26,7 +26,7 @@ namespace Twitch.Net.PubSub.Events
         public CommunityPointsEventType EventType => Type switch
         {
             "reward-redeemed" => CommunityPointsEventType.Redeem,
-            "automatic-reward-updated" => CommunityPointsEventType.AutomaticUpdated,
+            "automatic-reward-updated" => CommunityPointsEventType.AutomaticUpdated, // these may not be correct anymore as twitch changed the "event"
             "custom-reward-created" => CommunityPointsEventType.CustomCreated,
             "custom-reward-updated" => CommunityPointsEventType.CustomUpdated,
             "custom-reward-deleted" => CommunityPointsEventType.CustomDeleted,

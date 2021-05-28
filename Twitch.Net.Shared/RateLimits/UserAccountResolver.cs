@@ -24,7 +24,8 @@ namespace Twitch.Net.Shared.RateLimits
 
         public UserAccountResolver(
             IHttpClientFactory httpClientFactory, 
-            IUserAccountResolverCredentialConfiguration configuration)
+            IUserAccountResolverCredentialConfiguration configuration
+            )
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;

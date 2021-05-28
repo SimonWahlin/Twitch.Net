@@ -53,7 +53,7 @@ namespace Twitch.Net.PubSub.Topics
             
             return message.Topic switch
             {
-                "community-points-channel-v1" => await _redeemTopicHandler.Handle(_eventInvoker, message),
+                "channel-points-channel-v1" => await _redeemTopicHandler.Handle(_eventInvoker, message),
                 _ => false
             };
         }

@@ -14,6 +14,7 @@ namespace Twitch.Net.Client.Client
             => new IrcClient(
                 credentialConfiguration,
                 connectionClient ?? ClientFactory.CreateClient(IrcClientAddressBuilder.CreateAddress()),
-                userAccountStatus);
+                userAccountStatus
+                );
     }
 }

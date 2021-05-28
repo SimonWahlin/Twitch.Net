@@ -99,7 +99,7 @@ namespace Twitch.Net.Samples
             };
             irc.Events.OnChatMessage += message =>
             {
-                Console.WriteLine($"[{message.Channel}] {message.DisplayName} : {message.Message}");
+                Console.WriteLine($"[{message.Channel}] {message.DisplayName} : {message.Message} - {message.IsModerator} - {message.IsSubscriber}");
                 return Task.CompletedTask;
             };
             
@@ -114,7 +114,7 @@ namespace Twitch.Net.Samples
 
         private Task PubSubOnRedeemEvent(CommunityPointsEvent arg)
         {
-            Console.WriteLine($"ON REDEEM EVENT FIRE - TYPE: {arg.Type}");
+            Console.WriteLine($"ON REDEEM EVENT FIRE - TYPE: {arg.Type} - {arg.Data.Reward.Id} - {arg.Data.Reward.Status} - {arg.Data.Reward.Reward.Title} - {arg.Data.Reward.UserInput}");
             return Task.CompletedTask;
         }
 

@@ -121,9 +121,9 @@ namespace Twitch.Net.Client.Client
             if (_channels.Any(x => x.ChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase)))
             {
                 var ch = _channels.First(x => x.ChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase));
-                if (ch.ConnectionState == ChatChannelConnectionState.Failure ||
-                    ch.ConnectionState == ChatChannelConnectionState.Left ||
-                    ch.ConnectionState == ChatChannelConnectionState.NotDefined)
+                if (ch.ConnectionState is ChatChannelConnectionState.Failure 
+                    or ChatChannelConnectionState.Left 
+                    or ChatChannelConnectionState.NotDefined)
                     _channels.Remove(ch);
                 else
                     return _channels.First(x => x.ChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase));
@@ -160,7 +160,9 @@ namespace Twitch.Net.Client.Client
             if (!_channels.Any(x => x.ChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase))) 
                 return new ChatChannel {ChannelName = channel}.SetConnectionState(ChatChannelConnectionState.Failure);
             
-            var chatChannel = _channels.First(x => x.ChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase));
+            var chatChannel = _channels.FirstOrDefault(x => x.ChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase));
+            if (chatChannel == null)
+                return new ChatChannel {ChannelName = channel}.SetConnectionState(ChatChannelConnectionState.Failure);
             
             if (!_connectionClient.IsConnected)
                 return chatChannel.SetConnectionState(ChatChannelConnectionState.Left);

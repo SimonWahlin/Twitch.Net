@@ -26,12 +26,12 @@ namespace Twitch.Net.PubSub.Topics
         }
         
         public TopicBuilder CreateChannelPointsRedeemTopic(long userId)
-            => AddTopic($"community-points-channel-v1.{userId}");
+            => AddTopic($"channel-points-channel-v1.{userId}");
         
         public void Listen(string token = null) 
             => SendTopics(true, token);
 
-        public void Unlisten(string token = null) 
+        public void Unlisten(string token = null)
             => SendTopics(true, token);
 
         private void SendTopics(bool listen = true, string token = null)
