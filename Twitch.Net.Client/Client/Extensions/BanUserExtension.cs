@@ -8,14 +8,16 @@ namespace Twitch.Net.Client.Client.Extensions
             this IIrcClient client,
             ChatChannel channel,
             string user,
-            string reason)
+            string reason
+            )
             => client.SendMessage(channel, BanMessage(user, reason));
 
         public static void BanUser(
             this IIrcClient client,
             string channel,
             string user,
-            string reason)
+            string reason
+            )
             => client.SendMessage(channel, BanMessage(user, reason));
 
         private static string BanMessage(string user, string reason)

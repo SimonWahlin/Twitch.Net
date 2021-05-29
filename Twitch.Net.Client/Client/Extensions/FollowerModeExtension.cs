@@ -10,14 +10,16 @@ namespace Twitch.Net.Client.Client.Extensions
         public static void FollowerModeOn(
             this IIrcClient client, 
             ChatChannel channel,
-            TimeSpan cooldown)
+            TimeSpan cooldown
+            )
             => client.SendMessage(channel, FollowersCommand(cooldown));
         
 
         public static void FollowerModeOn(
             this IIrcClient client, 
             string channel, 
-            TimeSpan cooldown)
+            TimeSpan cooldown
+            )
             => client.SendMessage(channel, FollowersCommand(cooldown));
 
         private static string FollowersCommand(TimeSpan cooldown)
@@ -31,12 +33,14 @@ namespace Twitch.Net.Client.Client.Extensions
 
         public static void FollowerModeOff(
             this IIrcClient client, 
-            ChatChannel channel)
+            ChatChannel channel
+            )
             => client.SendMessage(channel, "/followersoff");
 
         public static void FollowerModeOff(
             this IIrcClient client, 
-            string channel)
+            string channel
+            )
             => client.SendMessage(channel, "/followersoff");
     }
 }

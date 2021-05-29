@@ -12,7 +12,8 @@ namespace Twitch.Net.Client.Client.Extensions
             ChatChannel channel,
             string user,
             TimeSpan duration,
-            string reason)
+            string reason
+            )
             => client.SendMessage(channel, TimeoutCommand(user, duration, reason));
 
         public static void TimeoutUser(
@@ -20,7 +21,8 @@ namespace Twitch.Net.Client.Client.Extensions
             string channel,
             string user,
             TimeSpan duration,
-            string reason)
+            string reason
+            )
             => client.SendMessage(channel, TimeoutCommand(user, duration, reason));
 
         private static string TimeoutCommand(string user, TimeSpan duration, string reason)

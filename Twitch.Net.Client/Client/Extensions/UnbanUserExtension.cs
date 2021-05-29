@@ -7,13 +7,15 @@ namespace Twitch.Net.Client.Client.Extensions
         public static void UnbanUser(
             this IIrcClient client,
             ChatChannel channel,
-            string user)
+            string user
+            )
             => client.SendMessage(channel, UnbanMessage(user));
 
         public static void UnbanUser(
             this IIrcClient client,
             string channel,
-            string user)
+            string user
+            )
             => client.SendMessage(channel, UnbanMessage(user));
 
         private static string UnbanMessage(string user)
