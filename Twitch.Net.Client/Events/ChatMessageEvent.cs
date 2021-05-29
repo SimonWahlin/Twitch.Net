@@ -7,16 +7,18 @@ namespace Twitch.Net.Client.Events
 {
     public class ChatMessageEvent
     {
-        private readonly IReadOnlyDictionary<string, string> _tags;
         private readonly string _username;
+        private readonly IReadOnlyDictionary<string, string> _badges;
+        public IReadOnlyDictionary<string, string> Tags { get; }
         public string Message { get; }
         public bool IsMeAction { get; }
         public string Channel { get; }
         
         internal ChatMessageEvent(IrcMessage ircMessage)
         {
-            _tags = ircMessage.Tags;
+            Tags = ircMessage.Tags;
             _username = ircMessage.User;
+            _badges = Tags.ParseBadges();
             
             Message = IsIncomingMeAction(ircMessage.Message)
                 ? ircMessage.Message.Trim('\u0001').Substring(7)
@@ -26,28 +28,44 @@ namespace Twitch.Net.Client.Events
         }
 
         public string DisplayName => 
-            _tags.ContainsKey(TwitchIrcMessageTags.DisplayName) && 
-            !string.IsNullOrEmpty(_tags[TwitchIrcMessageTags.DisplayName])
-                ? _tags[TwitchIrcMessageTags.DisplayName]
+            Tags.ContainsKey(TwitchIrcMessageTags.DisplayName) && 
+            !string.IsNullOrEmpty(Tags[TwitchIrcMessageTags.DisplayName])
+                ? Tags[TwitchIrcMessageTags.DisplayName]
                 : _username;
 
         public string Username => _username;
 
+        public string UserId => Tags["user-id"];
+
+        public string MessageId => Tags["id"];
+
+        public string ChannelId => Tags["room-id"];
+
+        public bool IsStreamer =>
+            _badges.ContainsKey("broadcaster") ||
+            Tags.TagToBoolean(TwitchIrcMessageTags.Broadcaster);
+        
         public bool IsModerator =>
-            _tags.TagToBoolean(TwitchIrcMessageTags.Mod);
+            _badges.ContainsKey("broadcaster") ||
+            _badges.ContainsKey("moderator") ||
+            Tags.TagToBoolean(TwitchIrcMessageTags.Mod);
 
         public bool IsSubscriber =>
-            _tags.ParseBadges().ContainsKey("founder") || 
-            _tags.ParseBadges().ContainsKey("subscriber") ||
-            _tags.TagToBoolean(TwitchIrcMessageTags.Subscriber);
+            _badges.ContainsKey("founder") ||
+            _badges.ContainsKey("subscriber") ||
+            Tags.TagToBoolean(TwitchIrcMessageTags.Subscriber);
 
         public bool IsTurbo =>
-            _tags.ParseBadges().ContainsKey("turbo") ||
-            _tags.TagToBoolean(TwitchIrcMessageTags.Turbo);
+            Tags.ParseBadges().ContainsKey("turbo") ||
+            Tags.TagToBoolean(TwitchIrcMessageTags.Turbo);
+
+        public bool IsVip =>
+            _badges.ContainsKey("vip") ||
+            Tags.TagToBoolean(TwitchIrcMessageTags.Vip);
 
         public UserType Type =>
-            _tags.ContainsKey(TwitchIrcMessageTags.UserType)
-                ? _tags[TwitchIrcMessageTags.UserType] switch
+            Tags.ContainsKey(TwitchIrcMessageTags.UserType)
+                ? Tags[TwitchIrcMessageTags.UserType] switch
                 {
                     "mod" => UserType.Moderator,
                     "global_mod" => UserType.GlobalModerator,

@@ -6,6 +6,7 @@
         public const string BadgeInfo = "badge-info";
         public const string BanDuration = "ban-duration";
         public const string BanReason = "ban-reason";
+        public const string Broadcaster = "broadcaster";
         public const string BroadcasterLang = "broadcaster-lang";
         public const string Bits = "bits";
         public const string Color = "color";
@@ -53,6 +54,7 @@
         public const string UserId = "user-id";
         public const string Subscriber = "subscriber"; // Badges are more accurate, but use this as fallback
         public const string Turbo = "turbo";
+        public const string Vip = "vip";
         public const string UserType = "user-type";
     }
 }
