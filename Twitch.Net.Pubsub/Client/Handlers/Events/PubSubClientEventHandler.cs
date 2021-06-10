@@ -109,6 +109,28 @@ namespace Twitch.Net.PubSub.Client.Handlers.Events
             remove => _customAutomaticUpdatedEvents.Remove(value);
         }
         
+        
+        private readonly AsyncEvent<Func<CheerEventDataParsed, Task>> _cheerEvents = new();
+        public event Func<CheerEventDataParsed, Task> OnCheerEvent
+        {
+            add => _cheerEvents.Add(value);
+            remove => _cheerEvents.Remove(value);
+        }
+        
+        private readonly AsyncEvent<Func<SubscribeEventMessage, Task>> _subscriptionEvents = new();
+        public event Func<SubscribeEventMessage, Task> OnSubscriptionEvent
+        {
+            add => _subscriptionEvents.Add(value);
+            remove => _subscriptionEvents.Remove(value);
+        }
+        
+        private readonly AsyncEvent<Func<SubscribeEventMessage, Task>> _giftedSubscriptionEvents = new();
+        public event Func<SubscribeEventMessage, Task> OnGiftedSubscriptionEvent
+        {
+            add => _giftedSubscriptionEvents.Add(value);
+            remove => _giftedSubscriptionEvents.Remove(value);
+        }
+        
         #endregion
 
         #region Invokers
@@ -155,7 +177,16 @@ namespace Twitch.Net.PubSub.Client.Handlers.Events
 
         public async Task InvokeAutomaticRedeemUpdatedTopic(CommunityPointsEvent arg)
             => await _customAutomaticUpdatedEvents.InvokeAsync(arg).ConfigureAwait(false);
-        
+
+        public async Task InvokeCheerTopic(CheerEventDataParsed arg)
+            => await _cheerEvents.InvokeAsync(arg).ConfigureAwait(false);
+
+        public async Task InvokeSubscriptionEventTopic(SubscribeEventMessage arg)
+            => await _subscriptionEvents.InvokeAsync(arg).ConfigureAwait(false);
+
+        public async Task InvokeGiftedSubscriptionEventTopic(SubscribeEventMessage arg)
+            => await _giftedSubscriptionEvents.InvokeAsync(arg).ConfigureAwait(false);
+
         #endregion
     }
 }

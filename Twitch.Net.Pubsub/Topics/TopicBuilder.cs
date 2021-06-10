@@ -24,11 +24,17 @@ namespace Twitch.Net.PubSub.Topics
             _topics.Add(topic);
             return this;
         }
+
+        public TopicBuilder CreateChannelBitsCheerTopic(long userId)
+            => AddTopic($"channel-bits-events-v2.{userId}");
+        
+        public TopicBuilder CreateChannelSubscribeEventsTopic(long userId)
+            => AddTopic($"channel-subscribe-events-v1.{userId}");
         
         public TopicBuilder CreateChannelPointsRedeemTopic(long userId)
             => AddTopic($"channel-points-channel-v1.{userId}");
         
-        public void Listen(string token = null) 
+        public void Listen(string token = null)
             => SendTopics(true, token);
 
         public void Unlisten(string token = null)

@@ -3,7 +3,7 @@
     /**
      * An object holder of a message which was a TOPIC
      */
-    internal class ParsedTopicMessage
+    public class ParsedTopicMessage
     {
         public bool Parsed { get; init; }
         public string Topic { get; init; }

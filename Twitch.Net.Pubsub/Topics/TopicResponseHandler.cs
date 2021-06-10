@@ -11,6 +11,8 @@ namespace Twitch.Net.PubSub.Topics
     {
         private readonly IPubSubClientEventInvoker _eventInvoker;
         private readonly ITopicHandler _redeemTopicHandler = new RedeemTopicHandler();
+        private readonly ITopicHandler _cheerTopicHandler = new CheerTopicHandler();
+        private readonly ITopicHandler _subscribeTopicHandler = new SubscribeTopicHandler();
 
         public TopicResponseHandler(IPubSubClientEventInvoker eventInvoker)
         {
@@ -25,7 +27,7 @@ namespace Twitch.Net.PubSub.Topics
                 _ => false
             };
 
-        private ParsedTopicMessage ParseMessage(Dictionary<string, object> parsed)
+        private static ParsedTopicMessage ParseMessage(Dictionary<string, object> parsed)
         {
             if (parsed.ContainsKey("data") && parsed["data"] is JsonElement { ValueKind: JsonValueKind.Object } element) 
             {
@@ -54,6 +56,8 @@ namespace Twitch.Net.PubSub.Topics
             return message.Topic switch
             {
                 "channel-points-channel-v1" => await _redeemTopicHandler.Handle(_eventInvoker, message),
+                "channel-bits-events-v2" => await _cheerTopicHandler.Handle(_eventInvoker, message),
+                "channel-subscribe-events-v1" => await _subscribeTopicHandler.Handle(_eventInvoker, message),
                 _ => false
             };
         }
