@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Twitch.Net.PubSub.Client.Handlers.Events;
@@ -52,14 +53,22 @@ namespace Twitch.Net.PubSub.Topics
         {
             if (!message.Parsed) // so if the parsing went wrong, we will return false to trigger "UnknownMessageEvent"
                 return false;
-            
-            return message.Topic switch
+
+            try
             {
-                "channel-points-channel-v1" => await _redeemTopicHandler.Handle(_eventInvoker, message),
-                "channel-bits-events-v2" => await _cheerTopicHandler.Handle(_eventInvoker, message),
-                "channel-subscribe-events-v1" => await _subscribeTopicHandler.Handle(_eventInvoker, message),
-                _ => false
-            };
+                return message.Topic switch
+                {
+                    "channel-points-channel-v1" => await _redeemTopicHandler.Handle(_eventInvoker, message),
+                    "channel-bits-events-v2" => await _cheerTopicHandler.Handle(_eventInvoker, message),
+                    "channel-subscribe-events-v1" => await _subscribeTopicHandler.Handle(_eventInvoker, message),
+                    _ => false
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Handled messaged topic failed : {ex.Message} \n [RAW] : {message}");
+                return false;
+            }
         }
 
         private async Task<bool> HandleResponseMessage(Dictionary<string, object> parsed)
