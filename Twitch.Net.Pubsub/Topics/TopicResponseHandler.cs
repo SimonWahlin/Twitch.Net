@@ -66,7 +66,7 @@ namespace Twitch.Net.PubSub.Topics
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Handled messaged topic failed : {ex.Message} \n [RAW] : {message}");
+                Console.WriteLine($"Handled messaged topic failed : {ex.Message} \n [RAW] : {message.JsonData}");
                 return false;
             }
         }
