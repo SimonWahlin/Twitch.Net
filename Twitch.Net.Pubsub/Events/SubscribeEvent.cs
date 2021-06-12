@@ -68,6 +68,6 @@ namespace Twitch.Net.PubSub.Events
         public int End { get; init; }
         
         [JsonPropertyName("id")]
-        public long Id { get; init; }
+        public string Id { get; init; }
     }
 }
