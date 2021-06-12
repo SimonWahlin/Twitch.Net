@@ -11,10 +11,10 @@ namespace Twitch.Net.PubSub.Topics.Handlers
         {
             var data = JsonSerializer.Deserialize<SubscribeEvent>(message.JsonData);
             
-            if (data.Data.Message.Gifted)
-                await eventInvoker.InvokeGiftedSubscriptionEventTopic(data.Data.Message);
+            if (data.Gifted)
+                await eventInvoker.InvokeGiftedSubscriptionEventTopic(data);
             else
-                await eventInvoker.InvokeSubscriptionEventTopic(data.Data.Message);
+                await eventInvoker.InvokeSubscriptionEventTopic(data);
             
             return true;
         }

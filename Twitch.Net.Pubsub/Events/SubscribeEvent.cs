@@ -4,27 +4,6 @@ namespace Twitch.Net.PubSub.Events
 {
     public class SubscribeEvent
     {
-        [JsonPropertyName("type")]
-        public string Type { get; init; }
-        
-        /**
-         * The data when an event is redeemed, created, updated
-         */
-        [JsonPropertyName("data")]
-        public SubscribeEventData Data { get; init; }
-    }
-
-    public class SubscribeEventData
-    {
-        [JsonPropertyName("topic")]
-        public string Data { get; init; }
-        
-        [JsonPropertyName("message")]
-        public SubscribeEventMessage Message { get; init; }
-    }
-
-    public class SubscribeEventMessage
-    {
         [JsonPropertyName("user_name")]
         public string Username { get; init; } = string.Empty; // can be empty.
 
@@ -70,7 +49,7 @@ namespace Twitch.Net.PubSub.Events
         [JsonPropertyName("multi_month_duration")]
         public byte MonthsGifted { get; init; }
     }
-
+    
     public class SubscribeEventMessageData
     {
         [JsonPropertyName("message")]

@@ -31,10 +31,10 @@ namespace Twitch.Net.PubSub.Client.Handlers.Events
         event Func<CommunityPointsEvent, Task> OnCustomRedeemProgressFinished;
         
         // Cheer
-        event Func<CheerEventDataParsed, Task> OnCheerEvent;
+        event Func<CheerEvent, Task> OnCheerEvent;
         
         // Subscriptions
-        event Func<SubscribeEventMessage, Task> OnSubscriptionEvent;
-        event Func<SubscribeEventMessage, Task> OnGiftedSubscriptionEvent;
+        event Func<SubscribeEvent, Task> OnSubscriptionEvent;
+        event Func<SubscribeEvent, Task> OnGiftedSubscriptionEvent;
     }
 }

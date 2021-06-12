@@ -28,10 +28,10 @@ namespace Twitch.Net.PubSub.Client.Handlers.Events
         Task InvokeAutomaticRedeemUpdatedTopic(CommunityPointsEvent arg);
         
         // Cheer
-        Task InvokeCheerTopic(CheerEventDataParsed arg);
+        Task InvokeCheerTopic(CheerEvent arg);
         
         // Subevents
-        Task InvokeSubscriptionEventTopic(SubscribeEventMessage arg);
-        Task InvokeGiftedSubscriptionEventTopic(SubscribeEventMessage arg);
+        Task InvokeSubscriptionEventTopic(SubscribeEvent arg);
+        Task InvokeGiftedSubscriptionEventTopic(SubscribeEvent arg);
     }
 }

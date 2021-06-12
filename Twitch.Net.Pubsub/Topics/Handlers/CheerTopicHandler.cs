@@ -10,10 +10,9 @@ namespace Twitch.Net.PubSub.Topics.Handlers
         public async Task<bool> Handle(IPubSubClientEventInvoker eventInvoker, ParsedTopicMessage message)
         {
             var data = JsonSerializer.Deserialize<CheerEvent>(message.JsonData);
-            var parsed = JsonSerializer.Deserialize<CheerEventParsed>(data.Data.Message).Data;
 
             // Both anonymous & none anonymous
-            await eventInvoker.InvokeCheerTopic(parsed);
+            await eventInvoker.InvokeCheerTopic(data);
             
             return true;
         }

@@ -6,32 +6,23 @@ namespace Twitch.Net.PubSub.Events
 {
     public class CheerEvent
     {
-        [JsonPropertyName("type")]
-        public string Type { get; init; }
+        [JsonPropertyName("version")]
+        public string Version { get; init; }
         
         /**
-         * The data when an event is redeemed, created, updated
+         * The inner data object
          */
         [JsonPropertyName("data")]
         public CheerEventData Data { get; init; }
+        
+        [JsonPropertyName("message_type")]
+        public string MessageType { get; init; }
+        
+        [JsonPropertyName("message_id")]
+        public Guid MessageId { get; init; }
     }
     
     public class CheerEventData
-    {
-        [JsonPropertyName("topic")]
-        public string Data { get; init; }
-        
-        [JsonPropertyName("message")]
-        public string Message { get; init; }
-    }
-
-    public class CheerEventParsed
-    {
-        [JsonPropertyName("data")]
-        public CheerEventDataParsed Data { get; init; }
-    }
-    
-    public class CheerEventDataParsed
     {
         [JsonPropertyName("user_name")]
         public string Username { get; init; } = string.Empty; // can be empty.
@@ -60,17 +51,8 @@ namespace Twitch.Net.PubSub.Events
         [JsonPropertyName("context")]
         public string Context { get; init; }
         
-        [JsonPropertyName("message_type")]
-        public string MessageType { get; init; }
-        
-        [JsonPropertyName("message_id")]
-        public Guid MessageId { get; init; }
-        
         [JsonPropertyName("is_anonymous")]
         public bool IsAnonymous { get; init; }
-        
-        [JsonPropertyName("version")]
-        public string Version { get; init; }
 
         [JsonPropertyName("badge_entitlement")]
         public Dictionary<string, int> BadgeData { get; init; } = new(); // can be empty

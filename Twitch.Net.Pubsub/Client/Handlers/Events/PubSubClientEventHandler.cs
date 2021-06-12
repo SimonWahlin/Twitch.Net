@@ -110,22 +110,22 @@ namespace Twitch.Net.PubSub.Client.Handlers.Events
         }
         
         
-        private readonly AsyncEvent<Func<CheerEventDataParsed, Task>> _cheerEvents = new();
-        public event Func<CheerEventDataParsed, Task> OnCheerEvent
+        private readonly AsyncEvent<Func<CheerEvent, Task>> _cheerEvents = new();
+        public event Func<CheerEvent, Task> OnCheerEvent
         {
             add => _cheerEvents.Add(value);
             remove => _cheerEvents.Remove(value);
         }
         
-        private readonly AsyncEvent<Func<SubscribeEventMessage, Task>> _subscriptionEvents = new();
-        public event Func<SubscribeEventMessage, Task> OnSubscriptionEvent
+        private readonly AsyncEvent<Func<SubscribeEvent, Task>> _subscriptionEvents = new();
+        public event Func<SubscribeEvent, Task> OnSubscriptionEvent
         {
             add => _subscriptionEvents.Add(value);
             remove => _subscriptionEvents.Remove(value);
         }
         
-        private readonly AsyncEvent<Func<SubscribeEventMessage, Task>> _giftedSubscriptionEvents = new();
-        public event Func<SubscribeEventMessage, Task> OnGiftedSubscriptionEvent
+        private readonly AsyncEvent<Func<SubscribeEvent, Task>> _giftedSubscriptionEvents = new();
+        public event Func<SubscribeEvent, Task> OnGiftedSubscriptionEvent
         {
             add => _giftedSubscriptionEvents.Add(value);
             remove => _giftedSubscriptionEvents.Remove(value);
@@ -178,13 +178,13 @@ namespace Twitch.Net.PubSub.Client.Handlers.Events
         public async Task InvokeAutomaticRedeemUpdatedTopic(CommunityPointsEvent arg)
             => await _customAutomaticUpdatedEvents.InvokeAsync(arg).ConfigureAwait(false);
 
-        public async Task InvokeCheerTopic(CheerEventDataParsed arg)
+        public async Task InvokeCheerTopic(CheerEvent arg)
             => await _cheerEvents.InvokeAsync(arg).ConfigureAwait(false);
 
-        public async Task InvokeSubscriptionEventTopic(SubscribeEventMessage arg)
+        public async Task InvokeSubscriptionEventTopic(SubscribeEvent arg)
             => await _subscriptionEvents.InvokeAsync(arg).ConfigureAwait(false);
 
-        public async Task InvokeGiftedSubscriptionEventTopic(SubscribeEventMessage arg)
+        public async Task InvokeGiftedSubscriptionEventTopic(SubscribeEvent arg)
             => await _giftedSubscriptionEvents.InvokeAsync(arg).ConfigureAwait(false);
 
         #endregion
