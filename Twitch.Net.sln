@@ -14,6 +14,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Shared", "Twitch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Lib", "Twitch.Net.Lib\Twitch.Net.Lib.csproj", "{1486E70C-4CCA-46CD-A578-F13628B69AAA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.EventSub", "Twitch.Net.EventSub\Twitch.Net.EventSub.csproj", "{E113A7D5-6890-42C0-B3E6-205DD7A88C1F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Sample.EventSubServer", "Twitch.Net.Sample.EventSubServer\Twitch.Net.Sample.EventSubServer.csproj", "{47B5BAB9-ED67-44C6-8620-CFC2515C0B9E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{DDB0D412-69D7-4C4A-8538-DD68A864334B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,5 +53,17 @@ Global
 		{1486E70C-4CCA-46CD-A578-F13628B69AAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1486E70C-4CCA-46CD-A578-F13628B69AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1486E70C-4CCA-46CD-A578-F13628B69AAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E113A7D5-6890-42C0-B3E6-205DD7A88C1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E113A7D5-6890-42C0-B3E6-205DD7A88C1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E113A7D5-6890-42C0-B3E6-205DD7A88C1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E113A7D5-6890-42C0-B3E6-205DD7A88C1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47B5BAB9-ED67-44C6-8620-CFC2515C0B9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47B5BAB9-ED67-44C6-8620-CFC2515C0B9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47B5BAB9-ED67-44C6-8620-CFC2515C0B9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47B5BAB9-ED67-44C6-8620-CFC2515C0B9E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{47B5BAB9-ED67-44C6-8620-CFC2515C0B9E} = {DDB0D412-69D7-4C4A-8538-DD68A864334B}
+		{D128204F-A3E5-4D09-B5DD-013CDAAAEA34} = {DDB0D412-69D7-4C4A-8538-DD68A864334B}
 	EndGlobalSection
 EndGlobal

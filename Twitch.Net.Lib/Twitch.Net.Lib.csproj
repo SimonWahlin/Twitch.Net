@@ -9,13 +9,14 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/Twitch-Net/Twitch.Net</RepositoryUrl>
         <RepositoryType>Open Source</RepositoryType>
-        <PackageTags>Twitch IRC PubSub API .NET5</PackageTags>
+        <PackageTags>Twitch IRC PubSub API EventSub .NET5</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Twitch.Net.Api\Twitch.Net.Api.csproj" />
       <ProjectReference Include="..\Twitch.Net.Client\Twitch.Net.Client.csproj" />
       <ProjectReference Include="..\Twitch.Net.Communication\Twitch.Net.Communication.csproj" />
+      <ProjectReference Include="..\Twitch.Net.EventSub\Twitch.Net.EventSub.csproj" />
       <ProjectReference Include="..\Twitch.Net.Pubsub\Twitch.Net.Pubsub.csproj" />
       <ProjectReference Include="..\Twitch.Net.Shared\Twitch.Net.Shared.csproj" />
     </ItemGroup>

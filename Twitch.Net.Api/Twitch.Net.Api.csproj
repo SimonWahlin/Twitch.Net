@@ -3,13 +3,13 @@
     <PropertyGroup>
         <VersionPrefix>0.0.1</VersionPrefix>
         <TargetFramework>net5.0</TargetFramework>
+        <Authors>Twitch.Net Contributors</Authors>
         <Title>Twitch.Net API Imlementation</Title>
         <PackageProjectUrl>https://github.com/Twitch-Net/Twitch.Net</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/Twitch-Net/Twitch.Net</RepositoryUrl>
         <RepositoryType>Open Source</RepositoryType>
         <PackageTags>Twitch API .NET5</PackageTags>
-        <Authors>Twitch.Net Contributors</Authors>
     </PropertyGroup>
 
     <ItemGroup>

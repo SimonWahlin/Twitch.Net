@@ -13,7 +13,8 @@ namespace Twitch.Net.Api.Client
         public ApiClient(
             IApiCredentialConfiguration credentials, 
             IHttpClientFactory httpClientFactory, 
-            ITokenResolver tokenResolver)
+            ITokenResolver tokenResolver
+            )
         {
             var rateLimiter = TimeLimiter.GetFromMaxCountByInterval(800, TimeSpan.FromSeconds(60));
             ApiKraken = new ApiKraken(tokenResolver, credentials, httpClientFactory, rateLimiter);

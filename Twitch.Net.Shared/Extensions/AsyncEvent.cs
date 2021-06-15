@@ -10,7 +10,6 @@ namespace Twitch.Net.Shared.Extensions
         private readonly object _subLock = new();
         private ImmutableArray<T> _subscriptions;
 
-        public bool HasSubscribers => _subscriptions.Length != 0;
         public IReadOnlyList<T> Subscriptions => _subscriptions;
 
         public AsyncEvent()

@@ -27,7 +27,8 @@ namespace Twitch.Net.Shared.Credential
 
         public ClientCredentialTokenResolver(
             IHttpClientFactory httpClientFactory,
-            ITokenResolverCredentialConfiguration configuration)
+            ITokenResolverCredentialConfiguration configuration
+            )
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;

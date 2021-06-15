@@ -22,7 +22,6 @@ namespace Twitch.Net.Client.Client
         private bool _authenticated;
         
         private readonly IClient _connectionClient;
-        private readonly UserAccountStatus _userAccountStatus;
         private readonly IIrcClientCredentialConfiguration _credentialConfiguration;
         private readonly IrcClientEventHandler _eventHandler;
         private readonly JoinQueueHandler _joinChannelHandler;
@@ -41,11 +40,11 @@ namespace Twitch.Net.Client.Client
             )
         {
             _credentialConfiguration = credentialConfiguration;
-            _userAccountStatus = userAccountStatus ?? new UserAccountStatus();
+            var accountStatus = userAccountStatus ?? new UserAccountStatus();
 
             // Setup client handlers
             _eventHandler = new IrcClientEventHandler();
-            _joinChannelHandler = new JoinQueueHandler(this, _userAccountStatus.IsVerifiedBot);
+            _joinChannelHandler = new JoinQueueHandler(this, accountStatus.IsVerifiedBot);
             
             // Setup event handlers
             _userJoinedEventHandler = new UserJoinedEventHandler(this);
@@ -82,8 +81,7 @@ namespace Twitch.Net.Client.Client
         public async Task<bool> ReconnectAsync() =>
             await _connectionClient.ReconnectAsync();
 
-        public bool SendMessage(string channel, string message)
-            => SendMessage(
+        public bool SendMessage(string channel, string message) => SendMessage(
                 _channels.FirstOrDefault(x => x.ChannelName.Equals(channel, StringComparison.OrdinalIgnoreCase)), 
                 message);
 

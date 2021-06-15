@@ -9,7 +9,8 @@ namespace Twitch.Net.Api.Client
         public static IApiClient CreateClient(
             IApiCredentialConfiguration credentials,
             IHttpClientFactory httpClientFactory,
-            ITokenResolver tokenResolver)
+            ITokenResolver tokenResolver
+            )
             => new ApiClient(credentials, httpClientFactory, tokenResolver);
     }
 }
