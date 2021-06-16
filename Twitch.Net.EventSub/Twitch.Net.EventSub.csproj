@@ -10,6 +10,7 @@
         <RepositoryUrl>https://github.com/Twitch-Net/Twitch.Net</RepositoryUrl>
         <RepositoryType>Open Source</RepositoryType>
         <PackageTags>Twitch EventSub .NET5</PackageTags>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>

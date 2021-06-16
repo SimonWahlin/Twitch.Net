@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Twitch.Net.EventSub.Notifications
 {
@@ -10,9 +9,11 @@ namespace Twitch.Net.EventSub.Notifications
      * "broadcaster_user_id": "1337",
      * "broadcaster_user_login": "cooler_user",
      * "broadcaster_user_name": "Cooler_User",
-     * "followed_at": "2020-07-15T18:16:11.17106713Z"
+     * "moderator_user_id": "1339",
+     * "moderator_user_login": "mod_user",
+     * "moderator_user_name": "Mod_User"
      */
-    public class ChannelFollowNotificationEvent
+    public class ChannelUnbanNotificationEvent
     {
         [JsonPropertyName("user_id")]
         public string UserIdString { get; init; }
@@ -34,7 +35,14 @@ namespace Twitch.Net.EventSub.Notifications
         [JsonPropertyName("broadcaster_user_name")]
         public string BroadcasterUserName { get; init; }
         
-        [JsonPropertyName("followed_at")]
-        public DateTime FollowedAt { get; init; }
+        [JsonPropertyName("moderator_user_id")]
+        public string ModeratorUserIdString { get; init; }
+        public int ModeratorUserId => int.Parse(ModeratorUserIdString);
+        
+        [JsonPropertyName("moderator_user_login")]
+        public string ModeratorUserLogin { get; init; }
+        
+        [JsonPropertyName("moderator_user_name")]
+        public string ModeratorUserName { get; init; }
     }
 }

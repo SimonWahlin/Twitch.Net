@@ -1,5 +1,5 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using Twitch.Net.EventSub.Models;
 
 namespace Twitch.Net.EventSub.Notifications
 {
@@ -10,9 +10,10 @@ namespace Twitch.Net.EventSub.Notifications
      * "broadcaster_user_id": "1337",
      * "broadcaster_user_login": "cooler_user",
      * "broadcaster_user_name": "Cooler_User",
-     * "followed_at": "2020-07-15T18:16:11.17106713Z"
+     * "tier": "1000",
+     * "is_gift": false
      */
-    public class ChannelFollowNotificationEvent
+    public class ChannelSubscribeNotificationEvent
     {
         [JsonPropertyName("user_id")]
         public string UserIdString { get; init; }
@@ -34,7 +35,11 @@ namespace Twitch.Net.EventSub.Notifications
         [JsonPropertyName("broadcaster_user_name")]
         public string BroadcasterUserName { get; init; }
         
-        [JsonPropertyName("followed_at")]
-        public DateTime FollowedAt { get; init; }
+        [JsonPropertyName("tier")]
+        public string TierString { get; init; }
+        public SubscriptionPlan Tier => TierString.ToSubscriptionPlan();
+        
+        [JsonPropertyName("is_gift")]
+        public bool IsGift { get; init; }
     }
 }

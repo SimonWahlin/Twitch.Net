@@ -111,6 +111,7 @@ namespace Twitch.Net.EventSub
             ) => @event switch
             {
                 "channel.follow" => ConvertDataToModel<ChannelFollowNotificationEvent>(raw),
+                "channel.update" => ConvertDataToModel<ChannelUpdateNotificationEvent>(raw),
                 _ => Option.None<INotificationEvent>()
             };
 
@@ -118,7 +119,7 @@ namespace Twitch.Net.EventSub
         {
             try
             {
-                var model = JsonSerializer.Deserialize<NotificationEvent<T>>(raw);
+                var model = JsonSerializer.Deserialize<NotificationEvent<T>>(raw, new JsonSerializerOptions { IncludeFields = true });
                 return model.Some<INotificationEvent>();
             }
             catch (Exception ex)

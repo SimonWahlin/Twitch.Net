@@ -1,5 +1,5 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using Twitch.Net.EventSub.Models;
 
 namespace Twitch.Net.EventSub.Notifications
 {
@@ -10,9 +10,12 @@ namespace Twitch.Net.EventSub.Notifications
      * "broadcaster_user_id": "1337",
      * "broadcaster_user_login": "cooler_user",
      * "broadcaster_user_name": "Cooler_User",
-     * "followed_at": "2020-07-15T18:16:11.17106713Z"
+     * "total": 2,
+     * "tier": "1000",
+     * "cumulative_total": 284, //null if anonymous or not shared by the user
+     * "is_anonymous": false
      */
-    public class ChannelFollowNotificationEvent
+    public class ChannelSubscribeGiftNotificationEvent
     {
         [JsonPropertyName("user_id")]
         public string UserIdString { get; init; }
@@ -34,7 +37,23 @@ namespace Twitch.Net.EventSub.Notifications
         [JsonPropertyName("broadcaster_user_name")]
         public string BroadcasterUserName { get; init; }
         
-        [JsonPropertyName("followed_at")]
-        public DateTime FollowedAt { get; init; }
+        [JsonPropertyName("tier")]
+        public string TierString { get; init; }
+        public SubscriptionPlan Tier => TierString.ToSubscriptionPlan();
+        
+        [JsonPropertyName("is_anonymous")]
+        public bool IsAnonymous { get; init; }
+        
+        /// <summary>
+        /// How many gifts has been given from the user in total (if anon this is null)
+        /// </summary>
+        [JsonPropertyName("cumulative_total")]
+        public int? TotalGifted { get; init; }
+        
+        /// <summary>
+        /// How many gifted subs were gifted in this notification
+        /// </summary>
+        [JsonPropertyName("total")]
+        public int GiftedAmount { get; init; }
     }
 }

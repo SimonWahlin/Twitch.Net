@@ -8,5 +8,6 @@ namespace Twitch.Net.EventSub.Events
     {
         // Notifications
         event Func<NotificationEvent<ChannelFollowNotificationEvent>, Task> OnFollowed;
+        event Func<NotificationEvent<ChannelUpdateNotificationEvent>, Task> OnChannelUpdate;
     }
 }

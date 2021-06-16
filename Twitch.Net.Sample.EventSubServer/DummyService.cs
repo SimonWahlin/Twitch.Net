@@ -24,7 +24,7 @@ namespace Twitch.Net.Sample.EventSubServer
 
         private Task EventOnFollowed(NotificationEvent<ChannelFollowNotificationEvent> arg)
         {
-            Console.WriteLine($"[UserFollowedEvent] {arg.Event.UserName} followed {arg.Event.BroadcasterUserName}");
+            Console.WriteLine($"[UserFollowedEvent] {arg.Event.UserName}#{arg.Event.UserId} followed {arg.Event.BroadcasterUserName}#{arg.Event.BroadcasterId}");
             return Task.CompletedTask;
         }
 

@@ -23,22 +23,26 @@ namespace Twitch.Net.EventSub.Events
             add => _followedEvents.Add(value);
             remove => _followedEvents.Remove(value);
         }
-        
+
+        private readonly AsyncEvent<Func<NotificationEvent<ChannelUpdateNotificationEvent>, Task>> _channelUpdateEvents = new();
+        public event Func<NotificationEvent<ChannelUpdateNotificationEvent>, Task> OnChannelUpdate
+        {
+            add => _channelUpdateEvents.Add(value);
+            remove => _channelUpdateEvents.Remove(value);
+        }
+
         #endregion
 
         #region Invokers
 
         public async Task InvokeNotification(INotificationEvent @event)
         {
-            switch (@event)
-            {
-                case NotificationEvent<ChannelFollowNotificationEvent> follow:
-                    await _followedEvents.InvokeAsync(follow).ConfigureAwait(false);
-                    break;
-                default:
-                    _logger.LogError($"Event of type {@event} does not have an invoker event implemented.");
-                    break;
-            }
+            if (@event is NotificationEvent<ChannelFollowNotificationEvent> follow)
+                await _followedEvents.InvokeAsync(follow).ConfigureAwait(false);
+            else if (@event is NotificationEvent<ChannelUpdateNotificationEvent> chlUpdate)
+                await _channelUpdateEvents.InvokeAsync(chlUpdate).ConfigureAwait(false);
+            else
+                _logger.LogError($"Event of type {@event} does not have an invoker event implemented.");
         }
 
         #endregion

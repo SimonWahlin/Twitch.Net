@@ -10,9 +10,14 @@ namespace Twitch.Net.EventSub.Notifications
      * "broadcaster_user_id": "1337",
      * "broadcaster_user_login": "cooler_user",
      * "broadcaster_user_name": "Cooler_User",
-     * "followed_at": "2020-07-15T18:16:11.17106713Z"
+     * "moderator_user_id": "1339",
+     * "moderator_user_login": "mod_user",
+     * "moderator_user_name": "Mod_User",
+     * "reason": "Offensive language",
+     * "ends_at": "2020-07-15T18:16:11.17106713Z",
+     * "is_permanent": false
      */
-    public class ChannelFollowNotificationEvent
+    public class ChannelBanNotificationEvent
     {
         [JsonPropertyName("user_id")]
         public string UserIdString { get; init; }
@@ -34,7 +39,26 @@ namespace Twitch.Net.EventSub.Notifications
         [JsonPropertyName("broadcaster_user_name")]
         public string BroadcasterUserName { get; init; }
         
-        [JsonPropertyName("followed_at")]
-        public DateTime FollowedAt { get; init; }
+        [JsonPropertyName("moderator_user_id")]
+        public string ModeratorUserIdString { get; init; }
+        public int ModeratorUserId => int.Parse(ModeratorUserIdString);
+        
+        [JsonPropertyName("moderator_user_login")]
+        public string ModeratorUserLogin { get; init; }
+        
+        [JsonPropertyName("moderator_user_name")]
+        public string ModeratorUserName { get; init; }
+        
+        [JsonPropertyName("reason")]
+        public string Reason { get; init; }
+        
+        [JsonPropertyName("ends_at")]
+        public DateTime EndsAt { get; init; }
+        
+        [JsonPropertyName("is_permanent")]
+        public bool IsPermanent { get; init; }
+
+        public bool IsBan => IsPermanent;
+        public bool IsTimeout => !IsPermanent;
     }
 }
