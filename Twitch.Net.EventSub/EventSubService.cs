@@ -95,14 +95,14 @@ namespace Twitch.Net.EventSub
 
         private async Task HandleNotification(HttpRequest request, string raw)
         {
-            var @event = request.Headers[EventSubHeaderConst.SubscriptionType].ToString();
+            var type = request.Headers[EventSubHeaderConst.SubscriptionType].ToString();
             var version = request.Headers[EventSubHeaderConst.SubscriptionVersion].ToString();
-            var model = GetModel(raw, @event);
+            var model = GetModel(raw, type);
 
             if (!model.HasValue)
-                _logger.LogDebug($"Unhandled event {@event} with version {version}");
+                _logger.LogDebug($"Unhandled event {type} with version {version}");
             else
-                await _eventHandler.InvokeNotification(model.ValueOrFailure());
+                await _eventHandler.InvokeNotification(model.ValueOrFailure(), type);
         }
 
         private Option<INotificationEvent> GetModel(
@@ -112,6 +112,36 @@ namespace Twitch.Net.EventSub
             {
                 "channel.follow" => ConvertDataToModel<ChannelFollowNotificationEvent>(raw),
                 "channel.update" => ConvertDataToModel<ChannelUpdateNotificationEvent>(raw),
+                "channel.subscribe" => ConvertDataToModel<ChannelSubscribeNotificationEvent>(raw),
+                "channel.subscription.end" => ConvertDataToModel<ChannelSubscribeEndNotificationEvent>(raw),
+                "channel.subscription.gift" => ConvertDataToModel<ChannelSubscribeGiftNotificationEvent>(raw),
+                "channel.subscription.message" => ConvertDataToModel<ChannelSubscribeMessageNotificationEvent>(raw),
+                "channel.cheer" => ConvertDataToModel<ChannelCheerNotificationEvent>(raw),
+                "channel.raid" => ConvertDataToModel<ChannelRaidNotificationEvent>(raw),
+                "channel.ban" => ConvertDataToModel<ChannelBanNotificationEvent>(raw),
+                "channel.unban" => ConvertDataToModel<ChannelUnbanNotificationEvent>(raw),
+                "channel.moderator.add" => ConvertDataToModel<ChannelModeratorAddNotificationEvent>(raw),
+                "channel.moderator.remove" => ConvertDataToModel<ChannelModeratorRemoveNotificationEvent>(raw),
+                "channel.channel_points_custom_reward.add" => ConvertDataToModel<ChannelRedeemChangeNotificationEvent>(raw),
+                "channel.channel_points_custom_reward.update" => ConvertDataToModel<ChannelRedeemChangeNotificationEvent>(raw),
+                "channel.channel_points_custom_reward.remove" => ConvertDataToModel<ChannelRedeemChangeNotificationEvent>(raw),
+                "channel.channel_points_custom_reward_redemption.add" => ConvertDataToModel<ChannelRedeemRedemptionReward>(raw),
+                "channel.channel_points_custom_reward_redemption.update" => ConvertDataToModel<ChannelRedeemRedemptionReward>(raw),
+                "channel.poll.begin" => ConvertDataToModel<ChannelPollBeginNotificationEvent>(raw),
+                "channel.poll.progress" => ConvertDataToModel<ChannelPollProgressNotificationEvent>(raw),
+                "channel.poll.end" => ConvertDataToModel<ChannelPollEndNotificationEvent>(raw),
+                "channel.prediction.begin" => ConvertDataToModel<ChannelPredictBeginNotificationEvent>(raw),
+                "channel.prediction.progress" => ConvertDataToModel<ChannelPredictProgressNotificationEvent>(raw),
+                "channel.prediction.lock" => ConvertDataToModel<ChannelPredictLockNotificationEvent>(raw),
+                "channel.prediction.end" => ConvertDataToModel<ChannelPredictEndNotificationEvent>(raw),
+                "extension.bits_transaction.create" => ConvertDataToModel<ExtensionBitTransactionNotificationEvent>(raw),
+                "channel.hype_train.begin" => ConvertDataToModel<ChannelHypeTrainBeginNotificationEvent>(raw),
+                "channel.hype_train.progress" => ConvertDataToModel<ChannelHypeTrainProgressNotificationEvent>(raw),
+                "channel.hype_train.end" => ConvertDataToModel<ChannelHypeTrainEndNotificationEvent>(raw),
+                "stream.online" => ConvertDataToModel<StreamOnlineNotificationEvent>(raw),
+                "stream.offline" => ConvertDataToModel<StreamOfflineNotificationEvent>(raw),
+                "user.authorization.revoke" => ConvertDataToModel<UserAuthRevokeNotificationEvent>(raw),
+                "user.update" => ConvertDataToModel<UserUpdateNotificationEvent>(raw),
                 _ => Option.None<INotificationEvent>()
             };
 

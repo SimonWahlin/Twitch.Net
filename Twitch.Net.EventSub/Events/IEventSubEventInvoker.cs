@@ -5,6 +5,6 @@ namespace Twitch.Net.EventSub.Events
 {
     public interface IEventSubEventInvoker
     {
-        Task InvokeNotification(INotificationEvent @event);
+        Task InvokeNotification(INotificationEvent @event, string type);
     }
 }
