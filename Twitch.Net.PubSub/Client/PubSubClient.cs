@@ -37,7 +37,7 @@ namespace Twitch.Net.PubSub.Client
         {
             _eventHandler = new PubSubClientEventHandler();
             _topicResponseHandler = new TopicResponseHandler(_eventHandler);
-            _connectionClient = clientFactory.CreateClient(PubSubClientAddressBuilder.CreateAddress());
+            _connectionClient = clientFactory.CreateClient(logger, PubSubClientAddressBuilder.CreateAddress());
             _logger = logger;
             _config = config;
             _connectionClient.SetListener(this);

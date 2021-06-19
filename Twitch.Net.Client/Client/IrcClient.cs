@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Twitch.Net.Client.Client.Handlers.Events;
 using Twitch.Net.Client.Client.Handlers.Join;
@@ -36,7 +37,8 @@ namespace Twitch.Net.Client.Client
         private readonly ChatChannelStateEventHandler _chatChannelStateEventHandler;
 
         public IrcClient(
-            IOptions<IrcCredentialConfig> config, 
+            IOptions<IrcCredentialConfig> config,
+            ILogger<IIrcClient> logger,
             IClientFactory factory,
             IUserAccountStatusResolver accountStatusResolver
             )
@@ -54,7 +56,7 @@ namespace Twitch.Net.Client.Client
             _chatChannelStateEventHandler = new ChatChannelStateEventHandler(this);
             
             // Create connection
-            _connectionClient = factory.CreateClient(IrcClientAddressBuilder.CreateAddress());
+            _connectionClient = factory.CreateClient(logger, IrcClientAddressBuilder.CreateAddress());
             _connectionClient.SetListener(this);
         }
 
