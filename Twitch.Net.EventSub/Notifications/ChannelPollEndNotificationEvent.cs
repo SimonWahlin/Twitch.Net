@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Twitch.Net.EventSub.Notifications
 {
@@ -29,7 +28,7 @@ namespace Twitch.Net.EventSub.Notifications
     public class ChannelPollEndNotificationEvent : ChannelPollBaseModel<PollEndChoiceModel>
     {
         [JsonPropertyName("status")]
-        public string Status { get; init; }
+        public string Status { get; init; } = string.Empty;
     }
 
    /**

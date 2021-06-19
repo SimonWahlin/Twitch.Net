@@ -6,7 +6,7 @@ namespace Twitch.Net.EventSub.Models
     public class SubscribeResponseModel
     {
         [JsonPropertyName("data")]
-        public SubscribeResponseDataModel[] Data { get; init; }
+        public SubscribeResponseDataModel[] Data { get; init; } = Array.Empty<SubscribeResponseDataModel>();
         
         [JsonPropertyName("total")]
         public int Total { get; init; }
@@ -21,33 +21,33 @@ namespace Twitch.Net.EventSub.Models
     public class SubscribeResponseDataModel
     {
         [JsonPropertyName("id")]
-        public string Id { get; init; }
+        public string Id { get; init; } = string.Empty;
         
         [JsonPropertyName("status")]
-        public string Status { get; init; }
+        public string Status { get; init; } = string.Empty;
         
         [JsonPropertyName("type")]
-        public string Type { get; init; }
+        public string Type { get; init; } = string.Empty;
         
         [JsonPropertyName("version")]
-        public string Version { get; init; }
+        public string Version { get; init; } = string.Empty;
         
         [JsonPropertyName("cost")]
         public int Cost { get; init; }
         
         [JsonPropertyName("created_at")]
         public DateTime CreatedAt { get; init; }
-        
+
         [JsonPropertyName("transport")]
-        public SubscribeResponseDataTransportModel Transport { get; init; }
+        public SubscribeResponseDataTransportModel Transport { get; init; } = null!;
     }
 
     public class SubscribeResponseDataTransportModel
     {
         [JsonPropertyName("method")]
-        public string Method { get; init; }
+        public string Method { get; init; } = string.Empty;
         
         [JsonPropertyName("callback")]
-        public string Callback { get; init; }
+        public string Callback { get; init; } = string.Empty;
     }
 }

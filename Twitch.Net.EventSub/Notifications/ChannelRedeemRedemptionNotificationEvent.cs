@@ -24,37 +24,37 @@ namespace Twitch.Net.EventSub.Notifications
     public class ChannelRedeemRedemptionNotificationEvent
     {
         [JsonPropertyName("id")]
-        public string Id { get; init; }
+        public string Id { get; init; } = string.Empty;
         
         [JsonPropertyName("broadcaster_user_id")]
-        public string BroadcasterIdString { get; init; }
+        public string BroadcasterIdString { get; init; } = string.Empty;
         public int BroadcasterId => int.Parse(BroadcasterIdString);
         
         [JsonPropertyName("broadcaster_user_login")]
-        public string BroadcasterUserLogin { get; init; }
+        public string BroadcasterUserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("broadcaster_user_name")]
-        public string BroadcasterUserName { get; init; }
+        public string BroadcasterUserName { get; init; } = string.Empty;
         
         [JsonPropertyName("user_id")]
-        public string UserIdString { get; init; }
+        public string UserIdString { get; init; } = string.Empty;
         public int UserId => int.Parse(UserIdString);
         
         [JsonPropertyName("user_login")]
-        public string UserLogin { get; init; }
+        public string UserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("user_name")]
-        public string UserName { get; init; }
+        public string UserName { get; init; } = string.Empty;
         
         [JsonPropertyName("user_input")]
-        public string UserInput { get; init; }
+        public string UserInput { get; init; } = string.Empty;
         
         [JsonPropertyName("status")]
-        public string StatusString { get; init; }
+        public string StatusString { get; init; } = string.Empty;
         public ChannelRedeemStatus Status => StatusString.ToRedeemStatus();
         
         [JsonPropertyName("reward")]
-        public string Reward { get; init; }
+        public string Reward { get; init; } = string.Empty;
         
         [JsonPropertyName("redeemed_at")]
         public DateTime RedeemedAt { get; init; }
@@ -69,16 +69,16 @@ namespace Twitch.Net.EventSub.Notifications
     public class ChannelRedeemRedemptionReward
     {
         [JsonPropertyName("id")]
-        public string Id { get; init; }
+        public string Id { get; init; } = string.Empty;
         
         [JsonPropertyName("title")]
-        public string Title { get; init; }
+        public string Title { get; init; } = string.Empty;
         
         [JsonPropertyName("cost")]
         public int Cost { get; init; }
         
         [JsonPropertyName("prompt")]
-        public string Prompt { get; init; }
+        public string Prompt { get; init; } = string.Empty;
     }
 
     public enum ChannelRedeemStatus

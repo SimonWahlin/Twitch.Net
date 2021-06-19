@@ -36,9 +36,9 @@ namespace Twitch.Net.EventSub.Notifications
     public class PollBeginChoiceModel
     {
         [JsonPropertyName("id")]
-        public string Id { get; init; }
+        public string Id { get; init; } = string.Empty;
 
         [JsonPropertyName("title")]
-        public string Title { get; init; }
+        public string Title { get; init; } = string.Empty;
     }
 }

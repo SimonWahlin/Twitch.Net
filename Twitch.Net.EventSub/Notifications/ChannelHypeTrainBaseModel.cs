@@ -18,17 +18,17 @@ namespace Twitch.Net.EventSub.Notifications
     public class ChannelHypeTrainBaseModel
     {
         [JsonPropertyName("id")]
-        public string Id { get; init; }
+        public string Id { get; init; } = string.Empty;
         
         [JsonPropertyName("broadcaster_user_id")]
-        public string BroadcasterIdString { get; init; }
+        public string BroadcasterIdString { get; init; } = string.Empty;
         public int BroadcasterId => int.Parse(BroadcasterIdString);
         
         [JsonPropertyName("broadcaster_user_login")]
-        public string BroadcasterUserLogin { get; init; }
+        public string BroadcasterUserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("broadcaster_user_name")]
-        public string BroadcasterUserName { get; init; }
+        public string BroadcasterUserName { get; init; } = string.Empty;
         
         [JsonPropertyName("total")]
         public int Total { get; init; }
@@ -47,17 +47,17 @@ namespace Twitch.Net.EventSub.Notifications
     public class HypeTrainContributor
     {
         [JsonPropertyName("user_id")]
-        public string UserIdString { get; init; }
+        public string UserIdString { get; init; } = string.Empty;
         public int UserId => int.Parse(UserIdString);
         
         [JsonPropertyName("user_login")]
-        public string UserLogin { get; init; }
+        public string UserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("user_name")]
-        public string UserName { get; init; }
+        public string UserName { get; init; } = string.Empty;
         
         [JsonPropertyName("type")]
-        public string TypeString { get; init; }
+        public string TypeString { get; init; } = string.Empty;
         public HypeTrainContributionType Type => TypeString.ToHypeTrainContributionType();
         
         [JsonPropertyName("total")]

@@ -30,12 +30,12 @@ namespace Twitch.Net.EventSub.Notifications
     public class PredictBeginOutcome
     {
         [JsonPropertyName("id")]
-        public string Id { get; init; }
+        public string Id { get; init; } = string.Empty;
         
         [JsonPropertyName("title")]
-        public string Title { get; init; }
+        public string Title { get; init; } = string.Empty;
         
         [JsonPropertyName("color")]
-        public string Color { get; init; }
+        public string Color { get; init; } = string.Empty;
     }
 }

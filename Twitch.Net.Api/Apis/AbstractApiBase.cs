@@ -10,7 +10,6 @@ using Optional;
 using RateLimiter;
 using Twitch.Net.Api.Client;
 using Twitch.Net.Api.Configurations;
-using Twitch.Net.Shared.Configurations;
 using Twitch.Net.Shared.Credential;
 using Twitch.Net.Shared.Extensions;
 

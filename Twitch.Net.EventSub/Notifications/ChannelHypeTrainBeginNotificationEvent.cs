@@ -29,8 +29,8 @@ namespace Twitch.Net.EventSub.Notifications
         
         [JsonPropertyName("goal")]
         public int Goal { get; init; }
-        
+
         [JsonPropertyName("last_contribution")]
-        public HypeTrainContributor LastContribution { get; init; }
+        public HypeTrainContributor LastContribution { get; init; } = null!;
     }
 }

@@ -6,9 +6,9 @@ namespace Twitch.Net.EventSub.Notifications
     public class NotificationEvent<T> : INotificationEvent
     {
         [JsonPropertyName("subscription")]
-        public SubscribeCallbackSubscriptionModel Subscription { get; init; }
-        
+        public SubscribeCallbackSubscriptionModel Subscription { get; init; } = null!;
+
         [JsonPropertyName("event")]
-        public T Event { get; init; }
+        public T Event { get; init; } = default!;
     }
 }

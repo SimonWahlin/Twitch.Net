@@ -39,12 +39,12 @@ namespace Twitch.Net.EventSub.Notifications
     public class PollProgressChoiceModel : PollBeginChoiceModel
     {
         [JsonPropertyName("bits_votes")]
-        public string BitVotes { get; init; }
+        public string BitVotes { get; init; } = string.Empty;
         
         [JsonPropertyName("channel_points_votes")]
-        public string PointsVotes { get; init; }
+        public string PointsVotes { get; init; } = string.Empty;
         
         [JsonPropertyName("votes")]
-        public string Votes { get; init; }
+        public string Votes { get; init; } = string.Empty;
     }
 }

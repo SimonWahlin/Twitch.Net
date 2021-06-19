@@ -10,13 +10,13 @@ namespace Twitch.Net.EventSub.Notifications
     public class StreamOfflineNotificationEvent
     {
         [JsonPropertyName("broadcaster_user_id")]
-        public string BroadcasterIdString { get; init; }
+        public string BroadcasterIdString { get; init; } = string.Empty;
         public int BroadcasterId => int.Parse(BroadcasterIdString);
         
         [JsonPropertyName("broadcaster_user_login")]
-        public string BroadcasterUserLogin { get; init; }
+        public string BroadcasterUserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("broadcaster_user_name")]
-        public string BroadcasterUserName { get; init; }
+        public string BroadcasterUserName { get; init; } = string.Empty;
     }
 }

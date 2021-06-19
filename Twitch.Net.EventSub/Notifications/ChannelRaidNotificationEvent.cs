@@ -14,24 +14,24 @@ namespace Twitch.Net.EventSub.Notifications
     public class ChannelRaidNotificationEvent
     {
         [JsonPropertyName("from_broadcaster_user_id")]
-        public string FromBroadcasterUserIdString { get; init; }
+        public string FromBroadcasterUserIdString { get; init; } = string.Empty;
         public int FromBroadcasterUserId => int.Parse(FromBroadcasterUserIdString);
         
         [JsonPropertyName("from_broadcaster_user_login")]
-        public string FromBroadcasterUserLogin { get; init; }
+        public string FromBroadcasterUserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("from_broadcaster_user_name")]
-        public string FromBroadcasterUserName { get; init; }
+        public string FromBroadcasterUserName { get; init; } = string.Empty;
         
         [JsonPropertyName("to_broadcaster_user_id")]
-        public string ToBroadcasterUserIdString { get; init; }
+        public string ToBroadcasterUserIdString { get; init; } = string.Empty;
         public int ToBroadcasterUserId => int.Parse(ToBroadcasterUserIdString);
         
         [JsonPropertyName("to_broadcaster_user_login")]
-        public string ToBroadcasterUserLogin { get; init; }
+        public string ToBroadcasterUserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("to_broadcaster_user_name")]
-        public string ToBroadcasterUserName { get; init; }
+        public string ToBroadcasterUserName { get; init; } = string.Empty;
         
         [JsonPropertyName("viewers")]
         public int Viewers { get; init; }

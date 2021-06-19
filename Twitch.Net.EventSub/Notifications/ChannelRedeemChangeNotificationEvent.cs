@@ -45,17 +45,17 @@ namespace Twitch.Net.EventSub.Notifications
     public class ChannelRedeemChangeNotificationEvent
     {
         [JsonPropertyName("id")]
-        public string Id { get; init; }
+        public string Id { get; init; } = string.Empty;
         
         [JsonPropertyName("broadcaster_user_id")]
-        public string BroadcasterIdString { get; init; }
+        public string BroadcasterIdString { get; init; } = string.Empty;
         public int BroadcasterId => int.Parse(BroadcasterIdString);
         
         [JsonPropertyName("broadcaster_user_login")]
-        public string BroadcasterUserLogin { get; init; }
+        public string BroadcasterUserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("broadcaster_user_name")]
-        public string BroadcasterUserName { get; init; }
+        public string BroadcasterUserName { get; init; } = string.Empty;
         
         [JsonPropertyName("is_enabled")]
         public bool IsEnabled { get; init; }
@@ -67,13 +67,13 @@ namespace Twitch.Net.EventSub.Notifications
         public bool IsInStock { get; init; }
         
         [JsonPropertyName("title")]
-        public string Title { get; init; }
+        public string Title { get; init; } = string.Empty;
         
         [JsonPropertyName("cost")]
         public int Cost { get; init; }
-        
+
         [JsonPropertyName("prompt")]
-        public string Prompt { get; init; }
+        public string Prompt { get; init; } = string.Empty;
         
         [JsonPropertyName("is_user_input_required")]
         public bool UserInputRequired { get; init; }
@@ -86,24 +86,24 @@ namespace Twitch.Net.EventSub.Notifications
         
         [JsonPropertyName("redemptions_redeemed_current_stream")]
         public int? RedeemsCurrentStream { get; init; }
-        
+
         [JsonPropertyName("max_per_stream")]
-        public EnabledNumericValueModel MaxPerStream { get; init; }
-        
+        public EnabledNumericValueModel MaxPerStream { get; init; } = null!;
+
         [JsonPropertyName("max_per_user_per_stream")]
-        public EnabledNumericValueModel MaxPerUserPerStream { get; init; }
-        
+        public EnabledNumericValueModel MaxPerUserPerStream { get; init; } = null!;
+
         [JsonPropertyName("global_cooldown")]
-        public GlobalCooldownModel GlobalCooldown { get; init; }
+        public GlobalCooldownModel GlobalCooldown { get; init; } = null!;
         
         [JsonPropertyName("background_color")]
-        public string BackgroundColor { get; init; }
-        
+        public string BackgroundColor { get; init; } = string.Empty;
+
         [JsonPropertyName("image")]
-        public ImageModel Image { get; init; }
-        
+        public ImageModel Image { get; init; } = null!;
+
         [JsonPropertyName("default_image")]
-        public ImageModel DefaultImage { get; init; }
+        public ImageModel DefaultImage { get; init; } = null!;
     }
     
     /**
@@ -140,12 +140,12 @@ namespace Twitch.Net.EventSub.Notifications
     public class ImageModel
     {
         [JsonPropertyName("url_1x")]
-        public string Size1x { get; init; }
+        public string Size1X { get; init; } = string.Empty;
         
         [JsonPropertyName("url_2x")]
-        public string Size2x { get; init; }
+        public string Size2X { get; init; } = string.Empty;
         
         [JsonPropertyName("url_4x")]
-        public string Size4x { get; init; }
+        public string Size4X { get; init; } = string.Empty;
     }
 }

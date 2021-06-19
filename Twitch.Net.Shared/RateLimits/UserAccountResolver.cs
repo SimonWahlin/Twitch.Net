@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -87,13 +88,13 @@ namespace Twitch.Net.Shared.RateLimits
         private class UsersResponse
         {
             [JsonPropertyName("data")]
-            public CurrentUser[] Users { get; init; }
+            public CurrentUser[] Users { get; init; } = Array.Empty<CurrentUser>();
         }
 
         private class CurrentUser
         {
             [JsonPropertyName("id")]
-            public string UserId { get; init; }
+            public string UserId { get; init; } = string.Empty;
         }
     }
 }

@@ -36,12 +36,12 @@ namespace Twitch.Net.EventSub.Notifications
     public class ChannelPredictEndNotificationEvent : ChannelPredictBaseModel<PredictProgressOutcome>
     {
         [JsonPropertyName("winning_outcome_id")]
-        public string WinningOutcomingId { get; init; }
+        public string WinningOutcomingId { get; init; } = string.Empty;
         public PredictProgressOutcome WinnerOutcome => Outcomes.First(x => x.Id == WinningOutcomingId);
         public PredictProgressOutcome LoserOutcome => Outcomes.First(x => x.Id != WinningOutcomingId);
         
         [JsonPropertyName("status")]
-        public string StatusString { get; init; }
+        public string StatusString { get; init; } = string.Empty;
         public ChannelPredictStatus PredictStatus => StatusString.ToChannelPredictStatus();
         
         [JsonPropertyName("ended_at")]

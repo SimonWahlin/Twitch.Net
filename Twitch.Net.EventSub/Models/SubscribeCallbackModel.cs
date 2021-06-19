@@ -5,6 +5,6 @@ namespace Twitch.Net.EventSub.Models
     public class SubscribeCallbackModel
     {
         [JsonPropertyName("challenge")]
-        public string Challenge { get; init; }
+        public string Challenge { get; init; } = string.Empty;
     }
 }

@@ -15,26 +15,26 @@ namespace Twitch.Net.EventSub.Notifications
     public abstract class ChannelPredictBaseModel<T>
     {
         [JsonPropertyName("id")]
-        public string Id { get; init; }
+        public string Id { get; init; } = string.Empty;
         
         [JsonPropertyName("broadcaster_user_id")]
-        public string BroadcasterIdString { get; init; }
+        public string BroadcasterIdString { get; init; } = string.Empty;
         public int BroadcasterId => int.Parse(BroadcasterIdString);
         
         [JsonPropertyName("broadcaster_user_login")]
-        public string BroadcasterUserLogin { get; init; }
+        public string BroadcasterUserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("broadcaster_user_name")]
-        public string BroadcasterUserName { get; init; }
+        public string BroadcasterUserName { get; init; } = string.Empty;
         
         [JsonPropertyName("title")]
-        public string Title { get; init; }
+        public string Title { get; init; } = string.Empty;
         
         [JsonPropertyName("started_at")]
         public DateTime StartedAt { get; init; }
         
         // Not part of the base, but an easier way to implement the other ones.
         [JsonPropertyName("outcomes")]
-        public T[] Outcomes { get; init; }
+        public T[] Outcomes { get; init; } = null!;
     }
 }

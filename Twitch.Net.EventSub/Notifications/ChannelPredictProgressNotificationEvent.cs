@@ -59,22 +59,22 @@ namespace Twitch.Net.EventSub.Notifications
         
         [JsonPropertyName("channel_points")]
         public int ChannelPoints { get; init; }
-        
+
         [JsonPropertyName("top_predictors")]
-        public PredictUserOutcome[] TopPredictors { get; init; }
+        public PredictUserOutcome[] TopPredictors { get; init; } = Array.Empty<PredictUserOutcome>();
     }
 
     public class PredictUserOutcome
     {
         [JsonPropertyName("user_id")]
-        public string UserIdString { get; init; }
+        public string UserIdString { get; init; } = string.Empty;
         public int UserId => int.Parse(UserIdString);
         
         [JsonPropertyName("user_login")]
-        public string UserLogin { get; init; }
+        public string UserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("user_name")]
-        public string UserName { get; init; }
+        public string UserName { get; init; } = string.Empty;
         
         [JsonPropertyName("channel_points_won")]
         public int? ChannelPointsWon { get; init; }

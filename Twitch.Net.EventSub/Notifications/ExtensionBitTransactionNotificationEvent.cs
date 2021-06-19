@@ -21,33 +21,33 @@ namespace Twitch.Net.EventSub.Notifications
     public class ExtensionBitTransactionNotificationEvent
     {
         [JsonPropertyName("id")]
-        public string TransactionId { get; init; }
+        public string TransactionId { get; init; } = string.Empty;
         
         [JsonPropertyName("extension_client_id")]
-        public string ExtensionClientId { get; init; }
+        public string ExtensionClientId { get; init; } = string.Empty;
         
         [JsonPropertyName("broadcaster_user_id")]
-        public string BroadcasterIdString { get; init; }
+        public string BroadcasterIdString { get; init; } = string.Empty;
         public int BroadcasterId => int.Parse(BroadcasterIdString);
         
         [JsonPropertyName("broadcaster_user_login")]
-        public string BroadcasterUserLogin { get; init; }
+        public string BroadcasterUserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("broadcaster_user_name")]
-        public string BroadcasterUserName { get; init; }
+        public string BroadcasterUserName { get; init; } = string.Empty;
         
         [JsonPropertyName("user_id")]
-        public string UserIdString { get; init; }
+        public string UserIdString { get; init; } = string.Empty;
         public int UserId => int.Parse(UserIdString);
         
         [JsonPropertyName("user_login")]
-        public string UserLogin { get; init; }
+        public string UserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("user_name")]
-        public string UserName { get; init; }
-        
+        public string UserName { get; init; } = string.Empty;
+
         [JsonPropertyName("product")]
-        public ExtensionProductModel Product { get; init; }
+        public ExtensionProductModel Product { get; init; } = null!;
     }
 
     /**
@@ -59,10 +59,10 @@ namespace Twitch.Net.EventSub.Notifications
     public class ExtensionProductModel
     {
         [JsonPropertyName("name")]
-        public string Name { get; init; }
+        public string Name { get; init; } = string.Empty;
         
         [JsonPropertyName("sku")]
-        public string Sku { get; init; }
+        public string Sku { get; init; } = string.Empty;
         
         [JsonPropertyName("bits")]
         public int Bits { get; init; }

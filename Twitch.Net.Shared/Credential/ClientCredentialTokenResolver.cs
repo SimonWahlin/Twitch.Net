@@ -6,7 +6,6 @@ using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using Twitch.Net.Shared.Configurations;
 
 namespace Twitch.Net.Shared.Credential
 {

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Optional;
 using Twitch.Net.Api.Configurations;
-using Twitch.Net.Shared.Configurations;
 
 namespace Twitch.Net.Api.Apis
 {

@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 using Twitch.Net.EventSub.Models;
 
 namespace Twitch.Net.EventSub.Notifications
@@ -28,27 +29,27 @@ namespace Twitch.Net.EventSub.Notifications
     public class ChannelSubscribeMessageNotificationEvent
     {
         [JsonPropertyName("user_id")]
-        public string UserIdString { get; init; }
+        public string UserIdString { get; init; } = string.Empty;
         public int UserId => int.Parse(UserIdString);
         
         [JsonPropertyName("user_login")]
-        public string UserLogin { get; init; }
+        public string UserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("user_name")]
-        public string UserName { get; init; }
+        public string UserName { get; init; } = string.Empty;
         
         [JsonPropertyName("broadcaster_user_id")]
-        public string BroadcasterIdString { get; init; }
+        public string BroadcasterIdString { get; init; } = string.Empty;
         public int BroadcasterId => int.Parse(BroadcasterIdString);
         
         [JsonPropertyName("broadcaster_user_login")]
-        public string BroadcasterUserLogin { get; init; }
+        public string BroadcasterUserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("broadcaster_user_name")]
-        public string BroadcasterUserName { get; init; }
+        public string BroadcasterUserName { get; init; } = string.Empty;
         
         [JsonPropertyName("tier")]
-        public string TierString { get; init; }
+        public string TierString { get; init; } = string.Empty;
         public SubscriptionPlan Tier => TierString.ToSubscriptionPlan();
         
         [JsonPropertyName("cumulative_months")]
@@ -64,16 +65,16 @@ namespace Twitch.Net.EventSub.Notifications
         public int DurationMonths { get; init; }
         
         [JsonPropertyName("message")]
-        public string Message { get; init; }
+        public string Message { get; init; } = string.Empty;
     }
 
     public class Message
     {
         [JsonPropertyName("text")]
-        public string Text { get; init; }
-        
+        public string Text { get; init; } = string.Empty;
+
         [JsonPropertyName("emotes")]
-        public Emote[] Emotes { get; init; }
+        public Emote[] Emotes { get; init; } = Array.Empty<Emote>();
     }
 
     public class Emote
@@ -85,6 +86,6 @@ namespace Twitch.Net.EventSub.Notifications
         public int End { get; init; }
         
         [JsonPropertyName("id")]
-        public string EmoteId { get; init; }
+        public string EmoteId { get; init; } = string.Empty;
     }
 }

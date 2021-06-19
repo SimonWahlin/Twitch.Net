@@ -16,33 +16,33 @@ namespace Twitch.Net.EventSub.Notifications
     public class ChannelUnbanNotificationEvent
     {
         [JsonPropertyName("user_id")]
-        public string UserIdString { get; init; }
+        public string UserIdString { get; init; } = string.Empty;
         public int UserId => int.Parse(UserIdString);
         
         [JsonPropertyName("user_login")]
-        public string UserLogin { get; init; }
+        public string UserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("user_name")]
-        public string UserName { get; init; }
+        public string UserName { get; init; } = string.Empty;
         
         [JsonPropertyName("broadcaster_user_id")]
-        public string BroadcasterIdString { get; init; }
+        public string BroadcasterIdString { get; init; } = string.Empty;
         public int BroadcasterId => int.Parse(BroadcasterIdString);
         
         [JsonPropertyName("broadcaster_user_login")]
-        public string BroadcasterUserLogin { get; init; }
+        public string BroadcasterUserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("broadcaster_user_name")]
-        public string BroadcasterUserName { get; init; }
+        public string BroadcasterUserName { get; init; } = string.Empty;
         
         [JsonPropertyName("moderator_user_id")]
-        public string ModeratorUserIdString { get; init; }
+        public string ModeratorUserIdString { get; init; } = string.Empty;
         public int ModeratorUserId => int.Parse(ModeratorUserIdString);
         
         [JsonPropertyName("moderator_user_login")]
-        public string ModeratorUserLogin { get; init; }
+        public string ModeratorUserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("moderator_user_name")]
-        public string ModeratorUserName { get; init; }
+        public string ModeratorUserName { get; init; } = string.Empty;
     }
 }

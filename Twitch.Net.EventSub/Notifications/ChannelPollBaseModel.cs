@@ -25,26 +25,26 @@ namespace Twitch.Net.EventSub.Notifications
     public abstract class ChannelPollBaseModel<T>
     {
         [JsonPropertyName("id")]
-        public string Id { get; init; }
+        public string Id { get; init; } = string.Empty;
 
         [JsonPropertyName("broadcaster_user_id")]
-        public string BroadcasterIdString { get; init; }
+        public string BroadcasterIdString { get; init; } = string.Empty;
         public int BroadcasterId => int.Parse(BroadcasterIdString);
 
         [JsonPropertyName("broadcaster_user_login")]
-        public string BroadcasterUserLogin { get; init; }
+        public string BroadcasterUserLogin { get; init; } = string.Empty;
 
         [JsonPropertyName("broadcaster_user_name")]
-        public string BroadcasterUserName { get; init; }
+        public string BroadcasterUserName { get; init; } = string.Empty;
 
         [JsonPropertyName("title")]
-        public string Title { get; init; }
+        public string Title { get; init; } = string.Empty;
 
         [JsonPropertyName("bits_voting")]
-        public PointsVotingModel BitsVoting { get; init; }
+        public PointsVotingModel BitsVoting { get; init; } = null!;
 
         [JsonPropertyName("channel_points_voting")]
-        public PointsVotingModel ChannelPointsVoting { get; init; }
+        public PointsVotingModel ChannelPointsVoting { get; init; } = null!;
 
         [JsonPropertyName("started_at")]
         public DateTime StartedAt { get; init; }
@@ -54,6 +54,6 @@ namespace Twitch.Net.EventSub.Notifications
         
         // Not part of the base, but an easier way to implement the other ones.
         [JsonPropertyName("choices")]
-        public PollBeginChoiceModel[] Choices { get; init; }
+        public T[] Choices { get; init; } = Array.Empty<T>();
     }
 }

@@ -2,7 +2,6 @@
 using System.Net.Http;
 using RateLimiter;
 using Twitch.Net.Api.Configurations;
-using Twitch.Net.Shared.Configurations;
 using Twitch.Net.Shared.Credential;
 
 namespace Twitch.Net.Api.Apis.Helix

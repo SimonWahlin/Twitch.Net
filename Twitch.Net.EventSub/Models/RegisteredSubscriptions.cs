@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Twitch.Net.EventSub.Models
 {
@@ -43,7 +44,7 @@ namespace Twitch.Net.EventSub.Models
     public class RegisteredSubscriptions
     {
         [JsonPropertyName("data")]
-        public RegisteredSubscriptionModel[] Data { get; init; }
+        public RegisteredSubscriptionModel[] Data { get; init; } = Array.Empty<RegisteredSubscriptionModel>();
         
         [JsonPropertyName("total")]
         public int Total { get; init; }
@@ -60,7 +61,7 @@ namespace Twitch.Net.EventSub.Models
     public class RegisteredSubscriptionModel : SubscribeCallbackSubscriptionModel
     {
         [JsonPropertyName("condition")]
-        public RegisteredSubscriptionModelCondition Condition { get; init; }
+        public RegisteredSubscriptionModelCondition Condition { get; init; } = null!;
     }
 
     /**

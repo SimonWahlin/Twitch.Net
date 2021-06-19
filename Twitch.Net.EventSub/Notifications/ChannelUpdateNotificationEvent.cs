@@ -15,27 +15,27 @@ namespace Twitch.Net.EventSub.Notifications
     public class ChannelUpdateNotificationEvent
     {
         [JsonPropertyName("broadcaster_user_id")]
-        public string BroadcasterIdString { get; init; }
+        public string BroadcasterIdString { get; init; } = string.Empty;
         public int BroadcasterId => int.Parse(BroadcasterIdString);
         
         [JsonPropertyName("broadcaster_user_login")]
-        public string BroadcasterUserLogin { get; init; }
+        public string BroadcasterUserLogin { get; init; } = string.Empty;
         
         [JsonPropertyName("broadcaster_user_name")]
-        public string BroadcasterUserName { get; init; }
+        public string BroadcasterUserName { get; init; } = string.Empty;
         
         [JsonPropertyName("title")]
-        public string Title { get; init; }
+        public string Title { get; init; } = string.Empty;
         
         [JsonPropertyName("language")]
-        public string Language { get; init; }
+        public string Language { get; init; } = string.Empty;
         
         [JsonPropertyName("category_id")]
-        public string CategoryIdString { get; init; }
+        public string CategoryIdString { get; init; } = string.Empty;
         public int CategoryId => int.Parse(CategoryIdString);
         
         [JsonPropertyName("category_name")]
-        public string CategoryName { get; init; }
+        public string CategoryName { get; init; } = string.Empty;
         
         [JsonPropertyName("is_mature")]
         public bool IsMature { get; init; }
