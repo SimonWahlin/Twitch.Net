@@ -11,10 +11,10 @@
         <RepositoryType>Open Source</RepositoryType>
         <PackageTags>Twitch EventSub .NET5</PackageTags>
         <Nullable>enable</Nullable>
+        <Description>EventSub Implementation to handle registration, unregister and such.</Description>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.7" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Twitch.Net.Shared\Twitch.Net.Shared.csproj" />
+      <FrameworkReference Include="Microsoft.AspNetCore.App" /><!-- Needed to handle the "HttpRequest" all together in the lib-->
     </ItemGroup>
 
 </Project>

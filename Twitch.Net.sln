@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Communication", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Samples", "Twitch.Net.Samples\Twitch.Net.Samples.csproj", "{D128204F-A3E5-4D09-B5DD-013CDAAAEA34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Pubsub", "Twitch.Net.Pubsub\Twitch.Net.Pubsub.csproj", "{6C5451FE-4AA3-4DC6-9FF3-EB9FF9905F5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.PubSub", "Twitch.Net.PubSub\Twitch.Net.PubSub.csproj", "{6C5451FE-4AA3-4DC6-9FF3-EB9FF9905F5A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Net.Api", "Twitch.Net.Api\Twitch.Net.Api.csproj", "{7147D62B-46E8-43AF-9153-F50ECEF0B4F1}"
 EndProject

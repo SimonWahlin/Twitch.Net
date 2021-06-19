@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Twitch.Net.Shared.Configurations;
 using Twitch.Net.Shared.Credential;
 
@@ -15,59 +15,72 @@ namespace Twitch.Net.Shared.RateLimits
      * If the auto resolver for the "user account" stops working you'll have to manually set the information.
      * The reason why this is outside of "API" library too is because of the use-cases it can be used for
      */
-    public class UserAccountResolver
+    public class UserAccountResolver : IUserAccountStatusResolver
     {
         private const string KrakenBaseUrl = "https://api.twitch.tv/kraken/";
         private const string HelixBaseUrl = "https://api.twitch.tv/helix/";
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IUserAccountResolverCredentialConfiguration _configuration;
-        private readonly ClientCredentialTokenResolver _clientTokenResolver;
+        private readonly AccountCredentialConfiguration _accountConfig;
+        private readonly TokenCredentialConfiguration _tokenConfig;
+        private readonly ITokenResolver _clientTokenResolver;
 
         public UserAccountResolver(
-            IHttpClientFactory httpClientFactory, 
-            IUserAccountResolverCredentialConfiguration configuration
+            IHttpClientFactory httpClientFactory,
+            ITokenResolver tokenResolver,
+            IOptions<AccountCredentialConfiguration> accountConfig,
+            IOptions<TokenCredentialConfiguration> tokenConfig
             )
         {
             _httpClientFactory = httpClientFactory;
-            _configuration = configuration;
-            _clientTokenResolver = new ClientCredentialTokenResolver(_httpClientFactory, configuration);
+            _accountConfig = accountConfig.Value;
+            _tokenConfig = tokenConfig.Value;
+            _clientTokenResolver = tokenResolver;
         }
 
-        public async Task<UserAccountStatus> TryResolveUserAccountStatusOrDefaultAsync()
+        public async Task<UserAccountStatus> ResolveUserAccountStatusAsync() =>
+            await TryResolveUserAccountStatusOrDefaultAsync();
+
+        private async Task<UserAccountStatus> TryResolveUserAccountStatusOrDefaultAsync()
         {
             try
             {
-                if (string.IsNullOrEmpty(_configuration.Username) || 
-                    string.IsNullOrEmpty(_configuration.ClientId) ||
-                    string.IsNullOrEmpty(_configuration.ClientSecret))
+                if (string.IsNullOrEmpty(_accountConfig.Username) ||
+                    string.IsNullOrEmpty(_tokenConfig.ClientId) ||
+                    string.IsNullOrEmpty(_tokenConfig.ClientSecret))
                     return new UserAccountStatus();
 
                 var token = await _clientTokenResolver.GetToken();
                 var type = await _clientTokenResolver.GetTokenType();
                 if (string.IsNullOrEmpty(token))
                     return new UserAccountStatus();
-                
+
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Add("Authorization", $"{type} {token}");
-                client.DefaultRequestHeaders.Add("Client-Id", $"{_configuration.ClientId}");
+                client.DefaultRequestHeaders.Add("Client-Id", $"{_tokenConfig.ClientId}");
 
                 // resolve the actual user Id
-                var currentResponse = await client.GetAsync($"{HelixBaseUrl}users?login={_configuration.Username}");
+                var currentResponse = await client.GetAsync($"{HelixBaseUrl}users?login={_accountConfig.Username}");
                 if (currentResponse.StatusCode != HttpStatusCode.OK)
                     return new UserAccountStatus();
+
                 var currentResult = await currentResponse.Content.ReadFromJsonAsync<UsersResponse>();
 
-                if (currentResult == null || !currentResult.Users.Any() || string.IsNullOrEmpty(currentResult.Users[0].UserId))
+                if (currentResult == null || !currentResult.Users.Any() ||
+                    string.IsNullOrEmpty(currentResult.Users[0].UserId))
                     return new UserAccountStatus();
-                
+
                 // resolve the user account info (undocumented endpoint)
                 var userAccountResponse = await client.GetAsync(
-                    $"{KrakenBaseUrl}users/{currentResult.Users[0].UserId}/chat?api_version=5&client_id={_configuration.ClientId}");
+                    $"{KrakenBaseUrl}users/{currentResult.Users[0].UserId}/chat?api_version=5&client_id={_tokenConfig.ClientId}");
                 if (userAccountResponse.StatusCode != HttpStatusCode.OK)
                     return new UserAccountStatus();
+
                 return await userAccountResponse.Content.ReadFromJsonAsync<UserAccountStatus>();
             }
-            catch { /* empty block */ }                            
+            catch
+            {
+                /* empty block */
+            }
             return new UserAccountStatus();
         }
 

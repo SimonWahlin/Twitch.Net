@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Twitch.Net.Shared.Credential;
 
 namespace Twitch.Net.EventSub
 {
@@ -8,7 +9,10 @@ namespace Twitch.Net.EventSub
     {
         public const string EventSubFactory = "Twitch-EventSub";
         
-        public static void AddEventSubService(this IServiceCollection service, Action<EventSubConfig> config = null)
+        public static IServiceCollection AddTwitchEventSubService(
+            this IServiceCollection service,
+            Action<EventSubConfig>? config = null
+            )
         {
             var configuration = new EventSubConfig();
 
@@ -16,14 +20,23 @@ namespace Twitch.Net.EventSub
             config?.Invoke(configuration);
             
             AddService(service, configuration);
+
+            return service;
         }
 
-        public static void AddEventSubService(this IServiceCollection service, EventSubConfig config = null) =>
+        public static IServiceCollection AddTwitchEventSubService(
+            this IServiceCollection service,
+            EventSubConfig? config = null
+            )
+        {
             AddService(service, config ?? new EventSubConfig());
+
+            return service;
+        }
 
         private static void AddService(IServiceCollection serviceCollection, EventSubConfig config)
         {
-            serviceCollection.AddHttpClient("Twitch-EventSub", c =>
+            serviceCollection.AddHttpClient(EventSubFactory, c =>
             {
                 c.BaseAddress = new Uri("https://api.twitch.tv/");
                 c.DefaultRequestHeaders.Add("Client-ID", config.ClientId);
@@ -32,9 +45,18 @@ namespace Twitch.Net.EventSub
             serviceCollection.Configure<EventSubConfig>(cfg =>
             {
                 cfg.CallbackUrl = config.CallbackUrl;
-                cfg.ClientId = config.ClientId;
                 cfg.SignatureSecret = config.SignatureSecret;
+                cfg.ClientId = config.ClientId;
+                cfg.ClientSecret = config.ClientSecret;
             });
+
+            serviceCollection.Configure<TokenCredentialConfiguration>(cfg =>
+            {
+                cfg.ClientId = config.ClientId;
+                cfg.ClientSecret = config.ClientSecret;
+            });
+            
+            serviceCollection.TryAddSingleton<ITokenResolver, ClientCredentialTokenResolver>();
             serviceCollection.TryAddSingleton<IEventSubService, EventSubService>();
         }
     }

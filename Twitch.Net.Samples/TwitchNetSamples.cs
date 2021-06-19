@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Twitch.Net.Api;
 using Twitch.Net.Api.Client;
+using Twitch.Net.Client;
 using Twitch.Net.Client.Client;
+using Twitch.Net.PubSub;
 using Twitch.Net.PubSub.Client;
 using Twitch.Net.PubSub.Events;
-using Twitch.Net.Shared.Configurations;
-using Twitch.Net.Shared.Credential;
-using Twitch.Net.Shared.RateLimits;
 
 namespace Twitch.Net.Samples
 {
@@ -33,22 +32,40 @@ namespace Twitch.Net.Samples
                 .Build();
 
             // And this would be something you just do with ".Configure<T>()" with the service collection
-            var config = new TwitchCredentialConfiguration(); // this is just to make it convenient for anyone who just wants a pre-defined setup
+            var config = new CustomTwitchConfig();
             configuration.GetSection("Twitch").Bind(config);
             
-            // In a real app we would use a service collection for everything, but it was easier to just make 
-            // an easy sample like this to test with
+            // Since we are in a console app, we will just create this manually
+            // there is also a TwitchLibFactory, but it is if you want everything (event sub included)
+            // but in this sample it wont be here, as that will be part of the "event sub sample instead"
             var collection = new ServiceCollection()
-                .AddHttpClient();
+                .AddTwitchIrcClient(cfg =>
+                {
+                    cfg.Username = config.Username;
+                    cfg.OAuth = config.OAuth;
+                },
+                cfg =>
+                {
+                    cfg.ClientId = config.ClientId;
+                    cfg.ClientSecret = config.ClientSecret;
+                })
+                .AddTwitchPubSubClient(cfg =>
+                {
+                    cfg.OAuth = config.OAuth;
+                })
+                .AddTwitchApiClient(cfg =>
+                {
+                    cfg.ClientId = config.ClientId;
+                    cfg.ClientSecret = config.ClientSecret;
+                });
+            
             var provider = collection.BuildServiceProvider();
-            var factory = provider.GetService<IHttpClientFactory>();
-            var userAccountResolver = new UserAccountResolver(factory, config);
+            var api = provider.GetService<IApiClient>();
+            var irc = provider.GetService<IIrcClient>();
+            var pubSub = provider.GetService<IPubSubClient>();
 
-            var userAccount = await userAccountResolver.TryResolveUserAccountStatusOrDefaultAsync();
-            var api = ApiClientFactory.CreateClient(config, factory, new ClientCredentialTokenResolver(factory, config));
+            // sample of api client
             var users = await api.Helix.Users.GetUsersAsync(logins: new List<string> {"ixyles", "ixylesbot"});
-            var pubSub = PubSubClientFactory.CreateClient();
-            var irc = IrcClientFactory.CreateClient(config, userAccountStatus: userAccount);
 
             irc.Events.OnIrcConnected += () =>
             {
@@ -61,7 +78,7 @@ namespace Twitch.Net.Samples
             pubSub.Events.OnPubSubConnected += () =>
             {
                 Console.WriteLine("[PUBSUB] Connected");
-                OnPubSubConnected(pubSub, config, long.Parse(users.Users.First().Id));
+                OnPubSubConnected(pubSub, config.OAuth, long.Parse(users.Users.First().Id));
                 return Task.CompletedTask;
             };
             pubSub.Events.OnPubSubDisconnect += msg =>
@@ -103,8 +120,8 @@ namespace Twitch.Net.Samples
                 return Task.CompletedTask;
             };
             
-            // if you wanna make sure the pubsub client initial connects
-            // you can just do it in a while loop, since the initial connection will not "retry", only reconnects
+            // if you wanna make sure the pubsub client initial connects goes through, just while await
+            // this is because since the initial connection will not "retry", only after first establishment
             while (!await pubSub.ConnectAsync())
                 Console.WriteLine("[PUBSUB] Failed initial connecting, retrying...");
 
@@ -120,12 +137,12 @@ namespace Twitch.Net.Samples
 
         private void OnPubSubConnected(
             IPubSubClient pubSub, 
-            IPubSubCredentialConfiguration config,
+            string oauth,
             long userId
             ) => 
             pubSub.CreateBuilder()
-                .CreateChannelPointsRedeemTopic(userId)
-                .Listen(config.OAuth);
+                  .CreateChannelPointsRedeemTopic(userId)
+                  .Listen(oauth);
 
         private static void Main() => _ = new TwitchNetSamples();
     }

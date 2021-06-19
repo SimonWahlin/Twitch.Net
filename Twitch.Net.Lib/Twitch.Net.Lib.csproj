@@ -10,6 +10,7 @@
         <RepositoryUrl>https://github.com/Twitch-Net/Twitch.Net</RepositoryUrl>
         <RepositoryType>Open Source</RepositoryType>
         <PackageTags>Twitch IRC PubSub API EventSub .NET5</PackageTags>
+        <Description>Collection of the entire "Twitch.Net.X" Library, for an easier installation and upgrade of all nugets.</Description>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,7 +18,7 @@
       <ProjectReference Include="..\Twitch.Net.Client\Twitch.Net.Client.csproj" />
       <ProjectReference Include="..\Twitch.Net.Communication\Twitch.Net.Communication.csproj" />
       <ProjectReference Include="..\Twitch.Net.EventSub\Twitch.Net.EventSub.csproj" />
-      <ProjectReference Include="..\Twitch.Net.Pubsub\Twitch.Net.Pubsub.csproj" />
+      <ProjectReference Include="..\Twitch.Net.PubSub\Twitch.Net.PubSub.csproj" />
       <ProjectReference Include="..\Twitch.Net.Shared\Twitch.Net.Shared.csproj" />
     </ItemGroup>
 

@@ -11,16 +11,10 @@ namespace Twitch.Net.EventSub.Models
         public string Version { get; init; }
         
         [JsonPropertyName("condition")]
-        public SubscribeConditionModel Condition { get; init; }
+        public IConditionModel Condition { get; init; }
         
         [JsonPropertyName("transport")]
         public SubscribeTransportModel Transport { get; init; }
-    }
-
-    public class SubscribeConditionModel
-    {
-        [JsonPropertyName("broadcaster_user_id")]
-        public string Broadcaster { get; init; }
     }
 
     public class SubscribeTransportModel

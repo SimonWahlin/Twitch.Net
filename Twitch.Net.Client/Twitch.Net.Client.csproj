@@ -10,6 +10,7 @@
         <RepositoryUrl>https://github.com/Twitch-Net/Twitch.Net</RepositoryUrl>
         <RepositoryType>Open Source</RepositoryType>
         <PackageTags>Twitch IRC Chat Websocket .NET5</PackageTags>
+        <Description>Irc implementation, to communicate and receive events from twitch channels.</Description>
     </PropertyGroup>
 
     <ItemGroup>

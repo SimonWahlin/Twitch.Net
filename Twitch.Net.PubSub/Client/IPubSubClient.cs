@@ -11,5 +11,6 @@ namespace Twitch.Net.PubSub.Client
         Task<bool> ConnectAsync();
         TopicBuilder CreateBuilder();
         IPubSubClientEventHandler Events { get; }
+        void Send(string data);
     }
 }

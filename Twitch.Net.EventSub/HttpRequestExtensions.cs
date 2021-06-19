@@ -10,7 +10,7 @@ namespace Twitch.Net.EventSub
         /// <summary>
         /// Retrieve the raw body as a string from the Request.Body stream
         /// </summary>
-        public static async Task<string> GetRawBodyStringAsync(this HttpRequest request, Encoding encoding = null)
+        public static async Task<string> GetRawBodyStringAsync(this HttpRequest request, Encoding? encoding = null)
         {
             encoding ??= Encoding.UTF8;
 

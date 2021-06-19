@@ -10,14 +10,11 @@
         <RepositoryUrl>https://github.com/Twitch-Net/Twitch.Net</RepositoryUrl>
         <RepositoryType>Open Source</RepositoryType>
         <PackageTags>Twitch API .NET5</PackageTags>
+        <Description>API implementation, to perform requests against twitch Helix API.</Description>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Twitch.Net.Shared\Twitch.Net.Shared.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Apis\Kraken\Models" />
     </ItemGroup>
 
     <ItemGroup>

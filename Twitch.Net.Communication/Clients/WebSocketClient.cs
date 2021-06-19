@@ -12,7 +12,7 @@ namespace Twitch.Net.Communication.Clients
     internal class WebSocketClient : IClient
     {
         private readonly string _clientAddress;
-        private readonly ILogger<IClient> _logger;
+        private readonly ILogger<IWebsocketClient> _logger;
 
         private Option<IClientListener> _clientListener = Option.None<IClientListener>();
         private IWebsocketClient _client;
@@ -21,7 +21,8 @@ namespace Twitch.Net.Communication.Clients
 
         public WebSocketClient(
             string address,
-            ILogger<IClient> logger = null)
+            ILogger<IWebsocketClient> logger = null
+            )
         {
             _clientAddress = address; // the server address the connection will be connecting to.
             _logger = logger;

@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Twitch.Net.Client.Client.Handlers.Events;
 using Twitch.Net.Client.Client.Handlers.Join;
+using Twitch.Net.Client.Configurations;
 using Twitch.Net.Client.Events;
 using Twitch.Net.Client.Events.Handlers;
 using Twitch.Net.Client.Irc;
 using Twitch.Net.Client.Models;
+using Twitch.Net.Communication;
 using Twitch.Net.Communication.Clients;
 using Twitch.Net.Communication.Events;
-using Twitch.Net.Shared.Configurations;
 using Twitch.Net.Shared.RateLimits;
 
 namespace Twitch.Net.Client.Client
@@ -22,7 +24,7 @@ namespace Twitch.Net.Client.Client
         private bool _authenticated;
         
         private readonly IClient _connectionClient;
-        private readonly IIrcClientCredentialConfiguration _credentialConfiguration;
+        private readonly IrcCredentialConfig _config;
         private readonly IrcClientEventHandler _eventHandler;
         private readonly JoinQueueHandler _joinChannelHandler;
         private readonly List<ChatChannel> _channels = new();
@@ -34,17 +36,16 @@ namespace Twitch.Net.Client.Client
         private readonly ChatChannelStateEventHandler _chatChannelStateEventHandler;
 
         public IrcClient(
-            IIrcClientCredentialConfiguration credentialConfiguration, 
-            IClient connectionClient,
-            UserAccountStatus userAccountStatus = null
+            IOptions<IrcCredentialConfig> config, 
+            IClientFactory factory,
+            IUserAccountStatusResolver accountStatusResolver
             )
         {
-            _credentialConfiguration = credentialConfiguration;
-            var accountStatus = userAccountStatus ?? new UserAccountStatus();
+            _config = config.Value;
 
             // Setup client handlers
             _eventHandler = new IrcClientEventHandler();
-            _joinChannelHandler = new JoinQueueHandler(this, accountStatus.IsVerifiedBot);
+            _joinChannelHandler = new JoinQueueHandler(this, accountStatusResolver);
             
             // Setup event handlers
             _userJoinedEventHandler = new UserJoinedEventHandler(this);
@@ -53,8 +54,8 @@ namespace Twitch.Net.Client.Client
             _chatChannelStateEventHandler = new ChatChannelStateEventHandler(this);
             
             // Create connection
-            _connectionClient = connectionClient;
-            connectionClient.SetListener(this);
+            _connectionClient = factory.CreateClient(IrcClientAddressBuilder.CreateAddress());
+            _connectionClient.SetListener(this);
         }
 
         public IReadOnlyList<ChatChannel> Channels
@@ -67,10 +68,15 @@ namespace Twitch.Net.Client.Client
             => _connectionClient.IsConnected;
 
         public string BotUsername
-            => _credentialConfiguration.Username;
+            => _config.Username;
 
-        public async Task<bool> ConnectAsync() =>
-            await _connectionClient.ConnectAsync();
+        public async Task<bool> ConnectAsync()
+        {
+            if (string.IsNullOrEmpty(_config.OAuth) || string.IsNullOrEmpty(_config.Username))
+                throw new ArgumentException("OAuth or Username configuration is null or empty.");
+            
+            return await _connectionClient.ConnectAsync();
+        }
 
         public async Task DisconnectAsync(string custom = null) =>
             await _connectionClient.DisconnectAsync(custom);
@@ -89,7 +95,7 @@ namespace Twitch.Net.Client.Client
         {
             if (string.IsNullOrEmpty(message) || 
                 chatChannel == null || 
-                string.IsNullOrEmpty(_credentialConfiguration?.Username))
+                string.IsNullOrEmpty(_config?.Username))
                 return false;
             
             if (message.Length > 500)
@@ -102,7 +108,7 @@ namespace Twitch.Net.Client.Client
             {
                 Channel = chatChannel.ChannelName,
                 Message = message,
-                Username = _credentialConfiguration.Username
+                Username = _config.Username
             };
 
             return _connectionClient.Send(outbound.ToString()); // this can return false if connection is closed.
@@ -177,8 +183,8 @@ namespace Twitch.Net.Client.Client
         private void AuthenticateConnection()
         {
             _authenticated = false; // before we send auths, we reset it to false so the event will re-fire
-            _connectionClient.Send(Rfc2812Parser.Pass(_credentialConfiguration.OAuth));
-            _connectionClient.Send(Rfc2812Parser.Nick(_credentialConfiguration.Username));
+            _connectionClient.Send(Rfc2812Parser.Pass(_config.OAuth));
+            _connectionClient.Send(Rfc2812Parser.Nick(_config.Username));
 
             _connectionClient.Send("CAP REQ twitch.tv/membership");
             _connectionClient.Send("CAP REQ twitch.tv/commands");

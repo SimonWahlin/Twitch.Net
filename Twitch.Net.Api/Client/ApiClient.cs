@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net.Http;
+using Microsoft.Extensions.Options;
 using RateLimiter;
 using Twitch.Net.Api.Apis.Helix;
-using Twitch.Net.Api.Apis.Kraken;
-using Twitch.Net.Shared.Configurations;
+using Twitch.Net.Api.Configurations;
 using Twitch.Net.Shared.Credential;
 
 namespace Twitch.Net.Api.Client
@@ -11,17 +11,15 @@ namespace Twitch.Net.Api.Client
     internal class ApiClient : IApiClient
     {
         public ApiClient(
-            IApiCredentialConfiguration credentials, 
+            IOptions<ApiCredentialConfig> config, 
             IHttpClientFactory httpClientFactory, 
             ITokenResolver tokenResolver
             )
         {
             var rateLimiter = TimeLimiter.GetFromMaxCountByInterval(800, TimeSpan.FromSeconds(60));
-            ApiKraken = new ApiKraken(tokenResolver, credentials, httpClientFactory, rateLimiter);
-            Helix = new ApiHelix(tokenResolver, credentials, httpClientFactory, rateLimiter);
+            Helix = new ApiHelix(tokenResolver, config.Value, httpClientFactory, rateLimiter);
         }
 
-        public IApiKraken ApiKraken { get; }
         public IApiHelix Helix { get; }
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Optional;
 using RateLimiter;
 using Twitch.Net.Api.Client;
+using Twitch.Net.Api.Configurations;
 using Twitch.Net.Shared.Configurations;
 using Twitch.Net.Shared.Credential;
 using Twitch.Net.Shared.Extensions;
@@ -24,7 +25,8 @@ namespace Twitch.Net.Api.Apis
         protected AbstractApiBase(
             IHttpClientFactory httpClientFactory, 
             TimeLimiter rateLimiter, 
-            ILogger<IApiClient> logger = null)
+            ILogger<IApiClient> logger = null
+            )
         {
             _httpClientFactory = httpClientFactory;
             _logger = logger;
@@ -35,12 +37,13 @@ namespace Twitch.Net.Api.Apis
         public abstract string BaseUrl { get; }
         public abstract string ClientIdHeaderKey { get; }
         public abstract IReadOnlyDictionary<string, string> ExtraHeaders { get; }
-        public abstract IApiCredentialConfiguration Credentials { get; }
+        public abstract ApiCredentialConfig Config { get; }
 
         public async Task<Option<T>> GetAsync<T>(
             string segment, 
             IReadOnlyList<KeyValuePair<string, string>> parameters = null, 
-            string token = null)
+            string token = null
+            )
         {
             try
             {
@@ -48,12 +51,12 @@ namespace Twitch.Net.Api.Apis
                     ? token
                     : await ResolveToken();
 
-                if (string.IsNullOrEmpty(Credentials.ClientId) || string.IsNullOrEmpty(authorization))
+                if (string.IsNullOrEmpty(Config.ClientId) || string.IsNullOrEmpty(authorization))
                     return Option.None<T>();
 
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Add("Authorization", authorization);
-                client.DefaultRequestHeaders.Add(ClientIdHeaderKey, $"{Credentials.ClientId}");
+                client.DefaultRequestHeaders.Add(ClientIdHeaderKey, $"{Config.ClientId}");
                 ExtraHeaders.ForEach(extra =>
                     client.DefaultRequestHeaders.Add(extra.Key, extra.Value));
 

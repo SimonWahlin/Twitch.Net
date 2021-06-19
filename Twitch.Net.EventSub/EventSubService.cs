@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
@@ -6,13 +7,16 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Optional;
 using Optional.Unsafe;
+using Twitch.Net.EventSub.Converter;
 using Twitch.Net.EventSub.Events;
 using Twitch.Net.EventSub.Models;
 using Twitch.Net.EventSub.Notifications;
+using Twitch.Net.Shared.Credential;
 
 namespace Twitch.Net.EventSub
 {
@@ -20,63 +24,76 @@ namespace Twitch.Net.EventSub
     {
         private readonly ILogger<EventSubService> _logger;
         private readonly IHttpClientFactory _factory;
+        private readonly ITokenResolver _tokenResolver;
         private readonly EventSubConfig _config;
         private readonly EventSubEventHandler _eventHandler;
+        private readonly JsonSerializerOptions _jsonSerializerOptions;
 
         public EventSubService(
             ILogger<EventSubService> logger,
             IHttpClientFactory factory,
-            IOptions<EventSubConfig> config
+            IOptions<EventSubConfig> config,
+            ITokenResolver tokenResolver
             )
         {
             _eventHandler = new EventSubEventHandler(logger);
+            _jsonSerializerOptions = new JsonSerializerOptions
+            {
+                IncludeFields = true,
+                Converters =
+                {
+                    new ConditionConverter()
+                }
+            };
+            
             _logger = logger;
             _factory = factory;
+            _tokenResolver = tokenResolver;
             _config = config.Value;
         }
 
         public IEventSubEventHandler Events => _eventHandler;
 
-        public async Task<bool> Handle(HttpRequest request)
+        public async Task<IActionResult> Handle(HttpRequest request)
         {
             try
             {
                 var type = request.Headers[EventSubHeaderConst.MessageType].ToString();
                 var raw = await request.GetRawBodyStringAsync(); // we need the raw request for "hmac verification"
-                if (!HandleVerification(request.Headers, raw))
-                    return false;
+                if (!HandleVerification(request.Headers, raw, out var verification))
+                    return new BadRequestResult();
                 
                 switch (type)
                 {
                     case "webhook_callback_verification":
-                        return true; // HandleVerification handles this indirectly
+                        return new OkObjectResult(verification.Challenge); // HandleVerification handles this indirectly
                     case "notification":
                         await HandleNotification(request, raw);
-                        return true;
+                        return new OkResult();
                     case "revocation":
-                        return true; // we do not do anything for now, but at least it is being "handled"
+                        return new OkResult(); // we do not do anything for now, but at least it is being "handled"
                     default:
                         // so we can handle future stuff, in-case twitch add something new we will get an information log about it.
                         _logger.LogInformation($"The event type {type} of EventSub was not being handled");
-                        return true;
+                        return new BadRequestResult();
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return false;
+                return new BadRequestResult();
             }
         }
 
-        private bool HandleVerification(IHeaderDictionary headers, string raw)
+        private bool HandleVerification(IHeaderDictionary headers, string raw, out SubscribeCallbackModel model)
         {
-            
             var hmac =
                 headers[EventSubHeaderConst.MessageId] +
                 headers[EventSubHeaderConst.MessageTimestamp] +
                 raw;
             var sign = $"sha256={GetHash(hmac, _config.SignatureSecret)}";
 
+            model = JsonSerializer.Deserialize<SubscribeCallbackModel>(raw)!;
             return sign == headers[EventSubHeaderConst.MessageSignature];
         }
         
@@ -110,38 +127,38 @@ namespace Twitch.Net.EventSub
             string @event
             ) => @event switch
             {
-                "channel.follow" => ConvertDataToModel<ChannelFollowNotificationEvent>(raw),
-                "channel.update" => ConvertDataToModel<ChannelUpdateNotificationEvent>(raw),
-                "channel.subscribe" => ConvertDataToModel<ChannelSubscribeNotificationEvent>(raw),
-                "channel.subscription.end" => ConvertDataToModel<ChannelSubscribeEndNotificationEvent>(raw),
-                "channel.subscription.gift" => ConvertDataToModel<ChannelSubscribeGiftNotificationEvent>(raw),
-                "channel.subscription.message" => ConvertDataToModel<ChannelSubscribeMessageNotificationEvent>(raw),
-                "channel.cheer" => ConvertDataToModel<ChannelCheerNotificationEvent>(raw),
-                "channel.raid" => ConvertDataToModel<ChannelRaidNotificationEvent>(raw),
-                "channel.ban" => ConvertDataToModel<ChannelBanNotificationEvent>(raw),
-                "channel.unban" => ConvertDataToModel<ChannelUnbanNotificationEvent>(raw),
-                "channel.moderator.add" => ConvertDataToModel<ChannelModeratorAddNotificationEvent>(raw),
-                "channel.moderator.remove" => ConvertDataToModel<ChannelModeratorRemoveNotificationEvent>(raw),
-                "channel.channel_points_custom_reward.add" => ConvertDataToModel<ChannelRedeemChangeNotificationEvent>(raw),
-                "channel.channel_points_custom_reward.update" => ConvertDataToModel<ChannelRedeemChangeNotificationEvent>(raw),
-                "channel.channel_points_custom_reward.remove" => ConvertDataToModel<ChannelRedeemChangeNotificationEvent>(raw),
-                "channel.channel_points_custom_reward_redemption.add" => ConvertDataToModel<ChannelRedeemRedemptionReward>(raw),
-                "channel.channel_points_custom_reward_redemption.update" => ConvertDataToModel<ChannelRedeemRedemptionReward>(raw),
-                "channel.poll.begin" => ConvertDataToModel<ChannelPollBeginNotificationEvent>(raw),
-                "channel.poll.progress" => ConvertDataToModel<ChannelPollProgressNotificationEvent>(raw),
-                "channel.poll.end" => ConvertDataToModel<ChannelPollEndNotificationEvent>(raw),
-                "channel.prediction.begin" => ConvertDataToModel<ChannelPredictBeginNotificationEvent>(raw),
-                "channel.prediction.progress" => ConvertDataToModel<ChannelPredictProgressNotificationEvent>(raw),
-                "channel.prediction.lock" => ConvertDataToModel<ChannelPredictLockNotificationEvent>(raw),
-                "channel.prediction.end" => ConvertDataToModel<ChannelPredictEndNotificationEvent>(raw),
-                "extension.bits_transaction.create" => ConvertDataToModel<ExtensionBitTransactionNotificationEvent>(raw),
-                "channel.hype_train.begin" => ConvertDataToModel<ChannelHypeTrainBeginNotificationEvent>(raw),
-                "channel.hype_train.progress" => ConvertDataToModel<ChannelHypeTrainProgressNotificationEvent>(raw),
-                "channel.hype_train.end" => ConvertDataToModel<ChannelHypeTrainEndNotificationEvent>(raw),
-                "stream.online" => ConvertDataToModel<StreamOnlineNotificationEvent>(raw),
-                "stream.offline" => ConvertDataToModel<StreamOfflineNotificationEvent>(raw),
-                "user.authorization.revoke" => ConvertDataToModel<UserAuthRevokeNotificationEvent>(raw),
-                "user.update" => ConvertDataToModel<UserUpdateNotificationEvent>(raw),
+                EventSubTypes.ChannelFollow => ConvertDataToModel<ChannelFollowNotificationEvent>(raw),
+                EventSubTypes.ChannelUpdate => ConvertDataToModel<ChannelUpdateNotificationEvent>(raw),
+                EventSubTypes.ChannelSubscription => ConvertDataToModel<ChannelSubscribeNotificationEvent>(raw),
+                EventSubTypes.ChannelSubscriptionEnd => ConvertDataToModel<ChannelSubscribeEndNotificationEvent>(raw),
+                EventSubTypes.ChannelSubscriptionGift => ConvertDataToModel<ChannelSubscribeGiftNotificationEvent>(raw),
+                EventSubTypes.ChannelSubscriptionMessage => ConvertDataToModel<ChannelSubscribeMessageNotificationEvent>(raw),
+                EventSubTypes.ChannelCheer => ConvertDataToModel<ChannelCheerNotificationEvent>(raw),
+                EventSubTypes.ChannelRaid => ConvertDataToModel<ChannelRaidNotificationEvent>(raw),
+                EventSubTypes.ChannelBan => ConvertDataToModel<ChannelBanNotificationEvent>(raw),
+                EventSubTypes.ChannelUnban => ConvertDataToModel<ChannelUnbanNotificationEvent>(raw),
+                EventSubTypes.ChannelModeratorAdd => ConvertDataToModel<ChannelModeratorAddNotificationEvent>(raw),
+                EventSubTypes.ChannelModeratorRemove => ConvertDataToModel<ChannelModeratorRemoveNotificationEvent>(raw),
+                EventSubTypes.ChannelCustomRewardAdd => ConvertDataToModel<ChannelRedeemChangeNotificationEvent>(raw),
+                EventSubTypes.ChannelCustomRewardUpdate => ConvertDataToModel<ChannelRedeemChangeNotificationEvent>(raw),
+                EventSubTypes.ChannelCustomRewardRemove => ConvertDataToModel<ChannelRedeemChangeNotificationEvent>(raw),
+                EventSubTypes.ChannelRedemptionAdd => ConvertDataToModel<ChannelRedeemRedemptionReward>(raw),
+                EventSubTypes.ChannelRedemptionUpdate => ConvertDataToModel<ChannelRedeemRedemptionReward>(raw),
+                EventSubTypes.ChannelPollBegin => ConvertDataToModel<ChannelPollBeginNotificationEvent>(raw),
+                EventSubTypes.ChannelPollProgress => ConvertDataToModel<ChannelPollProgressNotificationEvent>(raw),
+                EventSubTypes.ChannelPollEnd => ConvertDataToModel<ChannelPollEndNotificationEvent>(raw),
+                EventSubTypes.ChannelPredictBegin => ConvertDataToModel<ChannelPredictBeginNotificationEvent>(raw),
+                EventSubTypes.ChannelPredictProgress => ConvertDataToModel<ChannelPredictProgressNotificationEvent>(raw),
+                EventSubTypes.ChannelPredictLock => ConvertDataToModel<ChannelPredictLockNotificationEvent>(raw),
+                EventSubTypes.ChannelPredictEnd => ConvertDataToModel<ChannelPredictEndNotificationEvent>(raw),
+                EventSubTypes.ExtensionBitTransaction => ConvertDataToModel<ExtensionBitTransactionNotificationEvent>(raw),
+                EventSubTypes.ChannelHypeTrainBegin => ConvertDataToModel<ChannelHypeTrainBeginNotificationEvent>(raw),
+                EventSubTypes.ChannelHypeTrainProgress => ConvertDataToModel<ChannelHypeTrainProgressNotificationEvent>(raw),
+                EventSubTypes.ChannelHypeTrainEnd => ConvertDataToModel<ChannelHypeTrainEndNotificationEvent>(raw),
+                EventSubTypes.StreamOnline => ConvertDataToModel<StreamOnlineNotificationEvent>(raw),
+                EventSubTypes.StreamOffline => ConvertDataToModel<StreamOfflineNotificationEvent>(raw),
+                EventSubTypes.UserAuthRevoke => ConvertDataToModel<UserAuthRevokeNotificationEvent>(raw),
+                EventSubTypes.UserUpdate => ConvertDataToModel<UserUpdateNotificationEvent>(raw),
                 _ => Option.None<INotificationEvent>()
             };
 
@@ -149,8 +166,7 @@ namespace Twitch.Net.EventSub
         {
             try
             {
-                var model = JsonSerializer.Deserialize<NotificationEvent<T>>(raw, new JsonSerializerOptions { IncludeFields = true });
-                return model.Some<INotificationEvent>();
+                return JsonSerializer.Deserialize<NotificationEvent<T>>(raw, _jsonSerializerOptions)!.Some<INotificationEvent>();
             }
             catch (Exception ex)
             {
@@ -159,17 +175,58 @@ namespace Twitch.Net.EventSub
             }
         }
         
-        public async Task<bool> Subscribe(SubscribeModel model, string token)
+        public async Task<SubscribeResult> Subscribe(SubscribeModel model, string? token = null)
         {
             try
             {
                 var client = _factory.CreateClient(EventSubServiceFactory.EventSubFactory);
                 var request = new HttpRequestMessage(HttpMethod.Post, "/helix/eventsub/subscriptions");
 
-                var bytes = JsonSerializer.SerializeToUtf8Bytes(model);
+                var bytes = JsonSerializer.SerializeToUtf8Bytes(model, _jsonSerializerOptions);
                 var content = new ByteArrayContent(bytes);
                 content.Headers.Add("Content-Type", "application/json");
                 request.Content = content;
+
+                if (string.IsNullOrEmpty(token))
+                    token = await _tokenResolver.GetToken();
+                
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                var result = await client.SendAsync(request);
+
+                if (result.StatusCode == HttpStatusCode.Conflict)
+                    return new SubscribeResult
+                    {
+                        AlreadyRegistered = true
+                    };
+                
+                result.EnsureSuccessStatusCode();
+
+                return new SubscribeResult
+                {
+                    // if it fails it will throw an Exception anyways and not return a null object.
+                    Output = (await JsonSerializer.DeserializeAsync<SubscribeResponseModel>(
+                        await result.Content.ReadAsStreamAsync()
+                    )).Some()!
+                }; 
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new SubscribeResult();
+            }
+        }
+
+        public async Task<bool> Unsubscribe(string id, string? token = null)
+        {
+            try
+            {
+                var client = _factory.CreateClient(EventSubServiceFactory.EventSubFactory);
+                var request = new HttpRequestMessage(HttpMethod.Delete, $"/helix/eventsub/subscriptions?id={id}");
+
+                if (string.IsNullOrEmpty(token))
+                    token = await _tokenResolver.GetToken();
+                
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
                 var result = await client.SendAsync(request);
@@ -181,6 +238,30 @@ namespace Twitch.Net.EventSub
             {
                 _logger.LogError(ex.Message);
                 return false;
+            }
+        }
+
+        public async Task<Option<RegisteredSubscriptions>> Subscriptions(string? token = null)
+        {
+            try
+            {
+                var client = _factory.CreateClient(EventSubServiceFactory.EventSubFactory);
+                var request = new HttpRequestMessage(HttpMethod.Get, $"/helix/eventsub/subscriptions");
+
+                if (string.IsNullOrEmpty(token))
+                    token = await _tokenResolver.GetToken();
+                
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                var result = await client.SendAsync(request);
+                result.EnsureSuccessStatusCode();
+
+                return (await JsonSerializer.DeserializeAsync<RegisteredSubscriptions>(await result.Content.ReadAsStreamAsync()))!.Some();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return Option.None<RegisteredSubscriptions>();
             }
         }
     }

@@ -10,6 +10,7 @@
         <RepositoryUrl>https://github.com/Twitch-Net/Twitch.Net</RepositoryUrl>
         <RepositoryType>Open Source</RepositoryType>
         <PackageTags>Twitch Websocket Communication .NET5</PackageTags>
+        <Description>Communication core to interact with twitch systems throught websocket, such as IRC and PubSub.</Description>
     </PropertyGroup>
 
     <ItemGroup>

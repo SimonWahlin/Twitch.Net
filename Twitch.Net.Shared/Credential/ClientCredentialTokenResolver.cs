@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Twitch.Net.Shared.Configurations;
 
 namespace Twitch.Net.Shared.Credential
@@ -23,15 +24,15 @@ namespace Twitch.Net.Shared.Credential
         private DateTime _tokenExpiration = DateTime.Now;
         private readonly SemaphoreSlim _semaphoreSlim = new(1,1);
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ITokenResolverCredentialConfiguration _configuration;
+        private readonly TokenCredentialConfiguration _config;
 
         public ClientCredentialTokenResolver(
             IHttpClientFactory httpClientFactory,
-            ITokenResolverCredentialConfiguration configuration
+            IOptions<TokenCredentialConfiguration> config
             )
         {
             _httpClientFactory = httpClientFactory;
-            _configuration = configuration;
+            _config = config.Value;
         }
         
         public bool IsTokenExpired() => DateTime.Now >_tokenExpiration;
@@ -83,8 +84,8 @@ namespace Twitch.Net.Shared.Credential
             using var client = _httpClientFactory.CreateClient();
             var @params = new Dictionary<string, string>
             {
-                { "client_id", _configuration.ClientId },
-                { "client_secret", _configuration.ClientSecret },
+                { "client_id", _config.ClientId },
+                { "client_secret", _config.ClientSecret },
                 { "grant_type", "client_credentials" },
                 { "scopes", "" }
             };

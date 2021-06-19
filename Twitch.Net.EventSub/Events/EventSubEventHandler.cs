@@ -277,20 +277,20 @@ namespace Twitch.Net.EventSub.Events
                 await _channelModeratorRemovedEvents.InvokeAsync(chlModRemove).ConfigureAwait(false);
             else if (@event is NotificationEvent<ChannelRedeemChangeNotificationEvent> chlRedeem)
             {
-                if (type == "channel.channel_points_custom_reward.add")
+                if (type == EventSubTypes.ChannelCustomRewardAdd)
                     await _channelRedeemAddedEvents.InvokeAsync(chlRedeem).ConfigureAwait(false);
-                else if (type == "channel.channel_points_custom_reward.update")
+                else if (type == EventSubTypes.ChannelCustomRewardUpdate)
                     await _channelRedeemUpdatedEvents.InvokeAsync(chlRedeem).ConfigureAwait(false);
-                else if (type == "channel.channel_points_custom_reward.remove")
+                else if (type == EventSubTypes.ChannelCustomRewardRemove)
                     await _channelRedeemRemovedEvents.InvokeAsync(chlRedeem).ConfigureAwait(false);
                 else 
                     _logger.LogError($"Event of type {@event} does not have an invoker event implemented. - ${type}");
             }
             else if (@event is NotificationEvent<ChannelRedeemRedemptionReward> chlRdmChan)
             {
-                if (type == "channel.channel_points_custom_reward_redemption.add")
+                if (type == EventSubTypes.ChannelRedemptionAdd)
                     await _channelRedemptionAddedEvents.InvokeAsync(chlRdmChan).ConfigureAwait(false);
-                else if (type == "channel.channel_points_custom_reward_redemption.update")
+                else if (type == EventSubTypes.ChannelRedemptionUpdate)
                     await _channelRedemptionUpdatedEvents.InvokeAsync(chlRdmChan).ConfigureAwait(false);
                 else 
                     _logger.LogError($"Event of type {@event} does not have an invoker event implemented. - ${type}");

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Options;
 using Twitch.Net.PubSub.Client;
+using Twitch.Net.PubSub.Configurations;
 using Twitch.Net.Shared.Extensions;
 
 namespace Twitch.Net.PubSub.Topics
@@ -11,12 +13,17 @@ namespace Twitch.Net.PubSub.Topics
         private const string ValidRandomCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         private static readonly Random Gen = new();
         
-        private readonly PubSubClient _client;
+        private readonly IPubSubClient _client;
         private readonly List<string> _topics = new();
+        private readonly PubSubCredentialConfig _config;
 
-        public TopicBuilder(PubSubClient client)
+        public TopicBuilder(
+            IPubSubClient client,
+            IOptions<PubSubCredentialConfig> config
+            )
         {
             _client = client;
+            _config = config.Value;
         }
         
         private TopicBuilder AddTopic(string topic)
@@ -34,9 +41,15 @@ namespace Twitch.Net.PubSub.Topics
         public TopicBuilder CreateChannelPointsRedeemTopic(long userId)
             => AddTopic($"channel-points-channel-v1.{userId}");
         
+        /**
+         * Overload if you wanna pass a specific token otherwise it'll take the configured one.
+         */
         public void Listen(string token = null)
             => SendTopics(true, token);
 
+        /**
+         * Overload if you wanna pass a specific token otherwise it'll take the configured one.
+         */
         public void Unlisten(string token = null)
             => SendTopics(true, token);
 
@@ -44,6 +57,9 @@ namespace Twitch.Net.PubSub.Topics
         {
             if (_topics.Count == 0)
                 return;
+
+            if (string.IsNullOrEmpty(token))
+                token = _config.OAuth;
 
             var nonce = GenerateNonce();
 

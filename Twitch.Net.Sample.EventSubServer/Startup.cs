@@ -29,8 +29,9 @@ namespace Twitch.Net.Sample.EventSubServer
             // if you wanna have a config file, otherwise this stuff can be hard coded with opt => {}
             var config = new EventSubConfig();
             _configuration.GetSection("EventSub").Bind(config);
-            services.AddEventSubService(config);
+            services.AddTwitchEventSubService(config);
             services.AddHostedService<DummyService>();
+            services.AddTransient<EventSubBuilder>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

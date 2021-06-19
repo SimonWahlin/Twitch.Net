@@ -10,6 +10,7 @@
         <RepositoryUrl>https://github.com/Twitch-Net/Twitch.Net</RepositoryUrl>
         <RepositoryType>Open Source</RepositoryType>
         <PackageTags>PubSub Twitch Websocket .NET5</PackageTags>
+        <Description>PubSub Implementation to communicate with twitchs PubSub system.</Description>
     </PropertyGroup>
 
     <ItemGroup>

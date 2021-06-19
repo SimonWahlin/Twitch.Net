@@ -3,21 +3,25 @@ using System.Net.WebSockets;
 using System.Threading.Tasks;
 using System.Timers;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Twitch.Net.Communication;
 using Twitch.Net.Communication.Clients;
 using Twitch.Net.Communication.Events;
 using Twitch.Net.Communication.Models;
 using Twitch.Net.PubSub.Client.Handlers.Events;
+using Twitch.Net.PubSub.Configurations;
 using Twitch.Net.PubSub.Events;
 using Twitch.Net.PubSub.Topics;
 using Twitch.Net.Shared.Extensions;
 
 namespace Twitch.Net.PubSub.Client
 {
-    public class PubSubClient : IPubSubClient, IClientListener
+    internal class PubSubClient : IPubSubClient, IClientListener
     {
         private readonly Random _gen = new();
         private readonly IClient _connectionClient;
-        private readonly ILogger<PubSubClient> _logger;
+        private readonly ILogger<IPubSubClient> _logger;
+        private readonly IOptions<PubSubCredentialConfig> _config;
         private readonly TopicResponseHandler _topicResponseHandler;
         private readonly PubSubClientEventHandler _eventHandler;
 
@@ -25,13 +29,18 @@ namespace Twitch.Net.PubSub.Client
         private readonly Timer _pongTimer;
         private readonly string _pingJson;
 
-        public PubSubClient(IClient connectionClient, ILogger<PubSubClient> logger = null)
+        public PubSubClient(
+            IClientFactory clientFactory,
+            ILogger<IPubSubClient> logger,
+            IOptions<PubSubCredentialConfig> config
+            )
         {
             _eventHandler = new PubSubClientEventHandler();
             _topicResponseHandler = new TopicResponseHandler(_eventHandler);
-            _connectionClient = connectionClient;
+            _connectionClient = clientFactory.CreateClient(PubSubClientAddressBuilder.CreateAddress());
             _logger = logger;
-            connectionClient.SetListener(this);
+            _config = config;
+            _connectionClient.SetListener(this);
 
             // Ping handler setup
             _pingTimer = new Timer
@@ -51,7 +60,7 @@ namespace Twitch.Net.PubSub.Client
         }
 
         public TopicBuilder CreateBuilder() 
-            => new(this);
+            => new(this, _config);
 
         public IPubSubClientEventHandler Events
             => _eventHandler;

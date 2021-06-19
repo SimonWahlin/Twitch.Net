@@ -3,22 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Twitch.Net.EventSub.Models
 {
-    public class SubscribeResponseModel
-    {
-        [JsonPropertyName("data")]
-        public SubscribeResponseDataModel[] Data { get; init; }
-        
-        [JsonPropertyName("total")]
-        public int Total { get; init; }
-        
-        [JsonPropertyName("total_cost")]
-        public int TotalCost { get; init; }
-        
-        [JsonPropertyName("max_total_cost")]
-        public int MaxTotalCost { get; init; }
-    }
-
-    public class SubscribeResponseDataModel
+    public class  SubscribeCallbackSubscriptionModel
     {
         [JsonPropertyName("id")]
         public string Id { get; init; }
@@ -35,14 +20,14 @@ namespace Twitch.Net.EventSub.Models
         [JsonPropertyName("cost")]
         public int Cost { get; init; }
         
+        [JsonPropertyName("transport")]
+        public SubscribeCallbackSubscriptionTransportModel Transport { get; init; }
+        
         [JsonPropertyName("created_at")]
         public DateTime CreatedAt { get; init; }
-        
-        [JsonPropertyName("transport")]
-        public SubscribeResponseDataTransportModel Transport { get; init; }
     }
 
-    public class SubscribeResponseDataTransportModel
+    public class SubscribeCallbackSubscriptionTransportModel
     {
         [JsonPropertyName("method")]
         public string Method { get; init; }

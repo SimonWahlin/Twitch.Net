@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using RateLimiter;
 using Twitch.Net.Client.Irc;
 using Twitch.Net.Client.Models;
+using Twitch.Net.Shared.RateLimits;
 
 namespace Twitch.Net.Client.Client.Handlers.Join
 {
@@ -11,15 +12,29 @@ namespace Twitch.Net.Client.Client.Handlers.Join
     {
         private CancellationTokenSource _tokenSource;
         private readonly IrcClient _client;
-        private readonly TimeLimiter _rateLimiter;
+        private TimeLimiter _rateLimiter;
 
-        public JoinQueueHandler(IrcClient client, bool verified)
+        public JoinQueueHandler(
+            IrcClient client, 
+            IUserAccountStatusResolver accountStatusResolver
+            )
         {
             _tokenSource = new CancellationTokenSource();
             _client = client;
             _rateLimiter = TimeLimiter.GetFromMaxCountByInterval(
-                verified ? 2000 : 20, // rate limits from docs
-                new TimeSpan(10));
+                 20, // base 20 as docs says for none verified accounts
+                new TimeSpan(10)
+                );
+
+            Task.Run(async () =>
+            {
+                var status = await accountStatusResolver.ResolveUserAccountStatusAsync();
+                if (status.IsVerifiedBot)
+                    _rateLimiter = TimeLimiter.GetFromMaxCountByInterval(
+                        2000, // rate limits from docs for verified bots
+                        new TimeSpan(10)
+                    );
+            });
         }
 
         public void Enqueue(ChatChannel channel, Action failure) =>

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using RateLimiter;
+using Twitch.Net.Api.Configurations;
 using Twitch.Net.Shared.Configurations;
 using Twitch.Net.Shared.Credential;
 
@@ -10,21 +11,22 @@ namespace Twitch.Net.Api.Apis.Helix
     {
         public ApiHelix(
             ITokenResolver tokenResolver, 
-            IApiCredentialConfiguration credentials,
+            ApiCredentialConfig config,
             IHttpClientFactory httpClientFactory,
-            TimeLimiter rateLimiter)
+            TimeLimiter rateLimiter
+            )
             : base(httpClientFactory, rateLimiter)
         {
             TokenResolver = tokenResolver;
-            Credentials = credentials;
+            Config = config;
 
             Users = new Users(this);
         }
 
-        public override string BaseUrl { get; } = "https://api.twitch.tv/helix";
-        public override string ClientIdHeaderKey { get; } =  "client-id";
+        public override string BaseUrl => "https://api.twitch.tv/helix";
+        public override string ClientIdHeaderKey => "client-id";
         public override IReadOnlyDictionary<string, string> ExtraHeaders { get; } = new Dictionary<string, string>();
-        public override IApiCredentialConfiguration Credentials { get; }
+        public override ApiCredentialConfig Config { get; }
         protected override ITokenResolver TokenResolver { get; }
         
         // API:s
