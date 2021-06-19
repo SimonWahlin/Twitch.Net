@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Twitch.Net.EventSub.Models;
 
 namespace Twitch.Net.EventSub.Notifications
 {
@@ -31,5 +32,12 @@ namespace Twitch.Net.EventSub.Notifications
         
         [JsonPropertyName("broadcaster_user_name")]
         public string BroadcasterUserName { get; init; } = string.Empty;
+        
+        [JsonPropertyName("tier")]
+        public string TierString { get; init; } = string.Empty;
+        public SubscriptionPlan Tier => TierString.ToSubscriptionPlan();
+        
+        [JsonPropertyName("is_gift")]
+        public bool IsGift { get; init; }
     }
 }
