@@ -1,13 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
-using Websocket.Client;
 
 namespace Twitch.Net.Communication.Clients
 {
     public class WebSocketClientFactory : IClientFactory
     {
-        private readonly ILogger<IWebsocketClient> _logger;
+        private readonly ILogger<IClient> _logger;
 
-        public WebSocketClientFactory(ILogger<IWebsocketClient> logger)
+        public WebSocketClientFactory(ILogger<IClient> logger)
         {
             _logger = logger;
         }
