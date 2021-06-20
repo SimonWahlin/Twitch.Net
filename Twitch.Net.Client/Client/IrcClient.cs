@@ -239,46 +239,54 @@ namespace Twitch.Net.Client.Client
 
         private async Task OnHandleMessage(string message)
         {
-            var parsed = RawIrcMessageParser.ParseRawIrcMessage(message);
-            
-            // if we do not define what command type, we can disconnect a random bot by typing it in the chat
-            if (parsed.Message.Contains("Login authentication failed", StringComparison.OrdinalIgnoreCase) && parsed.Command == IrcCommand.Notice) 
+            try
             {
-                await _connectionClient.DisconnectAsync("Login authentication failed");
-                return;
-            }
+                var parsed = RawIrcMessageParser.ParseRawIrcMessage(message);
 
-            // the twitch server responds with "001, 002, 003, 004, 375, 372, 376" after a valid authentication
-            // so we just take one of those to push an event for a developer to handle :) 
-            if (parsed.Command == IrcCommand.Rpl001 && !_authenticated)
-            {
-                _authenticated = true;
-                _eventHandler.InvokeOnAuthenticated(new TwitchAuthenticatedEvent
+                // if we do not define what command type, we can disconnect a random bot by typing it in the chat
+                if (parsed.Message.Contains("Login authentication failed", StringComparison.OrdinalIgnoreCase) &&
+                    parsed.Command == IrcCommand.Notice)
                 {
-                    Username = parsed.User
-                });
-                return;
-            }
+                    await _connectionClient.DisconnectAsync("Login authentication failed");
+                    return;
+                }
 
-            var handled = parsed.Command switch
-            {
-                IrcCommand.Join => _userJoinedEventHandler.Handle(_eventHandler, parsed),
-                IrcCommand.Part => _userLeftEventHandler.Handle(_eventHandler, parsed),
-                IrcCommand.PrivMsg => _messageEventHandler.Handle(_eventHandler, parsed),
-                IrcCommand.RoomState => _chatChannelStateEventHandler.Handle(_eventHandler, parsed),
-                IrcCommand.Ping => SendRaw("PONG"),
-                _ => false
-            };
-
-            if (!handled)
-            {
-                // if anyone wants to know what the output data was
-                // and easier if you wanna implement a missing feature too
-                _eventHandler.InvokeOnUnknownMessage(new UnknownMessageEvent
+                // the twitch server responds with "001, 002, 003, 004, 375, 372, 376" after a valid authentication
+                // so we just take one of those to push an event for a developer to handle :) 
+                if (parsed.Command == IrcCommand.Rpl001 && !_authenticated)
                 {
-                    Parsed = parsed,
-                    Raw = message
-                });
+                    _authenticated = true;
+                    _eventHandler.InvokeOnAuthenticated(new TwitchAuthenticatedEvent
+                    {
+                        Username = parsed.User
+                    });
+                    return;
+                }
+
+                var handled = parsed.Command switch
+                {
+                    IrcCommand.Join => _userJoinedEventHandler.Handle(_eventHandler, parsed),
+                    IrcCommand.Part => _userLeftEventHandler.Handle(_eventHandler, parsed),
+                    IrcCommand.PrivMsg => _messageEventHandler.Handle(_eventHandler, parsed),
+                    IrcCommand.RoomState => _chatChannelStateEventHandler.Handle(_eventHandler, parsed),
+                    IrcCommand.Ping => SendRaw("PONG"),
+                    _ => false
+                };
+
+                if (!handled)
+                {
+                    // if anyone wants to know what the output data was
+                    // and easier if you wanna implement a missing feature too
+                    _eventHandler.InvokeOnUnknownMessage(new UnknownMessageEvent
+                    {
+                        Parsed = parsed,
+                        Raw = message
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message); // we wanna have a catcher PER message that got parsed too.
             }
         }
     }
