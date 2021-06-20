@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Twitch.Net.EventSub.Models
@@ -44,8 +44,8 @@ namespace Twitch.Net.EventSub.Models
     public class RegisteredSubscriptions
     {
         [JsonPropertyName("data")]
-        public RegisteredSubscriptionModel[] Data { get; init; } = Array.Empty<RegisteredSubscriptionModel>();
-        
+        public List<RegisteredSubscriptionModel> Data { get; init; } = new();
+
         [JsonPropertyName("total")]
         public int Total { get; init; }
         

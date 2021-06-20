@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Twitch.Net.Communication.Events;
+﻿using Twitch.Net.Communication.Events;
 using Twitch.Net.PubSub.Events;
 
 namespace Twitch.Net.PubSub.Client.Handlers.Events

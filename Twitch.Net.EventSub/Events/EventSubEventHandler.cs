@@ -88,7 +88,7 @@ namespace Twitch.Net.EventSub.Events
         }
 
         private readonly AsyncEvent<Func<NotificationEvent<ChannelBanNotificationEvent>, Task>> _channelBanEvents = new();
-        public event Func<NotificationEvent<ChannelBanNotificationEvent>, Task> OnChannelBaned
+        public event Func<NotificationEvent<ChannelBanNotificationEvent>, Task> OnChannelBan
         {
             add => _channelBanEvents.Add(value);
             remove => _channelBanEvents.Remove(value);

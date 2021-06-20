@@ -17,7 +17,7 @@ namespace Twitch.Net.EventSub.Events
         event Func<NotificationEvent<ChannelSubscribeMessageNotificationEvent>, Task> OnChannelSubscriptionMessage;
         event Func<NotificationEvent<ChannelCheerNotificationEvent>, Task> OnChannelCheered;
         event Func<NotificationEvent<ChannelRaidNotificationEvent>, Task> OnChannelRaided;
-        event Func<NotificationEvent<ChannelBanNotificationEvent>, Task> OnChannelBaned;
+        event Func<NotificationEvent<ChannelBanNotificationEvent>, Task> OnChannelBan;
         event Func<NotificationEvent<ChannelUnbanNotificationEvent>, Task> OnChannelUnbanned;
         event Func<NotificationEvent<ChannelModeratorAddNotificationEvent>, Task> OnChannelModeratorAdded;
         event Func<NotificationEvent<ChannelModeratorRemoveNotificationEvent>, Task> OnChannelModeratorRemoved;
