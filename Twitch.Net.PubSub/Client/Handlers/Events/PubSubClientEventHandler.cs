@@ -136,56 +136,56 @@ namespace Twitch.Net.PubSub.Client.Handlers.Events
         #region Invokers
         
         // Connections
-        public async Task InvokeOnPubSubConnected()
-            => await _connectedEvents.InvokeAsync().ConfigureAwait(false);
+        public void InvokeOnPubSubConnected() =>
+            _connectedEvents.Invoke();
 
-        public async Task InvokeOnPubSubReconnect()
-            => await _reconnectEvents.InvokeAsync().ConfigureAwait(false);
+        public void InvokeOnPubSubReconnect() =>
+            _reconnectEvents.Invoke();
 
-        public async Task InvokeOnPubSubDisconnect(ClientDisconnected clientDisconnected)
-            => await _disconnectEvents.InvokeAsync(clientDisconnected).ConfigureAwait(false);
+        public void InvokeOnPubSubDisconnect(ClientDisconnected clientDisconnected) =>
+            _disconnectEvents.Invoke(clientDisconnected);
         
         // Message
-        public async Task InvokeResponseMessage(MessageResponse arg)
-            => await _responseMessageEvents.InvokeAsync(arg).ConfigureAwait(false);
+        public void InvokeResponseMessage(MessageResponse arg) =>
+            _responseMessageEvents.Invoke(arg);
 
         // Unhandled
-        public async Task InvokeUnknownMessage(UnknownMessageEvent arg)
-            => await _unknownMessageEvents.InvokeAsync(arg).ConfigureAwait(false);
+        public void InvokeUnknownMessage(UnknownMessageEvent arg) =>
+            _unknownMessageEvents.Invoke(arg);
         
         // Redeems
-        public async Task InvokeRedeemTopic(CommunityPointsEvent arg) 
-            => await _customRedeemEvents.InvokeAsync(arg).ConfigureAwait(false);
+        public void InvokeRedeemTopic(CommunityPointsEvent arg) =>
+            _customRedeemEvents.Invoke(arg);
         
-        public async Task InvokeCustomRedeemCreatedTopic(CommunityPointsEvent arg) 
-            => await _customRedeemCreatedEvents.InvokeAsync(arg).ConfigureAwait(false);
+        public void InvokeCustomRedeemCreatedTopic(CommunityPointsEvent arg) =>
+            _customRedeemCreatedEvents.Invoke(arg);
 
-        public async Task InvokeCustomRedeemUpdatedTopic(CommunityPointsEvent arg)
-            => await _customRedeemUpdatedEvents.InvokeAsync(arg).ConfigureAwait(false);
+        public void InvokeCustomRedeemUpdatedTopic(CommunityPointsEvent arg) =>
+            _customRedeemUpdatedEvents.Invoke(arg);
 
-        public async Task InvokeCustomRedeemDeletedTopic(CommunityPointsEvent arg)
-            => await _customRedeemDeletedEvents.InvokeAsync(arg).ConfigureAwait(false);
+        public void InvokeCustomRedeemDeletedTopic(CommunityPointsEvent arg) =>
+            _customRedeemDeletedEvents.Invoke(arg);
 
-        public async Task InvokeCustomRedeemStatusUpdateTopic(CommunityPointsEvent arg)
-            => await _customRedeemStatusUpdateEvents.InvokeAsync(arg).ConfigureAwait(false);
+        public void InvokeCustomRedeemStatusUpdateTopic(CommunityPointsEvent arg) =>
+            _customRedeemStatusUpdateEvents.Invoke(arg);
 
-        public async Task InvokeCustomRedeemInProgressTopic(CommunityPointsEvent arg)
-            => await _customProgressStartedEvents.InvokeAsync(arg).ConfigureAwait(false);
+        public void InvokeCustomRedeemInProgressTopic(CommunityPointsEvent arg) =>
+            _customProgressStartedEvents.Invoke(arg);
 
-        public async Task InvokeCustomRedeemFinishedProgressTopic(CommunityPointsEvent arg)
-            => await _customProgressFinishedEvents.InvokeAsync(arg).ConfigureAwait(false);
+        public void InvokeCustomRedeemFinishedProgressTopic(CommunityPointsEvent arg) =>
+            _customProgressFinishedEvents.Invoke(arg);
 
-        public async Task InvokeAutomaticRedeemUpdatedTopic(CommunityPointsEvent arg)
-            => await _customAutomaticUpdatedEvents.InvokeAsync(arg).ConfigureAwait(false);
+        public void InvokeAutomaticRedeemUpdatedTopic(CommunityPointsEvent arg) =>
+            _customAutomaticUpdatedEvents.Invoke(arg);
 
-        public async Task InvokeCheerTopic(CheerEvent arg)
-            => await _cheerEvents.InvokeAsync(arg).ConfigureAwait(false);
+        public void InvokeCheerTopic(CheerEvent arg) =>
+            _cheerEvents.Invoke(arg);
 
-        public async Task InvokeSubscriptionEventTopic(SubscribeEvent arg)
-            => await _subscriptionEvents.InvokeAsync(arg).ConfigureAwait(false);
+        public void InvokeSubscriptionEventTopic(SubscribeEvent arg) =>
+            _subscriptionEvents.Invoke(arg);
 
-        public async Task InvokeGiftedSubscriptionEventTopic(SubscribeEvent arg)
-            => await _giftedSubscriptionEvents.InvokeAsync(arg).ConfigureAwait(false);
+        public void InvokeGiftedSubscriptionEventTopic(SubscribeEvent arg) =>
+            _giftedSubscriptionEvents.Invoke(arg);
 
         #endregion
     }

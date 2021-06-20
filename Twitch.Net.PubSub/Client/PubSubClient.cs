@@ -76,10 +76,17 @@ namespace Twitch.Net.PubSub.Client
 
         public async Task OnMessage(WebSocketMessageType messageType, string message)
         {
-            if (messageType == WebSocketMessageType.Close) // if server sends "close" message we reconnect
-                await _connectionClient.ReconnectAsync();
-            else if (messageType == WebSocketMessageType.Text) // if it is text, then we parse & handle it
-                await OnHandleMessage(message);
+            try
+            {
+                if (messageType == WebSocketMessageType.Close) // if server sends "close" message we reconnect
+                    await _connectionClient.ReconnectAsync();
+                else if (messageType == WebSocketMessageType.Text) // if it is text, then we parse & handle it
+                    await OnHandleMessage(message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
         }
 
         private async Task OnHandleMessage(string message)
@@ -94,14 +101,14 @@ namespace Twitch.Net.PubSub.Client
             {
                 "pong" => HandlePong(),
                 "reconnect" => await HandleReconnect(),
-                _ => await _topicResponseHandler.Handle(type, parsed)
+                _ => _topicResponseHandler.Handle(type, parsed)
             };
 
             if (!handled)
             {
                 // if anyone wants to know what the output data was
                 // and easier if you wanna implement a missing feature too
-                await _eventHandler.InvokeUnknownMessage(new UnknownMessageEvent
+                _eventHandler.InvokeUnknownMessage(new UnknownMessageEvent
                 {
                     Data = parsed,
                     Raw = message
@@ -123,17 +130,17 @@ namespace Twitch.Net.PubSub.Client
             return true;
         }
 
-        public async Task OnConnected()
-            => await _eventHandler.InvokeOnPubSubConnected();
+        public void OnConnected() =>
+            _eventHandler.InvokeOnPubSubConnected();
 
-        public async Task OnReconnected()
+        public void OnReconnected()
         {
-            await _eventHandler.InvokeOnPubSubReconnect();
-            await _eventHandler.InvokeOnPubSubConnected();
+            _eventHandler.InvokeOnPubSubReconnect();
+            _eventHandler.InvokeOnPubSubConnected();
         }
 
-        public async Task OnDisconnected(ClientDisconnected clientDisconnected) 
-            => await _eventHandler.InvokeOnPubSubDisconnect(clientDisconnected);
+        public void OnDisconnected(ClientDisconnected clientDisconnected) => 
+            _eventHandler.InvokeOnPubSubDisconnect(clientDisconnected);
 
         private void PingTickHandler(object sender, ElapsedEventArgs e)
         {

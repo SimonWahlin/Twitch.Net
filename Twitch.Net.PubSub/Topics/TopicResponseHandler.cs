@@ -20,11 +20,11 @@ namespace Twitch.Net.PubSub.Topics
             _eventInvoker = eventInvoker;
         }
 
-        public async Task<bool> Handle(string type, Dictionary<string, object> parsed) =>
+        public bool Handle(string type, Dictionary<string, object> parsed) =>
             type switch
             {
-                "response" => await HandleResponseMessage(parsed),
-                "message" => await HandleMessageTopic(ParseMessage(parsed)),
+                "response" => HandleResponseMessage(parsed),
+                "message" => HandleMessageTopic(ParseMessage(parsed)),
                 _ => false
             };
 
@@ -49,7 +49,7 @@ namespace Twitch.Net.PubSub.Topics
             return new ParsedTopicMessage();
         }
 
-        private async Task<bool> HandleMessageTopic(ParsedTopicMessage message)
+        private bool HandleMessageTopic(ParsedTopicMessage message)
         {
             if (!message.Parsed) // so if the parsing went wrong, we will return false to trigger "UnknownMessageEvent"
                 return false;
@@ -58,9 +58,9 @@ namespace Twitch.Net.PubSub.Topics
             {
                 return message.Topic switch
                 {
-                    "channel-points-channel-v1" => await _redeemTopicHandler.Handle(_eventInvoker, message),
-                    "channel-bits-events-v2" => await _cheerTopicHandler.Handle(_eventInvoker, message),
-                    "channel-subscribe-events-v1" => await _subscribeTopicHandler.Handle(_eventInvoker, message),
+                    "channel-points-channel-v1" => _redeemTopicHandler.Handle(_eventInvoker, message),
+                    "channel-bits-events-v2" => _cheerTopicHandler.Handle(_eventInvoker, message),
+                    "channel-subscribe-events-v1" => _subscribeTopicHandler.Handle(_eventInvoker, message),
                     _ => false
                 };
             }
@@ -71,11 +71,11 @@ namespace Twitch.Net.PubSub.Topics
             }
         }
 
-        private async Task<bool> HandleResponseMessage(Dictionary<string, object> parsed)
+        private bool HandleResponseMessage(Dictionary<string, object> parsed)
         {
             if (parsed.ContainsKey("nonce") && parsed.ContainsKey("error"))
             {
-                await _eventInvoker.InvokeResponseMessage(new MessageResponse
+                _eventInvoker.InvokeResponseMessage(new MessageResponse
                 {
                     Nonce = parsed["nonce"].ToString(),
                     Error = parsed["error"].ToString()

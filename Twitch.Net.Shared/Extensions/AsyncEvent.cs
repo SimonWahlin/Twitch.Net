@@ -32,18 +32,16 @@ namespace Twitch.Net.Shared.Extensions
 
     public static class AsyncEventExtensions
     { 
-        public static async Task InvokeAsync(this AsyncEvent<Func<Task>> eventHandler)
+        public static void Invoke(this AsyncEvent<Func<Task>> eventHandler)
         {
             var subscribers = eventHandler.Subscriptions;
-            foreach (var t in subscribers)
-                await t.Invoke().ConfigureAwait(false);
+            subscribers.ForEach(s => s.Invoke().ConfigureAwait(false));
         }
         
-        public static async Task InvokeAsync<T>(this AsyncEvent<Func<T, Task>> eventHandler, T arg)
+        public static void Invoke<T>(this AsyncEvent<Func<T, Task>> eventHandler, T arg)
         {
             var subscribers = eventHandler.Subscriptions;
-            foreach (var t in subscribers)
-                await t.Invoke(arg).ConfigureAwait(false);
+            subscribers.ForEach(s => s.Invoke(arg).ConfigureAwait(false));
         }
     }
 }

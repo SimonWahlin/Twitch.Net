@@ -68,7 +68,7 @@ namespace Twitch.Net.EventSub
                     case "webhook_callback_verification":
                         return new OkObjectResult(verification.Challenge); // HandleVerification handles this indirectly
                     case "notification":
-                        await HandleNotification(request, raw);
+                        HandleNotification(request, raw);
                         return new OkResult();
                     case "revocation":
                         return new OkResult(); // we do not do anything for now, but at least it is being "handled"
@@ -110,7 +110,7 @@ namespace Twitch.Net.EventSub
             return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
         }
 
-        private async Task HandleNotification(HttpRequest request, string raw)
+        private void HandleNotification(HttpRequest request, string raw)
         {
             var type = request.Headers[EventSubHeaderConst.SubscriptionType].ToString();
             var version = request.Headers[EventSubHeaderConst.SubscriptionVersion].ToString();
@@ -119,7 +119,7 @@ namespace Twitch.Net.EventSub
             if (!model.HasValue)
                 _logger.LogDebug($"Unhandled event {type} with version {version}");
             else
-                await _eventHandler.InvokeNotification(model.ValueOrFailure(), type);
+                _eventHandler.InvokeNotification(model.ValueOrFailure(), type);
         }
 
         private Option<INotificationEvent> GetModel(

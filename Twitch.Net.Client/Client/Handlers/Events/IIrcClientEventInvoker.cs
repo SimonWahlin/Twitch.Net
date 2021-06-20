@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Twitch.Net.Client.Events;
+﻿using Twitch.Net.Client.Events;
 using Twitch.Net.Communication.Events;
 
 namespace Twitch.Net.Client.Client.Handlers.Events
@@ -7,24 +6,24 @@ namespace Twitch.Net.Client.Client.Handlers.Events
     public interface IIrcClientEventInvoker
     {
         // Connection
-        Task InvokeOnIrcConnected();
-        Task InvokeOnIrcReconnect();
-        Task InvokeOnIrcDisconnect(ClientDisconnected clientDisconnected);
-        Task InvokeOnAuthenticated(TwitchAuthenticatedEvent authenticatedEvent);
+        void InvokeOnIrcConnected();
+        void InvokeOnIrcReconnect();
+        void InvokeOnIrcDisconnect(ClientDisconnected clientDisconnected);
+        void InvokeOnAuthenticated(TwitchAuthenticatedEvent authenticatedEvent);
 
         // Unknown
-        Task InvokeOnUnknownMessage(UnknownMessageEvent messageEvent);
+        void InvokeOnUnknownMessage(UnknownMessageEvent messageEvent);
         
         // Chat messages
-        Task InvokeOnMessage(ChatMessageEvent chatMessageEvent);
-        Task InvokeOnBeingHosted(BeingHostedEvent beingHostedEvent);
+        void InvokeOnMessage(ChatMessageEvent chatMessageEvent);
+        void InvokeOnBeingHosted(BeingHostedEvent beingHostedEvent);
         
         // Channel join/leave/update
-        Task InvokeOnUserJoinedChannel(JoinedChannelEvent joinedChannelEvent);
-        Task InvokeOnUserLeftChannel(LeftChannelEvent leftChannelEvent);
-        Task InvokeOnChannelJoined(JoinedChannelEvent joinedChannelEvent);
-        Task InvokeOnFailedChannelJoined(FailedJoinedChannelEvent failedJoinedChannelEvent);
-        Task InvokeOnChannelLeft(LeftChannelEvent leftChannelEvent);
-        Task InvokeOnChannelStateUpdate(ChannelStateUpdateEvent channelStateUpdateEvent);
+        void InvokeOnUserJoinedChannel(JoinedChannelEvent joinedChannelEvent);
+        void InvokeOnUserLeftChannel(LeftChannelEvent leftChannelEvent);
+        void InvokeOnChannelJoined(JoinedChannelEvent joinedChannelEvent);
+        void InvokeOnFailedChannelJoined(FailedJoinedChannelEvent failedJoinedChannelEvent);
+        void InvokeOnChannelLeft(LeftChannelEvent leftChannelEvent);
+        void InvokeOnChannelStateUpdate(ChannelStateUpdateEvent channelStateUpdateEvent);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Optional;
 using Optional.Collections;
 using Twitch.Net.Client.Client;
@@ -18,14 +17,14 @@ namespace Twitch.Net.Client.Events.Handlers
             _client = client;
         }
 
-        public Task<bool> Handle(IIrcClientEventInvoker eventInvoker, IrcMessage message)
+        public bool Handle(IIrcClientEventInvoker eventInvoker, IrcMessage message)
         {
             if (message.Tags.Count > 2) // full join
             {
                 var channel = _client.Channels.FirstOrNone(c =>
                     c.ChannelName.Equals(message.Channel, StringComparison.OrdinalIgnoreCase));
-                channel.MatchSome(async chl =>
-                    await eventInvoker.InvokeOnChannelJoined(new JoinedChannelEvent
+                channel.MatchSome(chl =>
+                    eventInvoker.InvokeOnChannelJoined(new JoinedChannelEvent
                     {
                         Username = message.User,
                         Channel = chl
@@ -37,16 +36,16 @@ namespace Twitch.Net.Client.Events.Handlers
             {
                 var channel = _client.Channels.FirstOrNone(c =>
                     c.ChannelName.Equals(message.Channel, StringComparison.OrdinalIgnoreCase));
-                channel.MatchSome(async chl =>
-                    await eventInvoker.InvokeOnChannelStateUpdate(new ChannelStateUpdateEvent
+                channel.MatchSome(chl =>
+                    eventInvoker.InvokeOnChannelStateUpdate(new ChannelStateUpdateEvent
                     {
                         Channel = chl.UpdateTags(message.Tags)
                     }));
             }
             else
-                return Task.FromResult(false);
+                return false;
             
-            return Task.FromResult(true);
+            return true;
         }
     }
 }

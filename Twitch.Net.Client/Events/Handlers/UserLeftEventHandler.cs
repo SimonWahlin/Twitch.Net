@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Optional.Collections;
 using Twitch.Net.Client.Client;
 using Twitch.Net.Client.Client.Handlers.Events;
@@ -19,25 +18,25 @@ namespace Twitch.Net.Client.Events.Handlers
             _onLeftAction = onLeftAction;
         }
         
-        public Task<bool> Handle(IIrcClientEventInvoker eventInvoker, IrcMessage message)
+        public bool Handle(IIrcClientEventInvoker eventInvoker, IrcMessage message)
         {
             if (!string.IsNullOrEmpty(message.Channel) && !string.IsNullOrEmpty(message.User))
             {
                 var channel = _client.Channels.FirstOrNone(c =>
                     c.ChannelName.Equals(message.Channel, StringComparison.OrdinalIgnoreCase));
-                channel.MatchSome(async chl =>
+                channel.MatchSome(chl =>
                 {
                     if (message.User.Equals(_client.BotUsername, StringComparison.OrdinalIgnoreCase))
                     {
                         _onLeftAction?.Invoke(chl);
-                        await eventInvoker.InvokeOnChannelLeft(new LeftChannelEvent
+                        eventInvoker.InvokeOnChannelLeft(new LeftChannelEvent
                         {
                             Username = message.User,
                             Channel = chl.SetConnectionState(ChatChannelConnectionState.Left)
                         });
                     }
                     else
-                        await eventInvoker.InvokeOnUserLeftChannel(new LeftChannelEvent
+                        eventInvoker.InvokeOnUserLeftChannel(new LeftChannelEvent
                         {
                             Username = message.User,
                             Channel = chl
@@ -45,9 +44,9 @@ namespace Twitch.Net.Client.Events.Handlers
                 });
             }
             else
-                return Task.FromResult(false);
+                return false;
             
-            return Task.FromResult(true);
+            return true;
         }
     }
 }

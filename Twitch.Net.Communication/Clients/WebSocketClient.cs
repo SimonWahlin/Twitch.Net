@@ -96,7 +96,7 @@ namespace Twitch.Net.Communication.Clients
         private void Connected()
         {
             _logger?.LogTrace("Connection happened");
-            _clientListener.MatchSome(async listener => await listener.OnConnected());
+            _clientListener.MatchSome(listener => listener.OnConnected());
         }
 
         private void OnReconnect(ReconnectionInfo reconnectionInfo)
@@ -106,14 +106,14 @@ namespace Twitch.Net.Communication.Clients
                 return;
             
             _logger?.LogTrace($"Reconnection happened, type: {reconnectionInfo.Type}");
-            _clientListener.MatchSome(async listener => await listener.OnReconnected());
+            _clientListener.MatchSome(listener => listener.OnReconnected());
         }
 
         private void OnMessage(ResponseMessage responseMessage)
         {
             _logger?.LogInformation($"[INCOMING] [Type: {responseMessage.MessageType}] - {responseMessage.Text}".TrimEnd());
-            _clientListener.MatchSome(async listener => 
-                await listener.OnMessage(responseMessage.MessageType, responseMessage.Text));
+            _clientListener.MatchSome(listener => 
+                listener.OnMessage(responseMessage.MessageType, responseMessage.Text));
         }
 
         private void Disconnected(DisconnectionInfo disconnectionInfo)
@@ -121,9 +121,8 @@ namespace Twitch.Net.Communication.Clients
             if (_reconnecting) return; // disconnects are not valid during a reconnection is going on
             
             _logger?.LogInformation($"Disconnect happened - Reason: {disconnectionInfo.Type}");
-            _clientListener.MatchSome(async listener
-                => await listener.OnDisconnected(
-                    new ClientDisconnected(disconnectionInfo?.CloseStatusDescription ?? string.Empty))
+            _clientListener.MatchSome(listener => listener.OnDisconnected(
+                new ClientDisconnected(disconnectionInfo?.CloseStatusDescription ?? string.Empty))
                 );
         }
 
@@ -139,7 +138,7 @@ namespace Twitch.Net.Communication.Clients
             return true;
         }
 
-        public void SetListener(IClientListener listener)
-            => _clientListener = listener.Some();
+        public void SetListener(IClientListener listener) =>
+            _clientListener = listener.Some();
     }
 }

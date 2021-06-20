@@ -6,9 +6,9 @@ namespace Twitch.Net.Communication.Clients
 {
     public interface IClientListener
     {
-        Task OnReconnected();
+        void OnReconnected();
         Task OnMessage(WebSocketMessageType messageType, string message);
-        Task OnConnected();
-        Task OnDisconnected(ClientDisconnected clientDisconnected);
+        void OnConnected();
+        void OnDisconnected(ClientDisconnected clientDisconnected);
     }
 }

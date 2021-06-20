@@ -245,82 +245,82 @@ namespace Twitch.Net.EventSub.Events
 
         #region Invokers
 
-        public async Task InvokeNotification(INotificationEvent @event, string type)
+        public void InvokeNotification(INotificationEvent @event, string type)
         {
             if (@event is NotificationEvent<ChannelFollowNotificationEvent> follow)
-                await _followedEvents.InvokeAsync(follow).ConfigureAwait(false);
+                _followedEvents.Invoke(follow);
             else if (@event is NotificationEvent<ChannelUpdateNotificationEvent> chlUpdate)
-                await _channelUpdateEvents.InvokeAsync(chlUpdate).ConfigureAwait(false);
+                _channelUpdateEvents.Invoke(chlUpdate);
             else if (@event is NotificationEvent<StreamOnlineNotificationEvent> chlOnline)
-                await _channelOnlineEvents.InvokeAsync(chlOnline).ConfigureAwait(false);
+                _channelOnlineEvents.Invoke(chlOnline);
             else if (@event is NotificationEvent<StreamOfflineNotificationEvent> chlOffline)
-                await _channelOfflineEvents.InvokeAsync(chlOffline).ConfigureAwait(false);
+                _channelOfflineEvents.Invoke(chlOffline);
             else if (@event is NotificationEvent<ChannelSubscribeNotificationEvent> chlSub)
-                await _channelSubscriptionEvents.InvokeAsync(chlSub).ConfigureAwait(false);
+                _channelSubscriptionEvents.Invoke(chlSub);
             else if (@event is NotificationEvent<ChannelSubscribeEndNotificationEvent> chlSubEnd)
-                await _channelSubscriptionEndEvents.InvokeAsync(chlSubEnd).ConfigureAwait(false);
+                _channelSubscriptionEndEvents.Invoke(chlSubEnd);
             else if (@event is NotificationEvent<ChannelSubscribeGiftNotificationEvent> chlSubGift)
-                await _channelSubscriptionGiftedEvents.InvokeAsync(chlSubGift).ConfigureAwait(false);
+                _channelSubscriptionGiftedEvents.Invoke(chlSubGift);
             else if (@event is NotificationEvent<ChannelSubscribeMessageNotificationEvent> chlSubMsg)
-                await _channelSubscriptionMessageEvents.InvokeAsync(chlSubMsg).ConfigureAwait(false);
+                _channelSubscriptionMessageEvents.Invoke(chlSubMsg);
             else if (@event is NotificationEvent<ChannelCheerNotificationEvent> chlCheer)
-                await _channelCheerEvents.InvokeAsync(chlCheer).ConfigureAwait(false);
+                _channelCheerEvents.Invoke(chlCheer);
             else if (@event is NotificationEvent<ChannelRaidNotificationEvent> chlRaid)
-                await _channelRaidEvents.InvokeAsync(chlRaid).ConfigureAwait(false);
+                _channelRaidEvents.Invoke(chlRaid);
             else if (@event is NotificationEvent<ChannelBanNotificationEvent> chlBan)
-                await _channelBanEvents.InvokeAsync(chlBan).ConfigureAwait(false);
+                _channelBanEvents.Invoke(chlBan);
             else if (@event is NotificationEvent<ChannelUnbanNotificationEvent> chlUnban)
-                await _channelUnbanEvents.InvokeAsync(chlUnban).ConfigureAwait(false);
+                _channelUnbanEvents.Invoke(chlUnban);
             else if (@event is NotificationEvent<ChannelModeratorAddNotificationEvent> chlModAdd)
-                await _channelModeratorAddEvents.InvokeAsync(chlModAdd).ConfigureAwait(false);
+                _channelModeratorAddEvents.Invoke(chlModAdd);
             else if (@event is NotificationEvent<ChannelModeratorRemoveNotificationEvent> chlModRemove)
-                await _channelModeratorRemovedEvents.InvokeAsync(chlModRemove).ConfigureAwait(false);
+                _channelModeratorRemovedEvents.Invoke(chlModRemove);
             else if (@event is NotificationEvent<ChannelRedeemChangeNotificationEvent> chlRedeem)
             {
                 if (type == EventSubTypes.ChannelCustomRewardAdd)
-                    await _channelRedeemAddedEvents.InvokeAsync(chlRedeem).ConfigureAwait(false);
+                    _channelRedeemAddedEvents.Invoke(chlRedeem);
                 else if (type == EventSubTypes.ChannelCustomRewardUpdate)
-                    await _channelRedeemUpdatedEvents.InvokeAsync(chlRedeem).ConfigureAwait(false);
+                    _channelRedeemUpdatedEvents.Invoke(chlRedeem);
                 else if (type == EventSubTypes.ChannelCustomRewardRemove)
-                    await _channelRedeemRemovedEvents.InvokeAsync(chlRedeem).ConfigureAwait(false);
+                    _channelRedeemRemovedEvents.Invoke(chlRedeem);
                 else 
                     _logger.LogError($"Event of type {@event} does not have an invoker event implemented. - ${type}");
             }
             else if (@event is NotificationEvent<ChannelRedeemRedemptionReward> chlRdmChan)
             {
                 if (type == EventSubTypes.ChannelRedemptionAdd)
-                    await _channelRedemptionAddedEvents.InvokeAsync(chlRdmChan).ConfigureAwait(false);
+                    _channelRedemptionAddedEvents.Invoke(chlRdmChan);
                 else if (type == EventSubTypes.ChannelRedemptionUpdate)
-                    await _channelRedemptionUpdatedEvents.InvokeAsync(chlRdmChan).ConfigureAwait(false);
+                    _channelRedemptionUpdatedEvents.Invoke(chlRdmChan);
                 else 
                     _logger.LogError($"Event of type {@event} does not have an invoker event implemented. - ${type}");
             }
             else if (@event is NotificationEvent<ChannelPollBeginNotificationEvent> chlPollBegin)
-                await _channelPollBeginEvents.InvokeAsync(chlPollBegin).ConfigureAwait(false);
+                _channelPollBeginEvents.Invoke(chlPollBegin);
             else if (@event is NotificationEvent<ChannelPollProgressNotificationEvent> chlPollProgress)
-                await _channelPollProgressEvents.InvokeAsync(chlPollProgress).ConfigureAwait(false);
+                _channelPollProgressEvents.Invoke(chlPollProgress);
             else if (@event is NotificationEvent<ChannelPollEndNotificationEvent> chlPollEnd)
-                await _channelPollEndEvents.InvokeAsync(chlPollEnd).ConfigureAwait(false);
+                _channelPollEndEvents.Invoke(chlPollEnd);
             else if (@event is NotificationEvent<ChannelPredictBeginNotificationEvent> chlPredBegin)
-                await _channelPredictBeginEvents.InvokeAsync(chlPredBegin).ConfigureAwait(false);
+                _channelPredictBeginEvents.Invoke(chlPredBegin);
             else if (@event is NotificationEvent<ChannelPredictProgressNotificationEvent> chlPredProgress)
-                await _channelPredictProgressEvents.InvokeAsync(chlPredProgress).ConfigureAwait(false);
+                _channelPredictProgressEvents.Invoke(chlPredProgress);
             else if (@event is NotificationEvent<ChannelPredictLockNotificationEvent> chlPredLock)
-                await _channelPredictLockEvents.InvokeAsync(chlPredLock).ConfigureAwait(false);
+                _channelPredictLockEvents.Invoke(chlPredLock);
             else if (@event is NotificationEvent<ChannelPredictEndNotificationEvent> chlPredEnd)
-                await _channelPredictEndEvents.InvokeAsync(chlPredEnd).ConfigureAwait(false);
+                _channelPredictEndEvents.Invoke(chlPredEnd);
             else if (@event is NotificationEvent<ExtensionBitTransactionNotificationEvent> bitExh)
-                await _extensionBitTransactionEvents.InvokeAsync(bitExh).ConfigureAwait(false);
+                _extensionBitTransactionEvents.Invoke(bitExh);
             else if (@event is NotificationEvent<ChannelHypeTrainBeginNotificationEvent> chlHypeBegin)
-                await _channelHypeTrainBeginEvents.InvokeAsync(chlHypeBegin).ConfigureAwait(false);
+                _channelHypeTrainBeginEvents.Invoke(chlHypeBegin);
             else if (@event is NotificationEvent<ChannelHypeTrainProgressNotificationEvent> chlHypeProgress)
-                await _channelHypeTrainProgressEvents.InvokeAsync(chlHypeProgress).ConfigureAwait(false);
+                _channelHypeTrainProgressEvents.Invoke(chlHypeProgress);
             else if (@event is NotificationEvent<ChannelHypeTrainEndNotificationEvent> chlHypeEnd)
-                await _channelHypeTrainEndEvents.InvokeAsync(chlHypeEnd).ConfigureAwait(false);
+                _channelHypeTrainEndEvents.Invoke(chlHypeEnd);
             else if (@event is NotificationEvent<UserAuthRevokeNotificationEvent> userAuthRevoke)
-                await _userAuthRevokedEvents.InvokeAsync(userAuthRevoke).ConfigureAwait(false);
+                _userAuthRevokedEvents.Invoke(userAuthRevoke);
             else if (@event is NotificationEvent<UserUpdateNotificationEvent> userUpdate)
-                await _userUpdatedEvents.InvokeAsync(userUpdate).ConfigureAwait(false);
+                _userUpdatedEvents.Invoke(userUpdate);
             else
                 _logger.LogError($"Event of type {@event} does not have an invoker event implemented.");
         }

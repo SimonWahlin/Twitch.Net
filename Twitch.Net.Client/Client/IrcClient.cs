@@ -24,6 +24,7 @@ namespace Twitch.Net.Client.Client
         // inner state to make sure an event is not fired more than once
         private bool _authenticated;
         
+        private readonly ILogger<IIrcClient> _logger;
         private readonly IClient _connectionClient;
         private readonly IrcCredentialConfig _config;
         private readonly IrcClientEventHandler _eventHandler;
@@ -43,6 +44,7 @@ namespace Twitch.Net.Client.Client
             IUserAccountStatusResolver accountStatusResolver
             )
         {
+            _logger = logger;
             _config = config.Value;
 
             // Setup client handlers
@@ -144,11 +146,11 @@ namespace Twitch.Net.Client.Client
                 return chat.SetConnectionState(ChatChannelConnectionState.Failure);
 
             _channels.Add(chat);
-            _joinChannelHandler.Enqueue(chat, async () => // on failure we wanna set the status and remove it from the list
+            _joinChannelHandler.Enqueue(chat, () => // on failure we wanna set the status and remove it from the list
             {
                 chat.SetConnectionState(ChatChannelConnectionState.Failure);
                 _channels.Remove(chat);
-                await _eventHandler.InvokeOnFailedChannelJoined(new FailedJoinedChannelEvent
+                _eventHandler.InvokeOnFailedChannelJoined(new FailedJoinedChannelEvent
                 {
                     Username = chat.ChannelName,
                     Channel = chat
@@ -193,39 +195,46 @@ namespace Twitch.Net.Client.Client
             _connectionClient.Send("CAP REQ twitch.tv/tags");
         }
         
-        public async Task OnConnected() 
+        public void OnConnected() 
         {
             AuthenticateConnection();
-            await _eventHandler.InvokeOnIrcConnected();
+            _eventHandler.InvokeOnIrcConnected();
         }
 
-        public async Task OnReconnected()
+        public void OnReconnected()
         {
             AuthenticateConnection();
-            await _eventHandler.InvokeOnIrcReconnect();
-            await _eventHandler.InvokeOnIrcConnected();
+            _eventHandler.InvokeOnIrcReconnect();
+            _eventHandler.InvokeOnIrcConnected();
         }
 
-        public async Task OnDisconnected(ClientDisconnected clientDisconnected)
+        public void OnDisconnected(ClientDisconnected clientDisconnected)
         {
             // Channel joining / joined needs to be reset since we lost connection
             _joinChannelHandler.Reset();
             _channels.Clear();
             
-            await _eventHandler.InvokeOnIrcDisconnect(clientDisconnected);
+            _eventHandler.InvokeOnIrcDisconnect(clientDisconnected);
         }
         
         private const string MessageStringSeparator = "\r\n";
         public async Task OnMessage(WebSocketMessageType messageType, string messages)
         {
-            if (messageType == WebSocketMessageType.Close) // if server sends "close" message we reconnect
-                await _connectionClient.ReconnectAsync();
-            else if (messageType == WebSocketMessageType.Text) // if it is text, then we parse & handle it
+            try
             {
-                var lines = messages.Split(MessageStringSeparator);
-                foreach (var line in lines.Where(l => l.Length > 1)) // one line equals one message
-                    await OnHandleMessage(line);
-            } 
+                if (messageType == WebSocketMessageType.Close) // if server sends "close" message we reconnect
+                    await _connectionClient.ReconnectAsync();
+                else if (messageType == WebSocketMessageType.Text) // if it is text, then we parse & handle it
+                {
+                    var lines = messages.Split(MessageStringSeparator);
+                    foreach (var line in lines.Where(l => l.Length > 1)) // one line equals one message
+                        await OnHandleMessage(line);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
         }
 
         private async Task OnHandleMessage(string message)
@@ -244,7 +253,7 @@ namespace Twitch.Net.Client.Client
             if (parsed.Command == IrcCommand.Rpl001 && !_authenticated)
             {
                 _authenticated = true;
-                await _eventHandler.InvokeOnAuthenticated(new TwitchAuthenticatedEvent
+                _eventHandler.InvokeOnAuthenticated(new TwitchAuthenticatedEvent
                 {
                     Username = parsed.User
                 });
@@ -253,10 +262,10 @@ namespace Twitch.Net.Client.Client
 
             var handled = parsed.Command switch
             {
-                IrcCommand.Join => await _userJoinedEventHandler.Handle(_eventHandler, parsed),
-                IrcCommand.Part => await _userLeftEventHandler.Handle(_eventHandler, parsed),
-                IrcCommand.PrivMsg => await _messageEventHandler.Handle(_eventHandler, parsed),
-                IrcCommand.RoomState => await _chatChannelStateEventHandler.Handle(_eventHandler, parsed),
+                IrcCommand.Join => _userJoinedEventHandler.Handle(_eventHandler, parsed),
+                IrcCommand.Part => _userLeftEventHandler.Handle(_eventHandler, parsed),
+                IrcCommand.PrivMsg => _messageEventHandler.Handle(_eventHandler, parsed),
+                IrcCommand.RoomState => _chatChannelStateEventHandler.Handle(_eventHandler, parsed),
                 IrcCommand.Ping => SendRaw("PONG"),
                 _ => false
             };
@@ -265,7 +274,7 @@ namespace Twitch.Net.Client.Client
             {
                 // if anyone wants to know what the output data was
                 // and easier if you wanna implement a missing feature too
-                await _eventHandler.InvokeOnUnknownMessage(new UnknownMessageEvent
+                _eventHandler.InvokeOnUnknownMessage(new UnknownMessageEvent
                 {
                     Parsed = parsed,
                     Raw = message

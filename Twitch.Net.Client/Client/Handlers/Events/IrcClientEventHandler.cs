@@ -111,47 +111,47 @@ namespace Twitch.Net.Client.Client.Handlers.Events
         #region Invokers
 
         // Connections
-        public async Task InvokeOnIrcConnected()
-            => await _connectedEvents.InvokeAsync().ConfigureAwait(false);
+        public void InvokeOnIrcConnected() =>
+            _connectedEvents.Invoke();
         
-        public async Task InvokeOnIrcReconnect()
-            => await _reconnectEvents.InvokeAsync().ConfigureAwait(false);
+        public void InvokeOnIrcReconnect() =>
+            _reconnectEvents.Invoke();
 
-        public async Task InvokeOnIrcDisconnect(ClientDisconnected clientDisconnected)
-            => await _disconnectEvents.InvokeAsync(clientDisconnected).ConfigureAwait(false);
+        public void InvokeOnIrcDisconnect(ClientDisconnected clientDisconnected) =>
+            _disconnectEvents.Invoke(clientDisconnected);
 
         // Unknown
-        public async Task InvokeOnUnknownMessage(UnknownMessageEvent messageEvent)
-            => await _unknownMessageEvents.InvokeAsync(messageEvent).ConfigureAwait(false);
+        public void InvokeOnUnknownMessage(UnknownMessageEvent messageEvent) =>
+            _unknownMessageEvents.Invoke(messageEvent);
         
         // Chat messages
-        public async Task InvokeOnMessage(ChatMessageEvent chatMessageEvent)
-            => await _chatMessageEvents.InvokeAsync(chatMessageEvent).ConfigureAwait(false);
+        public void InvokeOnMessage(ChatMessageEvent chatMessageEvent) =>
+            _chatMessageEvents.Invoke(chatMessageEvent);
 
-        public async Task InvokeOnBeingHosted(BeingHostedEvent beingHostedEvent)
-            => await _beingHostedEvents.InvokeAsync(beingHostedEvent).ConfigureAwait(false);
+        public void InvokeOnBeingHosted(BeingHostedEvent beingHostedEvent) =>
+            _beingHostedEvents.Invoke(beingHostedEvent);
 
         // Channel join/leave/update
-        public async Task InvokeOnUserJoinedChannel(JoinedChannelEvent joinedChannelEvent)
-            => await _onUserJoinedChannelEvents.InvokeAsync(joinedChannelEvent).ConfigureAwait(false);
+        public void InvokeOnUserJoinedChannel(JoinedChannelEvent joinedChannelEvent) =>
+            _onUserJoinedChannelEvents.Invoke(joinedChannelEvent);
 
-        public async Task InvokeOnUserLeftChannel(LeftChannelEvent leftChannelEvent)
-            => await _onUserLeftChannelEvents.InvokeAsync(leftChannelEvent).ConfigureAwait(false);
+        public void InvokeOnUserLeftChannel(LeftChannelEvent leftChannelEvent) =>
+            _onUserLeftChannelEvents.Invoke(leftChannelEvent);
         
-        public async Task InvokeOnChannelJoined(JoinedChannelEvent joinedChannelEvent)
-            => await _joinChannelEvents.InvokeAsync(joinedChannelEvent).ConfigureAwait(false);
+        public void InvokeOnChannelJoined(JoinedChannelEvent joinedChannelEvent) =>
+            _joinChannelEvents.Invoke(joinedChannelEvent);
 
-        public async Task InvokeOnFailedChannelJoined(FailedJoinedChannelEvent failedJoinedChannelEvent)
-            => await _failedJoinedChannelEvents.InvokeAsync(failedJoinedChannelEvent).ConfigureAwait(false);
+        public void InvokeOnFailedChannelJoined(FailedJoinedChannelEvent failedJoinedChannelEvent) =>
+            _failedJoinedChannelEvents.Invoke(failedJoinedChannelEvent);
 
-        public async Task InvokeOnChannelLeft(LeftChannelEvent leftChannelEvent)
-            => await _leftChannelEvents.InvokeAsync(leftChannelEvent).ConfigureAwait(false);
+        public void InvokeOnChannelLeft(LeftChannelEvent leftChannelEvent) =>
+            _leftChannelEvents.Invoke(leftChannelEvent);
 
-        public async Task InvokeOnChannelStateUpdate(ChannelStateUpdateEvent channelStateUpdateEvent)
-            => await _channelStateUpdateEvents.InvokeAsync(channelStateUpdateEvent).ConfigureAwait(false);
+        public void InvokeOnChannelStateUpdate(ChannelStateUpdateEvent channelStateUpdateEvent) =>
+            _channelStateUpdateEvents.Invoke(channelStateUpdateEvent);
 
-        public async Task InvokeOnAuthenticated(TwitchAuthenticatedEvent authenticatedEvent)
-            => await _userAuthenticatedEvents.InvokeAsync(authenticatedEvent).ConfigureAwait(false);
+        public void InvokeOnAuthenticated(TwitchAuthenticatedEvent authenticatedEvent) =>
+            _userAuthenticatedEvents.Invoke(authenticatedEvent);
         
         #endregion
     }

@@ -70,7 +70,9 @@ namespace Twitch.Net.Shared.RateLimits
                     string.IsNullOrEmpty(currentResult.Users[0].UserId))
                     return new UserAccountStatus();
 
-                // resolve the user account info (undocumented endpoint)
+                // resolve the user account info (undocumented endpoint as of why it has a fallback for status code != OK)
+                // anyone could make an override for this class themself if they need a "verified bot" user account status
+                // even if the endpoint is gone, to make the lib use "increased" limit rates.
                 var userAccountResponse = await client.GetAsync(
                     $"{KrakenBaseUrl}users/{currentResult.Users[0].UserId}/chat?api_version=5&client_id={_tokenConfig.ClientId}");
                 if (userAccountResponse.StatusCode != HttpStatusCode.OK)
