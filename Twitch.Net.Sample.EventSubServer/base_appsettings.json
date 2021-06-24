@@ -8,6 +8,7 @@
   },
   "EventSub": {
     "ClientId": "",
+    "ClientSecret": "",
     "CallbackUrl": "",
     "SignatureSecret": ""
   }

@@ -51,9 +51,12 @@ namespace Twitch.Net.EventSub.Notifications
         
         [JsonPropertyName("reason")]
         public string Reason { get; init; } = string.Empty;
-        
+
         [JsonPropertyName("ends_at")]
-        public DateTime EndsAt { get; init; }
+        public string EndsAtString { get; init; } = string.Empty;
+        public DateTime? EndsAt => DateTime.TryParse(EndsAtString, out var time)
+            ? time
+            : default;
         
         [JsonPropertyName("is_permanent")]
         public bool IsPermanent { get; init; }
