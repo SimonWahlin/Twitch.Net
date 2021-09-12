@@ -57,6 +57,7 @@ namespace Twitch.Net.EventSub
             });
             
             serviceCollection.TryAddSingleton<ITokenResolver, ClientCredentialTokenResolver>();
+            serviceCollection.TryAddSingleton<EventSubModelConverter>();
             serviceCollection.TryAddSingleton<IEventSubService, EventSubService>();
         }
     }
