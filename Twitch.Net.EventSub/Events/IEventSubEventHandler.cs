@@ -24,8 +24,8 @@ namespace Twitch.Net.EventSub.Events
         event Func<NotificationEvent<ChannelRedeemChangeNotificationEvent>, Task> OnChannelRedeemAdded;
         event Func<NotificationEvent<ChannelRedeemChangeNotificationEvent>, Task> OnChannelRedeemUpdated;
         event Func<NotificationEvent<ChannelRedeemChangeNotificationEvent>, Task> OnChannelRedeemRemoved;
-        event Func<NotificationEvent<ChannelRedeemRedemptionReward>, Task> OnChannelRedeemRedemptionAdded;
-        event Func<NotificationEvent<ChannelRedeemRedemptionReward>, Task> OnChannelRedeemRedemptionUpdated;
+        event Func<NotificationEvent<ChannelRedeemRedemptionNotificationEvent>, Task> OnChannelRedeemRedemptionAdded;
+        event Func<NotificationEvent<ChannelRedeemRedemptionNotificationEvent>, Task> OnChannelRedeemRedemptionUpdated;
         event Func<NotificationEvent<ChannelPollBeginNotificationEvent>, Task> OnChannelPollBegin;
         event Func<NotificationEvent<ChannelPollProgressNotificationEvent>, Task> OnChannelPollProgress;
         event Func<NotificationEvent<ChannelPollEndNotificationEvent>, Task> OnChannelPollEnded;

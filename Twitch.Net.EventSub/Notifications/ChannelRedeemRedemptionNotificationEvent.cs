@@ -54,7 +54,7 @@ namespace Twitch.Net.EventSub.Notifications
         public ChannelRedeemStatus Status => StatusString.ToRedeemStatus();
         
         [JsonPropertyName("reward")]
-        public string Reward { get; init; } = string.Empty;
+        public ChannelRedeemRedemptionReward Reward { get; init; } = null!;
         
         [JsonPropertyName("redeemed_at")]
         public DateTime RedeemedAt { get; init; }

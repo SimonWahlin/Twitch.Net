@@ -136,15 +136,15 @@ namespace Twitch.Net.EventSub.Events
             remove => _channelRedeemRemovedEvents.Remove(value);
         }
 
-        private readonly AsyncEvent<Func<NotificationEvent<ChannelRedeemRedemptionReward>, Task>> _channelRedemptionAddedEvents = new();
-        public event Func<NotificationEvent<ChannelRedeemRedemptionReward>, Task> OnChannelRedeemRedemptionAdded
+        private readonly AsyncEvent<Func<NotificationEvent<ChannelRedeemRedemptionNotificationEvent>, Task>> _channelRedemptionAddedEvents = new();
+        public event Func<NotificationEvent<ChannelRedeemRedemptionNotificationEvent>, Task> OnChannelRedeemRedemptionAdded
         {
             add => _channelRedemptionAddedEvents.Add(value);
             remove => _channelRedemptionAddedEvents.Remove(value);
         }
 
-        private readonly AsyncEvent<Func<NotificationEvent<ChannelRedeemRedemptionReward>, Task>> _channelRedemptionUpdatedEvents = new();
-        public event Func<NotificationEvent<ChannelRedeemRedemptionReward>, Task> OnChannelRedeemRedemptionUpdated
+        private readonly AsyncEvent<Func<NotificationEvent<ChannelRedeemRedemptionNotificationEvent>, Task>> _channelRedemptionUpdatedEvents = new();
+        public event Func<NotificationEvent<ChannelRedeemRedemptionNotificationEvent>, Task> OnChannelRedeemRedemptionUpdated
         {
             add => _channelRedemptionUpdatedEvents.Add(value);
             remove => _channelRedemptionUpdatedEvents.Remove(value);
@@ -286,7 +286,7 @@ namespace Twitch.Net.EventSub.Events
                 else 
                     _logger.LogError($"Event of type {@event} does not have an invoker event implemented. - ${type}");
             }
-            else if (@event is NotificationEvent<ChannelRedeemRedemptionReward> chlRdmChan)
+            else if (@event is NotificationEvent<ChannelRedeemRedemptionNotificationEvent> chlRdmChan)
             {
                 if (type == EventSubTypes.ChannelRedemptionAdd)
                     _channelRedemptionAddedEvents.Invoke(chlRdmChan);
