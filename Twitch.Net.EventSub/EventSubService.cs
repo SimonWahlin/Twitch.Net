@@ -64,13 +64,13 @@ public class EventSubService : IEventSubService
                     return new OkResult(); // we do not do anything for now, but at least it is being "handled"
                 default:
                     // so we can handle future stuff, in-case twitch add something new we will get an information log about it.
-                    _logger.LogInformation($"The event type {type} of EventSub was not being handled");
+                    _logger.LogInformation("The event type {Type} of EventSub was not being handled", type);
                     return new BadRequestResult();
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
+            _logger.LogError(ex, "Failed to handle request");
             return new BadRequestResult();
         }
     }
@@ -107,7 +107,7 @@ public class EventSubService : IEventSubService
         var model = _converter.GetModel(raw, type);
 
         if (!model.HasValue)
-            _logger.LogDebug($"Unhandled event {type} with version {version}");
+            _logger.LogDebug("Unhandled event {Type} with version {Version}", type, version);
         else
             _eventHandler.InvokeNotification(model.ValueOrFailure(), type);
     }
@@ -149,7 +149,7 @@ public class EventSubService : IEventSubService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
+            _logger.LogError(ex, "Failed to subscribe");
             return new SubscribeResult();
         }
     }
@@ -173,12 +173,12 @@ public class EventSubService : IEventSubService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
+            _logger.LogError(ex, "Failed to unsubscribe");
             return false;
         }
     }
 
-    public async Task<Option<RegisteredSubscriptions>> Subscriptions(string? token = null)
+    public async Task<Option<RegisteredSubscriptions>> Subscriptions(string? token = null) // TODO : Add paging support.
     {
         try
         {
@@ -197,7 +197,7 @@ public class EventSubService : IEventSubService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
+            _logger.LogError(ex, "Failed getting subscriptions");
             return Option.None<RegisteredSubscriptions>();
         }
     }
