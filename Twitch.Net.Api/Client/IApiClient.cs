@@ -1,9 +1,8 @@
 ﻿using Twitch.Net.Api.Apis.Helix;
 
-namespace Twitch.Net.Api.Client
+namespace Twitch.Net.Api.Client;
+
+public interface IApiClient
 {
-    public interface IApiClient
-    {
-        IApiHelix Helix { get; }
-    }
+    IApiHelix Helix { get; }
 }

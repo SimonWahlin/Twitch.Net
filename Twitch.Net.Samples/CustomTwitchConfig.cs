@@ -1,9 +1,8 @@
 ﻿using Twitch.Net.Shared.Configurations;
 
-namespace Twitch.Net.Samples
+namespace Twitch.Net.Samples;
+
+public class CustomTwitchConfig : TwitchCredentialConfiguration
 {
-    public class CustomTwitchConfig : TwitchCredentialConfiguration
-    {
-        public string BaseChannel { get; set; } // nice to have as "basic" startup
-    }
+    public string BaseChannel { get; set; } // nice to have as "basic" startup
 }

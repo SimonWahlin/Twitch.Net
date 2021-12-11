@@ -1,9 +1,8 @@
 ﻿using Twitch.Net.Client.Models;
 
-namespace Twitch.Net.Client.Events
+namespace Twitch.Net.Client.Events;
+
+public class ChannelStateUpdateEvent
 {
-    public class ChannelStateUpdateEvent
-    {
-        public ChatChannel Channel { get; init; }
-    }
+    public ChatChannel Channel { get; init; }
 }

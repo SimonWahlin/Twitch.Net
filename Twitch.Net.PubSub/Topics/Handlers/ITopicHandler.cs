@@ -1,9 +1,8 @@
 ﻿using Twitch.Net.PubSub.Client.Handlers.Events;
 
-namespace Twitch.Net.PubSub.Topics.Handlers
+namespace Twitch.Net.PubSub.Topics.Handlers;
+
+internal interface ITopicHandler
 {
-    internal interface ITopicHandler
-    {
-        bool Handle(IPubSubClientEventInvoker eventInvoker, ParsedTopicMessage message);
-    }
+    bool Handle(IPubSubClientEventInvoker eventInvoker, ParsedTopicMessage message);
 }

@@ -1,8 +1,7 @@
-﻿namespace Twitch.Net.Client.Configurations
+﻿namespace Twitch.Net.Client.Configurations;
+
+public class IrcCredentialConfig
 {
-    public class IrcCredentialConfig
-    {
-        public string Username { get; set; }
-        public string OAuth { get; set; }
-    }
+    public string Username { get; set; }
+    public string OAuth { get; set; }
 }

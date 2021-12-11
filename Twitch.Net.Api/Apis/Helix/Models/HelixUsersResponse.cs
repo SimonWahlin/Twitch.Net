@@ -1,15 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace Twitch.Net.Api.Apis.Helix.Models
+namespace Twitch.Net.Api.Apis.Helix.Models;
+
+public class HelixUsersResponse
 {
-    public class HelixUsersResponse
-    {
-        [JsonPropertyName("data")]
-        public List<HelixUserResponse> Users { get; init; }
+    [JsonPropertyName("data")]
+    public List<HelixUserResponse> Users { get; init; }
         
-        public int Requests { get; init; }
-        public int Successfully { get; init; }
-        public bool AllSuccess() => Requests == Successfully && Requests > 0;
-    }
+    public int Requests { get; init; }
+    public int Successfully { get; init; }
+    public bool AllSuccess() => Requests == Successfully && Requests > 0;
 }

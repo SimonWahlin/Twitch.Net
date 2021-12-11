@@ -1,7 +1,6 @@
-﻿namespace Twitch.Net.Shared.Configurations
+﻿namespace Twitch.Net.Shared.Configurations;
+
+public class AccountCredentialConfiguration
 {
-    public class AccountCredentialConfiguration
-    {
-        public string Username { get; set; }
-    }
+    public string Username { get; set; }
 }

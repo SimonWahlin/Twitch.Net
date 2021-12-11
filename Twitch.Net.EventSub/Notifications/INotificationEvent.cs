@@ -1,7 +1,6 @@
-﻿namespace Twitch.Net.EventSub.Notifications
+﻿namespace Twitch.Net.EventSub.Notifications;
+
+public interface INotificationEvent
 {
-    public interface INotificationEvent
-    {
         
-    }
 }

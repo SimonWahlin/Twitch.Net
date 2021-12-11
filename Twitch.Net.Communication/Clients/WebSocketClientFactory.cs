@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Twitch.Net.Communication.Clients
+namespace Twitch.Net.Communication.Clients;
+
+public class WebSocketClientFactory : IClientFactory
 {
-    public class WebSocketClientFactory : IClientFactory
-    {
-        public IClient CreateClient<T>(ILogger<T> logger, string address = null) =>
-            new WebSocketClient<T>(logger, address);
-    }
+    public IClient CreateClient<T>(ILoggerFactory factory, string address = null) =>
+        new WebSocketClient<T>(factory.CreateLogger<WebSocketClient<T>>(), address);
 }

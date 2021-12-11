@@ -1,9 +1,8 @@
-﻿namespace Twitch.Net.PubSub.Client
+﻿namespace Twitch.Net.PubSub.Client;
+
+public interface IPubSubClientListener
 {
-    public interface IPubSubClientListener
-    {
-        void OnReconnected();
-        void OnConnected();
-        void OnDisconnected();
-    }
+    void OnReconnected();
+    void OnConnected();
+    void OnDisconnected();
 }

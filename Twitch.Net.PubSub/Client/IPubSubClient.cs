@@ -1,16 +1,14 @@
-﻿using System.Threading.Tasks;
-using Twitch.Net.PubSub.Client.Handlers.Events;
+﻿using Twitch.Net.PubSub.Client.Handlers.Events;
 using Twitch.Net.PubSub.Topics;
 
-namespace Twitch.Net.PubSub.Client
+namespace Twitch.Net.PubSub.Client;
+
+public interface IPubSubClient
 {
-    public interface IPubSubClient
-    {
-        bool IsConnected { get; }
+    bool IsConnected { get; }
         
-        Task<bool> ConnectAsync();
-        TopicBuilder CreateBuilder();
-        IPubSubClientEventHandler Events { get; }
-        void Send(string data);
-    }
+    Task<bool> ConnectAsync();
+    TopicBuilder CreateBuilder();
+    IPubSubClientEventHandler Events { get; }
+    void Send(string data);
 }

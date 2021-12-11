@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace Twitch.Net.PubSub.Events;
 
-namespace Twitch.Net.PubSub.Events
+public class UnknownMessageEvent : EventArgs
 {
-    public class UnknownMessageEvent : EventArgs
-    {
-        public Dictionary<string, object> Data { get; init; } = new();
-        public string Raw { get; init; } = string.Empty;
-    }
+    public Dictionary<string, object> Data { get; init; } = new();
+    public string Raw { get; init; } = string.Empty;
 }

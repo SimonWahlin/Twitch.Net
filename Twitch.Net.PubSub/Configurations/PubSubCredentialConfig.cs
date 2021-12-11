@@ -1,7 +1,6 @@
-﻿namespace Twitch.Net.PubSub.Configurations
+﻿namespace Twitch.Net.PubSub.Configurations;
+
+public class PubSubCredentialConfig
 {
-    public class PubSubCredentialConfig
-    {
-        public string OAuth { get; set; }
-    }
+    public string OAuth { get; set; }
 }

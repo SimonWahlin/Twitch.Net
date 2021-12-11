@@ -1,8 +1,7 @@
-﻿namespace Twitch.Net.Shared.Credential
+﻿namespace Twitch.Net.Shared.Credential;
+
+public class TokenCredentialConfiguration
 {
-    public class TokenCredentialConfiguration
-    {
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
-    }
+    public string ClientId { get; set; }
+    public string ClientSecret { get; set; }
 }

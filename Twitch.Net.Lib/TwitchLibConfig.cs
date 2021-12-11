@@ -1,12 +1,11 @@
-﻿namespace Twitch.Net.Lib
+﻿namespace Twitch.Net.Lib;
+
+public class TwitchLibConfig
 {
-    public class TwitchLibConfig
-    {
-        public string CallbackUrl { get; set; } = string.Empty;
-        public string SignatureSecret { get; set; } = string.Empty;
-        public string Username { get; set; } = string.Empty;
-        public string ClientId { get; set; } = string.Empty;
-        public string ClientSecret { get; set; } = string.Empty;
-        public string OAuth { get; set; } = string.Empty;
-    }
+    public string CallbackUrl { get; init; } = string.Empty;
+    public string SignatureSecret { get; init; } = string.Empty;
+    public string Username { get; init; } = string.Empty;
+    public string ClientId { get; init; } = string.Empty;
+    public string ClientSecret { get; init; } = string.Empty;
+    public string OAuth { get; init; } = string.Empty;
 }

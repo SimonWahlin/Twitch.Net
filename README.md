@@ -1,5 +1,5 @@
 # Twitch.Net Project
-A library built on C# with the new .NET 5 core.
+A library built on C# with the new .NET 6.
 Built because of issues of previously tested libraries and wanted support for certain specific things, which was previously not available in Open-source.
 
 # Twitch.Net.Lib

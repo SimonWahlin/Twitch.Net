@@ -1,8 +1,7 @@
-﻿namespace Twitch.Net.Api.Configurations
+﻿namespace Twitch.Net.Api.Configurations;
+
+public class ApiCredentialConfig
 {
-    public class ApiCredentialConfig
-    {
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
-    }
+    public string ClientId { get; set; }
+    public string ClientSecret { get; set; }
 }

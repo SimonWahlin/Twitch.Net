@@ -1,12 +1,11 @@
-﻿namespace Twitch.Net.Communication.Events
+﻿namespace Twitch.Net.Communication.Events;
+
+public class ClientDisconnected
 {
-    public class ClientDisconnected
+    public ClientDisconnected(string message)
     {
-        public ClientDisconnected(string message)
-        {
-            Message = message;
-        }
-        
-        public string Message { get; init; }
+        Message = message;
     }
+        
+    public string Message { get; init; }
 }

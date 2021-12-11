@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Twitch.Net.Client.Client;
 using Twitch.Net.Client.Configurations;
@@ -9,72 +8,71 @@ using Twitch.Net.Shared.Configurations;
 using Twitch.Net.Shared.Credential;
 using Twitch.Net.Shared.RateLimits;
 
-namespace Twitch.Net.Client
+namespace Twitch.Net.Client;
+
+public static class IrcClientFactory
 {
-    public static class IrcClientFactory
+    public static IServiceCollection AddTwitchIrcClient(
+        this IServiceCollection service,
+        Action<IrcCredentialConfig> ircConfig = null,
+        Action<TokenCredentialConfiguration> tokenConfig = null
+        )
     {
-        public static IServiceCollection AddTwitchIrcClient(
-            this IServiceCollection service,
-            Action<IrcCredentialConfig> ircConfig = null,
-            Action<TokenCredentialConfiguration> tokenConfig = null
-            )
-        {
-            var ircConfiguration = new IrcCredentialConfig();
-            var tokenConfiguration = new TokenCredentialConfiguration();
+        var ircConfiguration = new IrcCredentialConfig();
+        var tokenConfiguration = new TokenCredentialConfiguration();
 
-            // pass the pre-created ircConfig to action so it can modified when being added with DI
-            ircConfig?.Invoke(ircConfiguration);
-            tokenConfig?.Invoke(tokenConfiguration);
+        // pass the pre-created ircConfig to action so it can modified when being added with DI
+        ircConfig?.Invoke(ircConfiguration);
+        tokenConfig?.Invoke(tokenConfiguration);
             
-            AddService(service, ircConfiguration, tokenConfiguration);
+        AddService(service, ircConfiguration, tokenConfiguration);
 
-            return service;
-        }
+        return service;
+    }
 
-        public static IServiceCollection AddTwitchIrcClient(
-            this IServiceCollection service,
-            IrcCredentialConfig ircConfig = null,
-            TokenCredentialConfiguration tokenConfig = null
-            )
+    public static IServiceCollection AddTwitchIrcClient(
+        this IServiceCollection service,
+        IrcCredentialConfig ircConfig = null,
+        TokenCredentialConfiguration tokenConfig = null
+        )
+    {
+        AddService(
+            service,
+            ircConfig ?? new IrcCredentialConfig(),
+            tokenConfig ?? new TokenCredentialConfiguration()
+        );
+
+        return service;
+    }
+
+    private static void AddService(
+        IServiceCollection serviceCollection,
+        IrcCredentialConfig ircConfig,
+        TokenCredentialConfiguration tokenConfig
+        )
+    {
+        serviceCollection.AddHttpClient();
+
+        serviceCollection.Configure<IrcCredentialConfig>(cfg =>
         {
-            AddService(
-                service,
-                ircConfig ?? new IrcCredentialConfig(),
-                tokenConfig ?? new TokenCredentialConfiguration()
-                );
+            cfg.Username = ircConfig.Username;
+            cfg.OAuth = ircConfig.OAuth;
+        });
 
-            return service;
-        }
-
-        private static void AddService(
-            IServiceCollection serviceCollection,
-            IrcCredentialConfig ircConfig,
-            TokenCredentialConfiguration tokenConfig
-            )
+        serviceCollection.Configure<AccountCredentialConfiguration>(cfg =>
         {
-            serviceCollection.AddHttpClient();
+            cfg.Username = ircConfig.Username;
+        });
 
-            serviceCollection.Configure<IrcCredentialConfig>(cfg =>
-            {
-                cfg.Username = ircConfig.Username;
-                cfg.OAuth = ircConfig.OAuth;
-            });
+        serviceCollection.Configure<TokenCredentialConfiguration>(cfg =>
+        {
+            cfg.ClientId = tokenConfig.ClientId;
+            cfg.ClientSecret = tokenConfig.ClientSecret;
+        });
 
-            serviceCollection.Configure<AccountCredentialConfiguration>(cfg =>
-            {
-                cfg.Username = ircConfig.Username;
-            });
-
-            serviceCollection.Configure<TokenCredentialConfiguration>(cfg =>
-            {
-                cfg.ClientId = tokenConfig.ClientId;
-                cfg.ClientSecret = tokenConfig.ClientSecret;
-            });
-
-            serviceCollection.TryAddSingleton<IClientFactory, WebSocketClientFactory>();
-            serviceCollection.TryAddSingleton<IUserAccountStatusResolver, UserAccountResolver>();
-            serviceCollection.TryAddSingleton<ITokenResolver, ClientCredentialTokenResolver>();
-            serviceCollection.TryAddSingleton<IIrcClient, IrcClient>();
-        }
+        serviceCollection.TryAddSingleton<IClientFactory, WebSocketClientFactory>();
+        serviceCollection.TryAddSingleton<IUserAccountStatusResolver, UserAccountResolver>();
+        serviceCollection.TryAddSingleton<ITokenResolver, ClientCredentialTokenResolver>();
+        serviceCollection.TryAddSingleton<IIrcClient, IrcClient>();
     }
 }

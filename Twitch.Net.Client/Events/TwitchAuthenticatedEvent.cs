@@ -1,7 +1,6 @@
-﻿namespace Twitch.Net.Client.Events
+﻿namespace Twitch.Net.Client.Events;
+
+public class TwitchAuthenticatedEvent
 {
-    public class TwitchAuthenticatedEvent
-    {
-        public string Username { get; init; }
-    }
+    public string Username { get; init; }
 }

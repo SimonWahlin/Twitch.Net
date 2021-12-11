@@ -1,24 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Optional;
+﻿using Optional;
 using Twitch.Net.Api.Configurations;
 
-namespace Twitch.Net.Api.Apis
+namespace Twitch.Net.Api.Apis;
+
+public interface IApiBase
 {
-    public interface IApiBase
-    {
-        string BaseUrl { get; }
-        string ClientIdHeaderKey { get; }
-        IReadOnlyDictionary<string, string> ExtraHeaders { get; }
-        ApiCredentialConfig Config { get; }
+    string BaseUrl { get; }
+    string ClientIdHeaderKey { get; }
+    IReadOnlyDictionary<string, string> ExtraHeaders { get; }
+    ApiCredentialConfig Config { get; }
         
-        /**
+    /**
          * Pass token if we wanna use a specific access token towards the API endpoint
          */
-        Task<Option<T>> GetAsync<T>(
-            string segment,
-            IReadOnlyList<KeyValuePair<string, string>> parameters = null, 
-            string token = null
-            );
-    }
+    Task<Option<T>> GetAsync<T>(
+        string segment,
+        IReadOnlyList<KeyValuePair<string, string>> parameters = null, 
+        string token = null
+        );
 }

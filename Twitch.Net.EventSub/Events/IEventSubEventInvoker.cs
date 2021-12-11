@@ -1,9 +1,8 @@
 ﻿using Twitch.Net.EventSub.Notifications;
 
-namespace Twitch.Net.EventSub.Events
+namespace Twitch.Net.EventSub.Events;
+
+public interface IEventSubEventInvoker
 {
-    public interface IEventSubEventInvoker
-    {
-        void InvokeNotification(INotificationEvent @event, string type);
-    }
+    void InvokeNotification(INotificationEvent @event, string type);
 }

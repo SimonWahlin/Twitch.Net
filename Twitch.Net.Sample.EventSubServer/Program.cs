@@ -1,19 +1,15 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+namespace Twitch.Net.Sample.EventSubServer;
 
-namespace Twitch.Net.Sample.EventSubServer
+public class EventSubSample
 {
-    public class EventSubSample
-    {
-        private EventSubSample() => CreateHostBuilder().Build().Run();
+    private EventSubSample() => CreateHostBuilder().Build().Run();
         
-        public static void Main() => _ = new EventSubSample();
+    public static void Main() => _ = new EventSubSample();
 
-        private static IHostBuilder CreateHostBuilder() =>
-            Host.CreateDefaultBuilder()
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
+    private static IHostBuilder CreateHostBuilder() =>
+        Host.CreateDefaultBuilder()
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
 }

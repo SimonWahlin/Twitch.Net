@@ -1,11 +1,10 @@
-﻿namespace Twitch.Net.Client.Models
+﻿namespace Twitch.Net.Client.Models;
+
+public enum UserType
 {
-    public enum UserType
-    {
-        Moderator,
-        GlobalModerator,
-        Admin,
-        Staff,
-        Viewer
-    }
+    Moderator,
+    GlobalModerator,
+    Admin,
+    Staff,
+    Viewer
 }
