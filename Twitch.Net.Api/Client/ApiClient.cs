@@ -1,19 +1,22 @@
-﻿using Twitch.Net.Api.Apis.Helix;
-using Twitch.Net.Api.Apis.V5;
+﻿using Microsoft.Extensions.Options;
+using RateLimiter;
+using Twitch.Net.Api.Apis.Helix;
+using Twitch.Net.Api.Configurations;
+using Twitch.Net.Shared.Credential;
 
-namespace Twitch.Net.Api.Client
+namespace Twitch.Net.Api.Client;
+
+internal class ApiClient : IApiClient
 {
-    internal class ApiClient : IApiClient
+    public ApiClient(
+        IOptions<ApiCredentialConfig> config, 
+        IHttpClientFactory httpClientFactory, 
+        ITokenResolver tokenResolver
+        )
     {
-        public ApiClient()
-        {
-            ApiV5 = new ApiV5();
-            Helix = new ApiHelix();
-            Configuration = new ApiConfiguration();
-        }
-
-        public IApiV5 ApiV5 { get; }
-        public IApiHelix Helix { get; }
-        public IApiConfiguration Configuration { get; }
+        var rateLimiter = TimeLimiter.GetFromMaxCountByInterval(800, TimeSpan.FromSeconds(60));
+        Helix = new ApiHelix(tokenResolver, config.Value, httpClientFactory, rateLimiter);
     }
+
+    public IApiHelix Helix { get; }
 }

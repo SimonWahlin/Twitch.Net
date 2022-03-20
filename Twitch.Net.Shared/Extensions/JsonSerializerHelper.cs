@@ -1,28 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Text.Json;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace Twitch.Net.Shared.Extensions
+namespace Twitch.Net.Shared.Extensions;
+
+public static class JsonSerializerHelper
 {
-    public static class JsonSerializerHelper
+    private static readonly JsonSerializerOptions SerializerOptions = new()
     {
-        private static readonly JsonSerializerOptions SerializerOptions = new()
-        {
-            IgnoreNullValues = true
-        };
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    };
 
-        public static string SerializeModel(object model) =>
-            JsonSerializer.Serialize(model, SerializerOptions);
+    public static string SerializeModel(object model) =>
+        JsonSerializer.Serialize(model, SerializerOptions);
 
-        public static Dictionary<string, object> Deserialize(string json)
+    public static Dictionary<string, object> Deserialize(string json)
+    {
+        try
         {
-            try
-            {
-                return JsonSerializer.Deserialize<Dictionary<string, object>>(json);
-            }
-            catch
-            {
-                return new Dictionary<string, object>();
-            }
+            return JsonSerializer.Deserialize<Dictionary<string, object>>(json);
+        }
+        catch
+        {
+            return new Dictionary<string, object>();
         }
     }
 }

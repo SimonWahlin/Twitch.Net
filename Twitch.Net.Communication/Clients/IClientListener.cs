@@ -1,13 +1,12 @@
 ﻿using System.Net.WebSockets;
-using System.Threading.Tasks;
+using Twitch.Net.Communication.Events;
 
-namespace Twitch.Net.Communication.Clients
+namespace Twitch.Net.Communication.Clients;
+
+public interface IClientListener
 {
-    public interface IClientListener
-    {
-        Task OnReconnected();
-        Task OnMessage(WebSocketMessageType messageType, string message);
-        Task OnConnected();
-        Task OnDisconnected();
-    }
+    void OnReconnected();
+    Task OnMessage(WebSocketMessageType messageType, string message);
+    void OnConnected();
+    void OnDisconnected(ClientDisconnected clientDisconnected);
 }

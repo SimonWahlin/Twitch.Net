@@ -1,14 +1,9 @@
-﻿namespace Twitch.Net.Shared.Configurations
+﻿namespace Twitch.Net.Shared.Configurations;
+
+public class TwitchCredentialConfiguration
 {
-    public class TwitchCredentialConfiguration : 
-        IChatClientCredentialConfiguration,
-        IPubSubCredentialConfiguration,
-        IApiCredentialConfiguration
-    {
-        public string Username { get; init; }
-        public string OAuth { get; init; }
-        public string ClientId { get; init; }
-        public string ClientSecret { get; init; }
-        public string BaseChannel { get; init; } // does not really have to do with credentials - but is nice to have as "basic" startup
-    }
+    public string Username { get; set; }
+    public string OAuth { get; set; }
+    public string ClientId { get; set; }
+    public string ClientSecret { get; set; }
 }

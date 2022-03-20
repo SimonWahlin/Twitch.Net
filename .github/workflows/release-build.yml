@@ -16,18 +16,69 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100
+          dotnet-version: 6.0.x
+
       - name: Install dependencies
         run: dotnet restore
+
       - name: Build
         run: dotnet build --configuration Release --no-restore
-      - name: Test
-        run: dotnet test --no-restore --verbosity normal
-        
-      - name: Publish Nuget
+
+      - name: Tests
+        run: dotnet test --no-restore --configuration Release --logger GitHubActions
+
+      - name: Publish Nuget (Twitch.Net.Shared)
         uses: brandedoutcast/publish-nuget@v2.5.5
         with:
-            PACKAGE_NAME: Twitch.Net.Library
-            PROJECT_FILE_PATH: Twitch.Net.Library/Twitch.Net.Library.csproj
-            NUGET_KEY: ${{secrets.NUGET_TWITCH_NET}}
-            VERSION_REGEX: ^\s*<PackageVersion>(.*)<\/PackageVersion>\s*$
+          PACKAGE_NAME: Twitch.Net.Shared
+          PROJECT_FILE_PATH: Twitch.Net.Shared/Twitch.Net.Shared.csproj
+          NUGET_KEY: ${{secrets.NUGET_TWITCH_NET}}
+          VERSION_REGEX: ^\s*<VersionPrefix>(.*)<\/VersionPrefix>\s*$
+
+      - name: Publish Nuget (Twitch.Net.Communication)
+        uses: brandedoutcast/publish-nuget@v2.5.5
+        with:
+          PACKAGE_NAME: Twitch.Net.Communication
+          PROJECT_FILE_PATH: Twitch.Net.Communication/Twitch.Net.Communication.csproj
+          NUGET_KEY: ${{secrets.NUGET_TWITCH_NET}}
+          VERSION_REGEX: ^\s*<VersionPrefix>(.*)<\/VersionPrefix>\s*$
+
+      - name: Publish Nuget (Twitch.Net.Api)
+        uses: brandedoutcast/publish-nuget@v2.5.5
+        with:
+          PACKAGE_NAME: Twitch.Net.Api
+          PROJECT_FILE_PATH: Twitch.Net.Api/Twitch.Net.Api.csproj
+          NUGET_KEY: ${{secrets.NUGET_TWITCH_NET}}
+          VERSION_REGEX: ^\s*<VersionPrefix>(.*)<\/VersionPrefix>\s*$
+
+      - name: Publish Nuget (Twitch.Net.Client)
+        uses: brandedoutcast/publish-nuget@v2.5.5
+        with:
+          PACKAGE_NAME: Twitch.Net.Client
+          PROJECT_FILE_PATH: Twitch.Net.Client/Twitch.Net.Client.csproj
+          NUGET_KEY: ${{secrets.NUGET_TWITCH_NET}}
+          VERSION_REGEX: ^\s*<VersionPrefix>(.*)<\/VersionPrefix>\s*$
+
+      - name: Publish Nuget (Twitch.Net.Pubsub)
+        uses: brandedoutcast/publish-nuget@v2.5.5
+        with:
+          PACKAGE_NAME: Twitch.Net.Pubsub
+          PROJECT_FILE_PATH: Twitch.Net.Pubsub/Twitch.Net.Pubsub.csproj
+          NUGET_KEY: ${{secrets.NUGET_TWITCH_NET}}
+          VERSION_REGEX: ^\s*<VersionPrefix>(.*)<\/VersionPrefix>\s*$
+
+      - name: Publish Nuget (Twitch.Net.EventSub)
+        uses: brandedoutcast/publish-nuget@v2.5.5
+        with:
+          PACKAGE_NAME: Twitch.Net.EventSub
+          PROJECT_FILE_PATH: Twitch.Net.EventSub/Twitch.Net.EventSub.csproj
+          NUGET_KEY: ${{secrets.NUGET_TWITCH_NET}}
+          VERSION_REGEX: ^\s*<VersionPrefix>(.*)<\/VersionPrefix>\s*$
+
+      - name: Publish Nuget (Twitch.Net.Lib - All above in a single package)
+        uses: brandedoutcast/publish-nuget@v2.5.5
+        with:
+          PACKAGE_NAME: Twitch.Net.Lib
+          PROJECT_FILE_PATH: Twitch.Net.Lib/Twitch.Net.Lib.csproj
+          NUGET_KEY: ${{secrets.NUGET_TWITCH_NET}}
+          VERSION_REGEX: ^\s*<VersionPrefix>(.*)<\/VersionPrefix>\s*$

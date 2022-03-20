@@ -1,7 +1,6 @@
-﻿namespace Twitch.Net.Api.Apis.Helix
+﻿namespace Twitch.Net.Api.Apis.Helix;
+
+public interface IApiHelix
 {
-    public interface IApiHelix
-    {
-        
-    }
+    Users Users { get; }
 }

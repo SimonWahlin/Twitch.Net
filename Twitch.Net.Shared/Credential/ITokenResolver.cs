@@ -1,10 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿namespace Twitch.Net.Shared.Credential;
 
-namespace Twitch.Net.Shared.Credential
+public interface ITokenResolver
 {
-    public interface ITokenResolver
-    {
-        Task<string> GetToken();
-        Task<string> GetTokenType();
-    }
+    bool IsTokenExpired();
+    Task<string> GetToken();
+    Task<string> GetTokenType();
 }
