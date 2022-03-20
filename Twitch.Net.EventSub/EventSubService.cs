@@ -12,6 +12,7 @@ using Optional.Unsafe;
 using Twitch.Net.EventSub.Events;
 using Twitch.Net.EventSub.Models;
 using Twitch.Net.Shared.Credential;
+using Twitch.Net.Shared.Extensions;
 
 namespace Twitch.Net.EventSub;
 
@@ -178,12 +179,30 @@ public class EventSubService : IEventSubService
         }
     }
 
-    public async Task<Option<RegisteredSubscriptions>> Subscriptions(string? token = null) // TODO : Add paging support.
+    public async Task<Option<RegisteredSubscriptions>> Subscriptions(
+        string? status = null,
+        string? type = null,
+        string? pagination = null,
+        string? token = null
+        )
     {
         try
         {
             var client = _factory.CreateClient(EventSubServiceFactory.EventSubFactory);
-            var request = new HttpRequestMessage(HttpMethod.Get, "/helix/eventsub/subscriptions");
+            var path = "/helix/eventsub/subscriptions";
+
+            // query params
+            var parameters = new Dictionary<string, string>();
+            if (!string.IsNullOrWhiteSpace(status))
+                parameters.Add("status", status);
+            if (!string.IsNullOrWhiteSpace(type))
+                parameters.Add("type", type);
+            if (!string.IsNullOrWhiteSpace(pagination))
+                parameters.Add("after", pagination);
+            if (parameters.Any())
+                path = $"{path}?{parameters.Select(x => $"{x.Key}={x.Value}").Join('&')}";
+            
+            var request = new HttpRequestMessage(HttpMethod.Get, path);
 
             if (string.IsNullOrEmpty(token))
                 token = await _tokenResolver.GetToken();

@@ -12,5 +12,10 @@ public interface IEventSubService
     Task<IActionResult> Handle(HttpRequest request);
     Task<SubscribeResult> Subscribe(SubscribeModel model, string? token = null);
     Task<bool> Unsubscribe(string id, string? token = null);
-    Task<Option<RegisteredSubscriptions>> Subscriptions(string? token = null);
+    Task<Option<RegisteredSubscriptions>> Subscriptions(
+        string? status = null,
+        string? type = null,
+        string? pagination = null,
+        string? token = null
+        );
 }
