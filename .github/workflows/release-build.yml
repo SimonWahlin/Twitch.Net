@@ -27,8 +27,8 @@ jobs:
       - name: Tests
         run: dotnet test --no-restore --configuration Release --logger GitHubActions
 
-      - name: Package beta nugets
+      - name: Package release nugets
         run: dotnet pack --configuration Release --no-restore --no-build -o ./nupkg
 
-      - name: Publish beta nugets
+      - name: Publish release nugets
         run: dotnet nuget push './nupkg/*.nupkg' -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_TWITCH_NET}} --skip-duplicate
