@@ -29,4 +29,8 @@
       <FrameworkReference Include="Microsoft.AspNetCore.App" /><!-- Needed to handle the "HttpRequest" all together in the lib-->
     </ItemGroup>
 
+    <ItemGroup>
+      <None Include="Twitch.Net.Sample.EventSubServer.csproj" />
+    </ItemGroup>
+
 </Project>
