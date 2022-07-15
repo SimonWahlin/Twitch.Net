@@ -196,7 +196,7 @@ public class EventSubService : IEventSubService2
             if (!string.IsNullOrWhiteSpace(pagination))
                 parameters.Add("after", pagination);
             if (parameters.Any())
-                path = $"{path}?{parameters.Select(x => $"{x.Key}={x.Value}").Join('&')}";
+                path = $"{path}?{String.Join('&',parameters.Select(x => $"{x.Key}={x.Value}"))}";
             
             var request = new HttpRequestMessage(HttpMethod.Get, path);
 
